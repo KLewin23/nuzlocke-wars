@@ -20,7 +20,13 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@public/*": ["./public/*"]
+      "@public/*": ["./public/*"],
+      "@type/*": ["./src/lib/type/*"],
+      "@images": ["./src/lib/components/images/index"],
+      "@molecules": ["./src/lib/components/molecules/index"],
+      "@atoms/*": ["./src/lib/components/atoms/*"],
+      "@hooks/*": ["./src/lib/hooks/*"],
+      "@data/*": ["./src/data/*"]
     }
   },
   "include": [
