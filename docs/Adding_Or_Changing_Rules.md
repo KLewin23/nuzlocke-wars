@@ -26,7 +26,7 @@ This is a guide to add new rules and rule segments to the website homepage
 #### To add or remove a rule
 2. Find the target ruleset you want to edit
 3. Find the specific rule you want to edit in that ruleset
-4. Change the text within the '{{TEXT}}' marks or even delete the rule (if there are none left the ruleset should really go)
+4. Change the text within the '{{TEXT}}' marks or even delete the rule (if there are none left the ruleset should really go). If you add an apostrophe put a `\` BACKSLASH before it (escapies the character) else it  will think you are ending the string on that apostrophe
 
 #### To change a ruleset
 2. Find the target ruleset you want to edit
