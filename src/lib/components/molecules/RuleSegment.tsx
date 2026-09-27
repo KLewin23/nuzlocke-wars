@@ -16,8 +16,6 @@ const RuleSegment = ({ ruleSegmentData, reverseHorizontalFlow }: Props) => {
 		.with(RuleSegmentColour.Yellow, () => 'gradient-section-yellow-background')
 		.exhaustive();
 
-	console.log(backgroundGradient);
-
 	return (
 		<div
 			className={cn(
@@ -32,8 +30,8 @@ const RuleSegment = ({ ruleSegmentData, reverseHorizontalFlow }: Props) => {
 					{ruleSegmentData.title}
 				</h3>
 				<div className="col gap-2.5 ">
-					{ruleSegmentData.rules.map(rule => (
-						<div className="row gap-4 items-center ml-10">
+					{ruleSegmentData.rules.map((rule, index) => (
+						<div key={`rule-${ruleSegmentData.title}-${index}`} className="row gap-4 items-center ml-10">
 							<div className="gradient-gold h-5 w-5 rotate-45"/>
 							<p className="text-white">{rule}</p>
 						</div>

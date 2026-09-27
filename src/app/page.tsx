@@ -22,7 +22,7 @@ export default function Home() {
 				{ruleset.map((segment, segIndex) => (
 					<Fragment key={`ruleSegment-${segment.title}-${segIndex}`}>
 						{segIndex < ruleset.length ?
-							<StripedSeperator />
+							<StripedSeperator  keyPrefix={segment.title}/>
 						:	null}
 						<RuleSegment ruleSegmentData={segment} reverseHorizontalFlow={segIndex % 2 !== 0} />
 					</Fragment>

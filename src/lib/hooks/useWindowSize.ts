@@ -5,20 +5,22 @@ import { useEffect, useState } from 'react';
 interface WindowSize {
 	width: number;
 	height: number;
+	isClient: boolean;
 }
 
 const useWindowSize = (): WindowSize => {
 	const [windowSize, setWindowSize] = useState<WindowSize>(() => {
 		if (typeof window !== 'undefined')
-			// Only run on client side
 			return {
 				width: window.innerWidth,
 				height: window.innerHeight,
+				isClient: false
 			};
 
 		return {
 			width: 0,
 			height: 0,
+			isClient: false
 		};
 	});
 
@@ -31,6 +33,7 @@ const useWindowSize = (): WindowSize => {
 			setWindowSize({
 				width: window.innerWidth,
 				height: window.innerHeight,
+				isClient: true
 			});
 		};
 
