@@ -1,7 +1,7 @@
 import Mew from '@public/Mew.png';
 import Muk from '@public/Muk.png';
 import MrMime from '@public/MrMime.png';
-import RatatatHatter from '@public/RatatatHatter.png';
+import ExampleBounty from '@public/example_bounty.png';
 import { RuleSegmentColour, type Ruleset } from '@type/rules';
 
 const ruleset: Ruleset = [
@@ -35,7 +35,7 @@ const ruleset: Ruleset = [
 			'These bonuses could take the form of extra points on top of their placement in the main challenge, or additional Candy Coins for their team\'s pot, to grant additional held item access for their subsequent teammates',
 			'2 bounties will be available per challenge, and both, one or neither can be fulfilled',
 		],
-		image: RatatatHatter,
+		image: ExampleBounty,
 	},
 	{
 		title: 'HANG ON',
