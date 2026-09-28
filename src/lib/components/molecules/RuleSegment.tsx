@@ -19,20 +19,20 @@ const RuleSegment = ({ ruleSegmentData, reverseHorizontalFlow }: Props) => {
 	return (
 		<div
 			className={cn(
-				'px-gutters flex justify-between py-40',
+				'px-gutters flex justify-between py-40 h-200 gap-5',
 				backgroundGradient,
 				reverseHorizontalFlow ? 'flex-row-reverse' : 'flex-row',
 			)}
 		>
-			<Image src={ruleSegmentData.image} alt={`icon for ${ruleSegmentData.title}`} />
+			<Image src={ruleSegmentData.image} alt={`icon for ${ruleSegmentData.title}`} className="max-w-2/4 h-auto object-contain"  />
 			<div className="col w-3/5 gap-2.5">
 				<h3 className="gradient-gold w-fit bg-clip-text text-5xl font-bold text-transparent">
 					{ruleSegmentData.title}
 				</h3>
-				<div className="col gap-2.5 ">
+				<div className="col gap-2.5">
 					{ruleSegmentData.rules.map((rule, index) => (
-						<div key={`rule-${ruleSegmentData.title}-${index}`} className="row gap-4 items-center ml-10">
-							<div className="gradient-gold h-5 w-5 rotate-45"/>
+						<div key={`rule-${ruleSegmentData.title}-${index}`} className="row ml-10 items-center gap-4">
+							<div className="gradient-gold h-5 w-5 rotate-45" />
 							<p className="text-white">{rule}</p>
 						</div>
 					))}
@@ -42,4 +42,4 @@ const RuleSegment = ({ ruleSegmentData, reverseHorizontalFlow }: Props) => {
 	);
 };
 
-export default RuleSegment;
+export { RuleSegment };

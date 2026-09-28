@@ -22,4 +22,4 @@ const StripedSeperator = ({ keyPrefix }: Props) => {
 	);
 };
 
-export default StripedSeperator;
+export { StripedSeperator };

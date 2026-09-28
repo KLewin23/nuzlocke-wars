@@ -24,7 +24,7 @@
       "@type/*": ["./src/lib/type/*"],
       "@images": ["./src/lib/components/images/index"],
       "@molecules": ["./src/lib/components/molecules/index"],
-      "@atoms/*": ["./src/lib/components/atoms/*"],
+      "@atoms": ["./src/lib/components/atoms/index"],
       "@hooks/*": ["./src/lib/hooks/*"],
       "@data/*": ["./src/data/*"]
     }

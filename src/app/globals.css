@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 :root {
-	--background: #242732;
+	--background: #292539;
 	--foreground: oklch(0.97 0.0418 92.2);
 }
 
@@ -17,6 +17,8 @@
 	--font-sans: var(--font-quattrocento-sans);
 	--font-railroad-gothic: var(--font-railroad-gothic);
 	--font-rye: var(--font-rye);
+
+	--breakpoint-xs: 20rem;
 }
 
 body {
