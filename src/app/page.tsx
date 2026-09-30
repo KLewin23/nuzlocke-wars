@@ -5,11 +5,12 @@ import { RuleSegment } from '@molecules';
 import { Fragment } from 'react/jsx-runtime';
 import { Header, StripedSeperator } from '@atoms';
 import CandymanMainpage from '@public/CandymanMainpage.png';
+import { BasicNavbar } from '@organisms';
 
 const Home = () => {
 	return (
 		<div className="gradient-radial-purple">
-			<Navbar />
+			<BasicNavbar />
 			<main className="col">
 				<div className="col h-[calc(100vh-76px)] w-full items-center pt-15 md:pt-40">
 					<div className="col w-250 items-center xl:items-end">
