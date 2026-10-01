@@ -1,5 +1,4 @@
 import { auth } from '@auth';
-import { env } from '@env/server';
 import { headers } from 'next/headers';
 import { type NextRequest, NextResponse } from 'next/server';
 
