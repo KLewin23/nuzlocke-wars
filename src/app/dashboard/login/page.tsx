@@ -45,7 +45,9 @@ const page = () => {
 					value={password}
 					onChange={e => setPassword(e.currentTarget.value)}
 				/>
-				<Button onClick={e => handleLogin(e)}>Login</Button>
+				<Button palette="gold" onClick={e => handleLogin(e)}>
+					Login
+				</Button>
 			</form>
 		</div>
 	);
