@@ -1,8 +1,13 @@
 import 'dotenv/config';
+import * as fs from 'fs';
+import * as path from 'path';
 import { env } from '@env/server';
 import { defineConfig } from 'drizzle-kit';
 
-import ca from '@lib/db/ca.pem';
+
+const certificate = fs
+  .readFileSync(path.resolve(__dirname, './src/lib/db/ca.pem'))
+  .toString();
 
 export default defineConfig({
 	out: './drizzle',
@@ -14,7 +19,7 @@ export default defineConfig({
 			env.VERCEL_ENV !== undefined ?
 				{
 					rejectUnauthorized: true,
-					ca,
+					ca: certificate,
 				}
 			:	undefined,
 	},
