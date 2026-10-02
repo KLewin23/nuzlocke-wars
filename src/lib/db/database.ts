@@ -3,14 +3,13 @@ import { drizzle } from 'drizzle-orm/node-postgres';
 
 import { authRelations } from './authSchema';
 import { draftRelations } from './draftSchema';
-import ca from './ca.pem'
 
 export const db = drizzle({
 	connection: {
 		connectionString: env.DATABASE_URL,
-		ssl: env.NODE_ENV === 'production' ? {
+		ssl: env.DB_CA_CERTIFICATE === 'production' ? {
 			rejectUnauthorized: true,
-			ca
+			ca: env.DB_CA_CERTIFICATE,
 		} : undefined
 	},
 	relations: { ...authRelations, ...draftRelations },
