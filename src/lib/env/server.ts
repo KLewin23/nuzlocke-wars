@@ -8,6 +8,7 @@ const env = createEnv({
 		BASE_URL: z.string(),
 		NODE_ENV: z.union([z.literal('testing'), z.literal('development'), z.literal('production')]),
 		VERCEL_ENV: z.union([z.literal('development'), z.literal('preview'), z.literal('production')]).optional(),
+		DB_CA_CERTIFICATE: z.string().optional()
 	},
 	runtimeEnv: process.env,
 });

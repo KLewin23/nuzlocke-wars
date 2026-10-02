@@ -16,10 +16,10 @@ export default defineConfig({
 	dbCredentials: {
 		url: env.DATABASE_URL,
 		ssl:
-			env.VERCEL_ENV !== undefined ?
+			env.DB_CA_CERTIFICATE !== undefined ?
 				{
 					rejectUnauthorized: true,
-					ca: certificate,
+					ca: env.DB_CA_CERTIFICATE,
 				}
 			:	undefined,
 	},
