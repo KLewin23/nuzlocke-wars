@@ -1,4 +1,6 @@
 import { auth } from '@auth';
+import { db, user } from '@db';
+import { eq } from 'drizzle-orm';
 
 const seed = async () => {
 	await auth.api.signUpEmail({
@@ -25,6 +27,9 @@ const seed = async () => {
 			password: 'Super123.',
 		},
 	});
+
+	await db.update(user).set({role: 'admin'}).where(eq(user.name, 'Admin'))
+	await db.update(user).set({role: 'super'}).where(eq(user.name, 'Super'))
 };
 
 seed()
