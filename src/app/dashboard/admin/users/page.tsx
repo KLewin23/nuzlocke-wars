@@ -1,14 +1,34 @@
-import React from 'react';
+import { db, session, user } from '@db';
+import { eitherOr } from '@type/either';
+import { count, eq } from 'drizzle-orm';
 import { DashboardNavbar } from '@organisms';
 import { EllipsisVertical } from 'lucide-react';
-import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@atoms';
+import { Button, ErrorFallback, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@atoms';
 
-const page = () => {
+const page = async () => {
+	const users = await eitherOr(
+		db
+			.select({
+				id: user.id,
+				username: user.username,
+				role: user.role,
+				createdAt: user.createdAt,
+				userSessionsCount: count(session.id),
+			})
+			.from(user)
+			.leftJoin(session, eq(user.id, session.userId))
+			.groupBy(user.id),
+		e => {
+			console.error(e);
+			return 'Failed to retrieve users.';
+		},
+	);
+
 	return (
 		<div className="col w-full gap-16">
 			<DashboardNavbar />
 			<div className="col w-full max-w-250 grow items-end gap-4 self-center">
-				<Button palette="blackOnWhite">CREATE DRAFT</Button>
+				<Button palette="blackOnWhite">Create User</Button>
 				<Table>
 					<TableHeader>
 						<TableRow>
@@ -20,17 +40,26 @@ const page = () => {
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						<TableRow>
-							<TableCell>Kieran</TableCell>
-							<TableCell>Role</TableCell>
-							<TableCell>Session Count</TableCell>
-							<TableCell>Creation Date</TableCell>
-							<TableCell>
-								<Button variant="ghost">
-									<EllipsisVertical />
-								</Button>
-							</TableCell>
-						</TableRow>
+						{users._type === 'right' ?
+							users.value.map(user => (
+								<TableRow key={user.id}>
+									<TableCell>{user.username}</TableCell>
+									<TableCell className="capitalize">{user.role}</TableCell>
+									<TableCell>{user.userSessionsCount}</TableCell>
+									<TableCell>{user.createdAt.toLocaleDateString()}</TableCell>
+									<TableCell>
+										<Button variant="ghost">
+											<EllipsisVertical />
+										</Button>
+									</TableCell>
+								</TableRow>
+							))
+						:	<TableRow>
+								<TableCell colSpan={5}>
+									<ErrorFallback message={users.value} className="min-h-80 leading-70" />
+								</TableCell>
+							</TableRow>
+						}
 					</TableBody>
 				</Table>
 			</div>

@@ -11,7 +11,7 @@ const DashboardNavbar = async () => {
 		headers: hdrs,
 	});
 	const role = session?.user.role;
-
+	console.log(role)
 	const signOutAndRedirect = async () => {
 		'use server';
 		await auth.api.signOut({

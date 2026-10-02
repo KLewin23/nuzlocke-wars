@@ -29,7 +29,8 @@
 			"@hooks/*": ["./src/lib/hooks/*"],
 			"@data/*": ["./src/data/*"],
 			"@auth": ["./src/lib/auth"],
-			"@env/*": ["./src/lib/env/*"]
+			"@env/*": ["./src/lib/env/*"],
+			"@db": ["./src/lib/db/index"]
 		}
 	},
 	"include": [

@@ -1,8 +1,28 @@
+import { count, eq } from 'drizzle-orm';
+import { eitherOr } from '@/lib/type/either';
 import { DashboardNavbar } from '@organisms';
+import { db, draft, user, usersToDrafts } from '@db';
 import { EllipsisVertical } from 'lucide-react';
-import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@atoms';
+import { Button, ErrorFallback, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@atoms';
 
-const page = () => {
+const page = async () => {
+	const drafts = await eitherOr(
+		db
+			.select({
+				id: draft.id,
+				name: draft.name,
+				status: draft.status,
+				playerCount: count(usersToDrafts.userId),
+			})
+			.from(draft)
+			.leftJoin(usersToDrafts, eq(draft.id, usersToDrafts.draftId))
+			.groupBy(draft.id),
+		(e) => {
+			console.error(e)
+			return 'Failed to fetch list of drafts.';
+		},
+	);
+
 	return (
 		<div className="col w-full gap-16">
 			<DashboardNavbar />
@@ -12,24 +32,31 @@ const page = () => {
 					<TableHeader>
 						<TableRow>
 							<TableHead>Draft Name</TableHead>
-							<TableHead>Current Player Count</TableHead>
 							<TableHead>Max Capacity</TableHead>
 							<TableHead>State</TableHead>
 							<TableHead>Actions</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						<TableRow>
-							<TableCell>INV001</TableCell>
-							<TableCell>Paid</TableCell>
-							<TableCell>Credit Card</TableCell>
-							<TableCell>$250.00</TableCell>
-							<TableCell>
-								<Button variant="ghost">
-									<EllipsisVertical />
-								</Button>
-							</TableCell>
-						</TableRow>
+						{drafts._type === 'right' ?
+							drafts.value.map(draft => (
+								<TableRow key={`draft-row-${draft.id}`}>
+									<TableCell>{draft.name}</TableCell>
+									<TableCell>{draft.playerCount}</TableCell>
+									<TableCell className="capitalize">{draft.status}</TableCell>
+									<TableCell>
+										<Button variant="ghost">
+											<EllipsisVertical />
+										</Button>
+									</TableCell>
+								</TableRow>
+							))
+						:	<TableRow>
+								<TableCell colSpan={4}>
+									<ErrorFallback message={drafts.value} className="min-h-80 leading-70" />
+								</TableCell>
+							</TableRow>
+						}
 					</TableBody>
 				</Table>
 			</div>

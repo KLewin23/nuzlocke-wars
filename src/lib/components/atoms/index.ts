@@ -5,3 +5,4 @@ export * from './StripedSeperator';
 export * from './table';
 export * from './Toaster';
 export * from './typography';
+export * from './ErrorFallback';
