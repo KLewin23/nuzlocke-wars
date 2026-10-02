@@ -6,6 +6,7 @@ const env = createEnv({
 		DATABASE_URL: z.string(),
 		BETTER_AUTH_SECRET: z.string(),
 		BASE_URL: z.string(),
+		NODE_ENV: z.union([z.literal('testing'), z.literal('development'),  z.literal('production')]),
 	},
 	runtimeEnv: process.env,
 });
