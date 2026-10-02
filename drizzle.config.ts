@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { env } from '@env/server';
 import { defineConfig } from 'drizzle-kit';
 
-import ca from './src/lib/db/ca.pem';
+import ca from '@lib/db/ca.pem';
 
 export default defineConfig({
 	out: './drizzle',
