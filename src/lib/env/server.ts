@@ -8,7 +8,7 @@ const env = createEnv({
 		DATABASE_NAME: z.string(),
 		DATABASE_PORT:  z.string().transform(s => parseInt(s, 10)),
 		DATABASE_HOST: z.string(),
-		DATABASE_CA_CERTIFICATE: z.string().optional(),
+		DATABASE_CA_CERTIFICATE: z.string().transform(s => Buffer.from(s, 'base64').toString()).optional(),
 		BETTER_AUTH_SECRET: z.string(),
 		BASE_URL: z.string(),
 		NODE_ENV: z.union([z.literal('testing'), z.literal('development'), z.literal('production')]),
