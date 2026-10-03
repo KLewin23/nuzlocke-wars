@@ -6,10 +6,14 @@ import { draftRelations } from './draftSchema';
 
 export const db = drizzle({
 	connection: {
-		connectionString: env.DATABASE_URL,
-		ssl: env.DB_CA_CERTIFICATE === 'production' ? {
+		database: env.DATABASE_NAME,
+		host: env.DATABASE_HOST,
+		password: env.DATABASE_PASSWORD,
+		port: env.DATABASE_PORT,
+		user: env.DATABASE_USERNAME,
+		ssl: env.DATABASE_CA_CERTIFICATE !== undefined ? {
 			rejectUnauthorized: true,
-			ca: env.DB_CA_CERTIFICATE,
+			ca: env.DATABASE_CA_CERTIFICATE,
 		} : undefined
 	},
 	relations: { ...authRelations, ...draftRelations },
