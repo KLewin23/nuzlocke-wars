@@ -1,7 +1,7 @@
 import Abacus from '@public/abacus.webp';
-import Muk from '@public/Muk.png';
-import MrMime from '@public/MrMime.png';
-import ExampleBounty from '@public/example_bounty.png';
+import MercenaryDraft from '@public/MercenaryDraft.png';
+import Challenges from '@public/Challenges.png';
+import BonutyPoster from '@public/BountyPoster.png';
 import { RuleSegmentColour, type Ruleset } from '@type/rules';
 
 const ruleset: Ruleset = [
@@ -14,7 +14,7 @@ const ruleset: Ruleset = [
 			'Captains will bid the number of Candy Coins they are willing to spend to procure each player\'s services; the highest bidder wins, but captains cannot see their opponents\' offers until the bidding window closes!',
 			'However, conserving some Candy Coins may also prove prudent, as they can be spent later to provide boons during...'
 		],
-		image: Muk,
+		image: MercenaryDraft,
 	},
 	{
 		title: 'The Challenges',
@@ -25,7 +25,7 @@ const ruleset: Ruleset = [
 			'Their Candy Coins, as any left over from the Mercenary Draft can be allocated to teammates to endow them with bonus held items!',
 			'These challenges will look like no ordinary nuzlocking competition - A myriad of abilities will be tested both within and outside the game to accrue the points that will determine our victor, and along the way...'
 		],
-		image: MrMime,
+		image: Challenges,
 	},
 	{
 		title: 'Bounties',
@@ -35,7 +35,7 @@ const ruleset: Ruleset = [
 			'These bonuses could take the form of extra points on top of their placement in the main challenge, or additional Candy Coins for their team\'s pot, to grant additional held item access for their subsequent teammates',
 			'2 bounties will be available per challenge, and both, one or neither can be fulfilled',
 		],
-		image: ExampleBounty,
+		image: BonutyPoster,
 	},
 	{
 		title: 'HANG ON',

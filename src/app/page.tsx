@@ -1,28 +1,32 @@
+import Image from 'next/image';
 import { Navbar } from '@molecules';
 import { ruleset } from '@data/rules';
-import RuleSegment from '@/lib/components/molecules/RuleSegment';
-import StripedSeperator from '@/lib/components/atoms/StripedSeperator';
+import { RuleSegment } from '@molecules';
 import { Fragment } from 'react/jsx-runtime';
+import { Header, StripedSeperator } from '@atoms';
+import CandymanMainpage from '@public/CandymanMainpage.png';
+import { BasicNavbar } from '@organisms';
 
-export default function Home() {
+const Home = () => {
 	return (
 		<div className="gradient-radial-purple">
-			<Navbar />
+			<BasicNavbar />
 			<main className="col">
-				<div className="h-[calc(100vh-76px)] w-full items-center pt-40">
-					<div className="col items-end px-80">
-						<h1 className="font-rye gradient-red mr-48 w-fit bg-clip-text text-9xl text-transparent">
+				<div className="col h-[calc(100vh-76px)] w-full items-center pt-15 md:pt-40">
+					<div className="col w-250 items-center xl:items-end">
+						<Header className="font-rye gradient-red w-fit bg-clip-text text-transparent xl:mr-48">
 							CANDYMAN&apos;S
-						</h1>
-						<h1 className="gradient-gold w-fit bg-clip-text text-9xl font-bold text-transparent">
+						</Header>
+						<Header className="gradient-gold w-fit bg-clip-text font-bold text-transparent">
 							CARNIVAL
-						</h1>
+						</Header>
+						<Image src={CandymanMainpage} alt="The candy man throwing a coin into a chest full of candy" className="max-w-80 md:max-w-lg self-auto xl:self-start mt-0 -ml-20 xl:-mt-24 "/>
 					</div>
 				</div>
 				{ruleset.map((segment, segIndex) => (
 					<Fragment key={`ruleSegment-${segment.title}-${segIndex}`}>
 						{segIndex < ruleset.length ?
-							<StripedSeperator  keyPrefix={segment.title}/>
+							<StripedSeperator keyPrefix={segment.title} />
 						:	null}
 						<RuleSegment ruleSegmentData={segment} reverseHorizontalFlow={segIndex % 2 !== 0} />
 					</Fragment>
@@ -30,4 +34,6 @@ export default function Home() {
 			</main>
 		</div>
 	);
-}
+};
+
+export default Home;

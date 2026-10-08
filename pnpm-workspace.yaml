@@ -1,3 +1,9 @@
+allowedBuilds:
+  cypress: true
+
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
+
+onlyBuiltDependencies:
+  - cypress

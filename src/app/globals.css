@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 :root {
-	--background: #242732;
+	--background: #292539;
 	--foreground: oklch(0.97 0.0418 92.2);
 }
 
@@ -10,19 +10,29 @@
 	--color-foreground: var(--foreground);
 
 	--color-seperator-red: #7e3326;
-	--color-seperator-white: #FFF5D6;
+	--color-seperator-white: #fff5d6;
+	--color-destructive: oklch(0.577 0.245 27.325);
 
 	--spacing-gutters: 18rem;
 
 	--font-sans: var(--font-quattrocento-sans);
 	--font-railroad-gothic: var(--font-railroad-gothic);
 	--font-rye: var(--font-rye);
+
+	--breakpoint-xs: 20rem;
 }
 
 body {
-	background: var(--background);
 	color: var(--foreground);
 	font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+:root {
+	
+	--border: oklch(0.922 0 0);
+	--popover: oklch(1 0 0);
+	--popover-foreground: oklch(0.145 0 0);
+	--radius: 4px;
 }
 
 @layer base {
@@ -44,13 +54,16 @@ body {
 
 @layer components {
 	.gradient-radial-purple {
-		background-image: linear-gradient(135deg, #392C4F 0%, #150f18 100%);
+		background-image: linear-gradient(135deg, #392c4f 0%, #150f18 100%);
+	}
+	.gradient-radial-blue {
+		background-image: linear-gradient(135deg, #2c3b4f 0%, #110f18 100%);
 	}
 	.gradient-gold {
 		background-image: linear-gradient(0deg, #f4bd8d 20%, #cbc5c5 100%);
 	}
 	.gradient-red {
-		background-image: linear-gradient(0deg,#6a4139 0%,  #c23b23 100% );
+		background-image: linear-gradient(0deg, #6a4139 0%, #c23b23 100%);
 	}
 	.gradient-section-red-background {
 		background-image: linear-gradient(#4f2c2c 0%, #18110f 100%);

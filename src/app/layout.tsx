@@ -1,36 +1,44 @@
-import type { Metadata } from "next";
-import { Quattrocento_Sans, Rye } from "next/font/google";
+import type { Metadata } from 'next';
+import localFont from 'next/font/local';
+import { Quattrocento_Sans, Rye } from 'next/font/google';
 
-import localFont from 'next/font/local'
-import "./globals.css";
+import './globals.css';
+import { Toaster } from '@atoms';
 
 const railroadGothic = localFont({
-  src:  '../../public/RailroadGothicCC.ttf', 
-  variable: '--font-railroad-gothic'
-})
+	src: '../../public/RailroadGothicCC.ttf',
+	variable: '--font-railroad-gothic',
+});
 
 const quattrocentoSans = Quattrocento_Sans({
-  variable: '--font-quattrocento-sans',
-  weight: ["400", "700"]
-})
+	variable: '--font-quattrocento-sans',
+	weight: ['400', '700'],
+});
 
 const rye = Rye({
-  variable: '--font-rye',
-  weight: ["400"]
-})
+	variable: '--font-rye',
+	weight: ['400'],
+});
 
 export const metadata: Metadata = {
-  title: "Nuzlocke Wars",
-  description: "Nuzlocke wars tournement",
+	title: 'Nuzlocke Wars',
+	description: 'Nuzlocke wars tournement',
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
-  return (
-    <html
-      lang="en"
-      className={`${quattrocentoSans.variable} ${railroadGothic.variable} ${rye.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
-    </html>
-  );
+export default function RootLayout({ children }: LayoutProps<'/'>) {
+	return (
+		<html
+			lang="en"
+			className={`${quattrocentoSans.variable} ${railroadGothic.variable} ${rye.variable} h-full antialiased`}
+		>
+			<head>
+				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+				<meta lang="en" />
+			</head>
+			<body className="flex min-h-full w-full flex-col">
+				<Toaster />
+				{children}
+			</body>
+		</html>
+	);
 }
