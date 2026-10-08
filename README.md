@@ -23,7 +23,8 @@
 - DATABASE_HOST
 - DATABASE_URL
 - BETTER_AUTH_SECRET - generate with `openssl rand -base64 32`
-- BETTER_AUTH_URL
+- NEXT_PUBLIC_BASE_URL
+- BASE_URL
 
 ## Commands
 1. `pnpm install`
