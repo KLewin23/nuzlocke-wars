@@ -1,9 +1,9 @@
 import Button from '@atoms/Button';
 import { count, eq } from 'drizzle-orm';
 import { eitherOr } from '@/lib/type/either';
+import { db, draft, usersToDrafts } from '@db';
 import { EllipsisVertical } from 'lucide-react';
 import { ErrorFallback } from '@atoms/ErrorFallback';
-import { db, draft, user, usersToDrafts } from '@db';
 import { DashboardNavbar } from '@organisms/DashboardNavbar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@atoms/table';
 
