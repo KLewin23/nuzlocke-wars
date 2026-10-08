@@ -8,6 +8,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 12.10.1
 
       - name: Cypress run
         uses: cypress-io/github-action@v7
