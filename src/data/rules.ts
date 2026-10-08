@@ -1,4 +1,4 @@
-import Mew from '@public/Mew.png';
+import Abacus from '@public/abacus.webp';
 import Muk from '@public/Muk.png';
 import MrMime from '@public/MrMime.png';
 import ExampleBounty from '@public/example_bounty.png';
@@ -46,7 +46,7 @@ const ruleset: Ruleset = [
 			'Their teammates? Well, there\'s only so much that can be done to regulate that kind of business. It\'s up to them how much they want to help their comrade with information...',
 			'For nerds who want some more in-depth rules, click here.'
 		],
-		image: Mew,
+		image: Abacus,
 	},
 ];
 
