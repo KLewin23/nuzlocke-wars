@@ -25,6 +25,10 @@
 - BETTER_AUTH_SECRET - generate with `openssl rand -base64 32`
 - NEXT_PUBLIC_BASE_URL
 - BASE_URL
+- VERCEL_ENV=production
+- NODE_ENV=production
+- DATABASE_CA_CERTIFICATE
+
 
 ## Commands
 1. `pnpm install`
