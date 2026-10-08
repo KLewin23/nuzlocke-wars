@@ -2,7 +2,7 @@
   <!-- <a href="https://nuzlocke-wars.com"> -->
     <img alt="Nuzlocke Wars!" src="docs/images/icon.png" height="200" />
   <!-- </a> -->
-    <h1>Nuzlocke Wars<h1>
+    <h1>Nuzlocke Wars!<h1>
 </div>
 
 # Requirements
@@ -23,7 +23,8 @@
 - DATABASE_HOST
 - DATABASE_URL
 - BETTER_AUTH_SECRET - generate with `openssl rand -base64 32`
-- BETTER_AUTH_URL
+- NEXT_PUBLIC_BASE_URL
+- BASE_URL
 
 ## Commands
 1. `pnpm install`
