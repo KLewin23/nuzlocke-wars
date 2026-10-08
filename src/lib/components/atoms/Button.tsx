@@ -7,8 +7,7 @@ const buttonVariants = cva(
 	{
 		variants: {
 			variant: {
-				default:
-					'font-railroad-gothic p-2.5 hover:pt-[8px] hover:pb-[12px] transition-all duration-200',
+				default: 'font-railroad-gothic p-2.5 hover:pt-[8px] hover:pb-[12px] transition-all duration-200',
 				ghost: 'hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground',
 				link: 'text-primary underline-offset-4 hover:underline',
 			},
@@ -16,11 +15,11 @@ const buttonVariants = cva(
 				default: 'bg-none text-white',
 				gold: 'gradient-gold text-black',
 				blackOnWhite: 'bg-white text-black',
-			}
+			},
 		},
 		defaultVariants: {
 			variant: 'default',
-			palette: 'default'
+			palette: 'default',
 		},
 	},
 );
@@ -48,4 +47,4 @@ const Button = ({
 	);
 };
 
-export { Button, buttonVariants };
+export default Button;

@@ -32,7 +32,7 @@ const RuleSegment = ({ ruleSegmentData, reverseHorizontalFlow }: Props) => {
 				<div className="col gap-2.5">
 					{ruleSegmentData.rules.map((rule, index) => (
 						<div key={`rule-${ruleSegmentData.title}-${index}`} className="row ml-10 items-center gap-4">
-							<div className="gradient-gold h-5 w-5 rotate-45" />
+							<div className="gradient-gold min-h-5 min-w-5 rotate-45" />
 							<p className="text-white">{rule}</p>
 						</div>
 					))}

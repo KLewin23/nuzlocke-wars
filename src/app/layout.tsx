@@ -3,7 +3,7 @@ import localFont from 'next/font/local';
 import { Quattrocento_Sans, Rye } from 'next/font/google';
 
 import './globals.css';
-import { Toaster } from '@atoms';
+import { Toaster } from '@atoms/Toaster';
 
 const railroadGothic = localFont({
 	src: '../../public/RailroadGothicCC.ttf',

@@ -50,4 +50,4 @@ const useWindowSize = (): WindowSize => {
 	return windowSize;
 };
 
-export { useWindowSize };
+export default useWindowSize;

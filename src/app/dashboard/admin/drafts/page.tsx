@@ -1,9 +1,11 @@
+import Button from '@atoms/Button';
 import { count, eq } from 'drizzle-orm';
 import { eitherOr } from '@/lib/type/either';
-import { DashboardNavbar } from '@organisms';
-import { db, draft, user, usersToDrafts } from '@db';
 import { EllipsisVertical } from 'lucide-react';
-import { Button, ErrorFallback, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@atoms';
+import { ErrorFallback } from '@atoms/ErrorFallback';
+import { db, draft, user, usersToDrafts } from '@db';
+import { DashboardNavbar } from '@organisms/DashboardNavbar';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@atoms/table';
 
 const page = async () => {
 	const drafts = await eitherOr(
@@ -17,8 +19,8 @@ const page = async () => {
 			.from(draft)
 			.leftJoin(usersToDrafts, eq(draft.id, usersToDrafts.draftId))
 			.groupBy(draft.id),
-		(e) => {
-			console.error(e)
+		e => {
+			console.error(e);
 			return 'Failed to fetch list of drafts.';
 		},
 	);

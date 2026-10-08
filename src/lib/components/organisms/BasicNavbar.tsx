@@ -1,6 +1,4 @@
-import React from 'react';
-
-import { Navbar } from '../molecules';
+import Navbar from '@molecules/navbar';
 
 const BasicNavbar = () => (
 	<Navbar

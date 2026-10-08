@@ -1,9 +1,11 @@
+import Button from '@atoms/Button';
 import { db, session, user } from '@db';
 import { eitherOr } from '@type/either';
 import { count, eq } from 'drizzle-orm';
-import { DashboardNavbar } from '@organisms';
 import { EllipsisVertical } from 'lucide-react';
-import { Button, ErrorFallback, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@atoms';
+import { ErrorFallback } from '@atoms/ErrorFallback';
+import { DashboardNavbar } from '@organisms/DashboardNavbar';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@atoms/table';
 
 const page = async () => {
 	const users = await eitherOr(

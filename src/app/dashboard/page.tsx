@@ -1,5 +1,4 @@
-import React from 'react';
-import '@organisms';
+
 
 const page = () => {
 	return (

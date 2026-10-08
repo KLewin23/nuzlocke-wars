@@ -13,7 +13,7 @@ interface Props {
 const ErrorFallback = ({ message, toastMessage = message, className }: Props) => {
 	useEffect(() => {
 		toast(toastMessage);
-	}, []);
+	}, [toastMessage]);
 
 	return <p className={cn('font-white font-sans text-lg', className)}>{message}</p>;
 };

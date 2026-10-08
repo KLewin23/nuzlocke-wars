@@ -1,9 +1,7 @@
-import React from 'react';
 import { auth } from '@/lib/auth';
+import Navbar from '@molecules/navbar';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-
-import { Navbar } from '../molecules';
 
 const DashboardNavbar = async () => {
 	const hdrs = await headers();
@@ -11,7 +9,7 @@ const DashboardNavbar = async () => {
 		headers: hdrs,
 	});
 	const role = session?.user.role;
-	console.log(role)
+	console.log(role);
 	const signOutAndRedirect = async () => {
 		'use server';
 		await auth.api.signOut({

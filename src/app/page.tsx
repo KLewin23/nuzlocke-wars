@@ -1,11 +1,11 @@
 import Image from 'next/image';
-import { Navbar } from '@molecules';
 import { ruleset } from '@data/rules';
-import { RuleSegment } from '@molecules';
 import { Fragment } from 'react/jsx-runtime';
-import { Header, StripedSeperator } from '@atoms';
+import { Header } from '@atoms/typography/Header';
+import { RuleSegment } from '@molecules/RuleSegment';
+import { BasicNavbar } from '@organisms/BasicNavbar';
+import { StripedSeperator } from '@atoms/StripedSeperator';
 import CandymanMainpage from '@public/CandymanMainpage.png';
-import { BasicNavbar } from '@organisms';
 
 const Home = () => {
 	return (
@@ -20,7 +20,11 @@ const Home = () => {
 						<Header className="gradient-gold w-fit bg-clip-text font-bold text-transparent">
 							CARNIVAL
 						</Header>
-						<Image src={CandymanMainpage} alt="The candy man throwing a coin into a chest full of candy" className="max-w-80 md:max-w-lg self-auto xl:self-start mt-0 -ml-20 xl:-mt-24 "/>
+						<Image
+							src={CandymanMainpage}
+							alt="The candy man throwing a coin into a chest full of candy"
+							className="mt-0 -ml-20 max-w-80 self-auto md:max-w-lg xl:-mt-24 xl:self-start"
+						/>
 					</div>
 				</div>
 				{ruleset.map((segment, segIndex) => (
