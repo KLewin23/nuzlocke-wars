@@ -4,6 +4,6 @@ describe('Home', () => {
         cy.contains('HOME')
         cy.contains('WARRIORS')
         cy.contains('HIGHLIGHTS')
-        cy.contains('FAW')
+        cy.contains('FAQ')
     })
 })
