@@ -1,8 +1,8 @@
 'use client';
 
-import { Title } from '@images';
-import { useWindowSize } from '@/lib/hooks';
+import Title from '@images/Title';
 import cn, { VariantProps, cva } from 'cnfast';
+import useWindowSize from '@hooks/useWindowSize';
 
 import MobileDropdown from './MobileDropdown';
 
@@ -19,7 +19,7 @@ const buttonVariants = cva('row font-railroad-gothic relative justify-center px-
 });
 
 interface Props {
-	links: Record<string, string |  (() => Promise<unknown>)>; // Record<title, link>
+	links: Record<string, string | (() => Promise<unknown>)>; // Record<title, link>
 }
 
 const Navbar = ({
@@ -40,7 +40,11 @@ const Navbar = ({
 								<a href={action} key={`navlink-${title}-${action}`}>
 									<p className="font-railroad-gothic text-xl font-bold">{title}</p>
 								</a>
-							:	<button key={`navlink-${title}`} className="cursor-pointer" onClick={async () => await action()}>
+							:	<button
+									key={`navlink-${title}`}
+									className="cursor-pointer"
+									onClick={async () => await action()}
+								>
 									<p className="font-railroad-gothic text-xl font-bold">{title}</p>
 								</button>,
 						)}
@@ -51,4 +55,4 @@ const Navbar = ({
 	);
 };
 
-export { Navbar };
+export default Navbar;

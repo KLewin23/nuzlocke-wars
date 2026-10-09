@@ -1,11 +1,12 @@
 'use client';
 
 import { toast } from 'sonner';
-import { Title } from '@images';
-import { Button, Input } from '@atoms';
+import Input from '@atoms/Input';
+import Title from '@images/Title';
+import Button from '@atoms/Button';
 import { useRouter } from 'next/navigation';
 import { MouseEvent, useState } from 'react';
-import { authClient } from '@/lib/auth-client';
+import { authClient } from '@lib/auth-client';
 
 interface Props {
 	searchParams: Promise<Record<string, string> | Array<string> | undefined>;
@@ -45,7 +46,9 @@ const page = () => {
 					value={password}
 					onChange={e => setPassword(e.currentTarget.value)}
 				/>
-				<Button onClick={e => handleLogin(e)}>Login</Button>
+				<Button palette="gold" onClick={e => handleLogin(e)}>
+					Login
+				</Button>
 			</form>
 		</div>
 	);

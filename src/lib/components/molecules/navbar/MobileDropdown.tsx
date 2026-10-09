@@ -1,43 +1,42 @@
-import React from 'react';
+import Button from '@atoms/Button';
 import {
-	Button,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuGroup,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from '@atoms';
+} from '@atoms/dropdownMenu';
 
 const MobileDropdown = () => {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<Button variant="ghost" className="col cursor-pointer gap-1">
-					<div className="h-1 w-5 rounded bg-foreground" />
-					<div className="h-1 w-5 rounded bg-foreground" />
-					<div className="h-1 w-5 rounded bg-foreground" />
+					<div className="bg-foreground h-1 w-5 rounded" />
+					<div className="bg-foreground h-1 w-5 rounded" />
+					<div className="bg-foreground h-1 w-5 rounded" />
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end" className="bg-background">
 				<DropdownMenuGroup>
 					<DropdownMenuItem asChild>
 						<a href="/">
-							<p className="font-railroad-gothic text-xl font-bold cursor-pointer">HOME</p>
+							<p className="font-railroad-gothic cursor-pointer text-xl font-bold">HOME</p>
 						</a>
 					</DropdownMenuItem>
 					<DropdownMenuItem asChild>
 						<a href="/">
-							<p className="font-railroad-gothic text-xl font-bold cursor-pointer">WARRIORS</p>
+							<p className="font-railroad-gothic cursor-pointer text-xl font-bold">WARRIORS</p>
 						</a>
 					</DropdownMenuItem>
 					<DropdownMenuItem asChild>
 						<a href="/">
-							<p className="font-railroad-gothic text-xl font-bold cursor-pointer">HIGHLIGHTS</p>
+							<p className="font-railroad-gothic cursor-pointer text-xl font-bold">HIGHLIGHTS</p>
 						</a>
 					</DropdownMenuItem>
 					<DropdownMenuItem asChild>
 						<a href="/">
-							<p className="font-railroad-gothic text-xl font-bold cursor-pointer">FAQ</p>
+							<p className="font-railroad-gothic cursor-pointer text-xl font-bold">FAQ</p>
 						</a>
 					</DropdownMenuItem>
 				</DropdownMenuGroup>

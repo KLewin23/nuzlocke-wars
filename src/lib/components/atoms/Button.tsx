@@ -7,17 +7,19 @@ const buttonVariants = cva(
 	{
 		variants: {
 			variant: {
-				default:
-					'gradient-gold text-primary-foreground font-railroad-gothic text-black p-2.5 hover:pt-[8px] hover:pb-[12px] transition-all duration-200',
+				default: 'font-railroad-gothic p-2.5 hover:pt-[8px] hover:pb-[12px] transition-all duration-200',
 				ghost: 'hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground',
-				destructive:
-					'bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20',
 				link: 'text-primary underline-offset-4 hover:underline',
+			},
+			palette: {
+				default: 'bg-none text-white',
+				gold: 'gradient-gold text-black',
+				blackOnWhite: 'bg-white text-black',
 			},
 		},
 		defaultVariants: {
 			variant: 'default',
-			
+			palette: 'default',
 		},
 	},
 );
@@ -25,6 +27,7 @@ const buttonVariants = cva(
 const Button = ({
 	className,
 	variant = 'default',
+	palette = 'default',
 	asChild = false,
 	...props
 }: React.ComponentProps<'button'> &
@@ -37,10 +40,11 @@ const Button = ({
 		<Comp
 			data-slot="button"
 			data-variant={variant}
-			className={cn(buttonVariants({ variant, className }))}
+			data-palette={palette}
+			className={cn(buttonVariants({ variant, className, palette }))}
 			{...props}
 		/>
 	);
 };
 
-export { Button, buttonVariants };
+export default Button;

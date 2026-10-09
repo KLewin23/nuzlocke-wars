@@ -8,4 +8,4 @@ const Title = (props: SVGProps<SVGSVGElement>) => (
 		/>
 	</svg>
 );
-export { Title };
+export default Title;

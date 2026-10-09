@@ -20,16 +20,18 @@
 		],
 		"paths": {
 			"@/*": ["./src/*"],
+			"@lib/*": ["./src/lib/*"],
 			"@public/*": ["./public/*"],
 			"@type/*": ["./src/lib/type/*"],
-			"@images": ["./src/lib/components/images/index"],
-			"@organisms": ["./src/lib/components/organisms/index"],
-			"@molecules": ["./src/lib/components/molecules/index"],
-			"@atoms": ["./src/lib/components/atoms/index"],
+			"@images/*": ["./src/lib/components/images/*"],
+			"@organisms/*": ["./src/lib/components/organisms/*"],
+			"@molecules/*": ["./src/lib/components/molecules/*"],
+			"@atoms/*": ["./src/lib/components/atoms/*"],
 			"@hooks/*": ["./src/lib/hooks/*"],
 			"@data/*": ["./src/data/*"],
 			"@auth": ["./src/lib/auth"],
-			"@env/*": ["./src/lib/env/*"]
+			"@env/*": ["./src/lib/env/*"],
+			"@db": ["./src/lib/db/index"]
 		}
 	},
 	"include": [

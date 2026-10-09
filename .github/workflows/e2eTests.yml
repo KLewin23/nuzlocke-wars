@@ -2,6 +2,18 @@ name: Cypress Tests
 
 on: push
 
+env:
+  BETTER_AUTH_SECRET: random_secret
+  BASE_URL: http://localhost:3000
+  NEXT_PUBLIC_BASE_URL: http://localhost:3000
+  VERCEL_ENV: production
+  NODE_ENV: testing
+  DATABASE_USERNAME: gh_pg_user
+  DATABASE_PASSWORD: gh_pg_pass
+  DATABASE_PORT: 54321
+  DATABASE_HOST: 0.0.0.0
+  DATABASE_NAME: nuzlocke-wars
+
 jobs:
   cypress-run:
     runs-on: ubuntu-24.04
@@ -13,6 +25,9 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: 12.10.1
+
+      - name: Setup DB
+        run: docker compose up -d
 
       - name: Cypress run
         uses: cypress-io/github-action@v7

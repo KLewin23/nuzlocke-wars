@@ -1,5 +1,4 @@
-import React from 'react';
-import { DashboardNavbar } from '@organisms';
+import { DashboardNavbar } from '@organisms/DashboardNavbar';
 
 const page = () => {
 	return (

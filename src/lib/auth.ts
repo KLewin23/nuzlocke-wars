@@ -1,7 +1,7 @@
 import { db } from '@/lib/db/database';
 import { env } from '@/lib/env/server';
 import { betterAuth } from 'better-auth';
-import * as schema from '@/lib/db/schema';
+import * as schema from '@/lib/db/authSchema';
 import { nextCookies } from 'better-auth/next-js';
 import { customSession, username } from 'better-auth/plugins';
 import { drizzleAdapter } from '@better-auth/drizzle-adapter/relations-v2';
