@@ -41,7 +41,8 @@
 		".next/types/**/*.ts",
 		".next/dev/types/**/*.ts",
 		"**/*.mts",
-		"src/seed.ts"
+		"src/seed.ts",
+		".next/dev/dev/types/**/*.ts"
 	],
 	"exclude": ["node_modules"]
 }

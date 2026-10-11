@@ -22,7 +22,7 @@ const rye = Rye({
 
 export const metadata: Metadata = {
 	title: 'Nuzlocke Wars',
-	description: 'Nuzlocke wars tournement',
+	description: 'Nuzlocke Wars',
 };
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
