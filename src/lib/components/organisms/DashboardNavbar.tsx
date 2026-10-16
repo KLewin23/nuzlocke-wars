@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth';
+import { auth } from '@/auth';
 import Navbar from '@molecules/navbar';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -9,7 +9,6 @@ const DashboardNavbar = async () => {
 		headers: hdrs,
 	});
 	const role = session?.user.role;
-	console.log(role);
 	const signOutAndRedirect = async () => {
 		'use server';
 		await auth.api.signOut({
@@ -37,4 +36,4 @@ const DashboardNavbar = async () => {
 	);
 };
 
-export { DashboardNavbar };
+export default DashboardNavbar;

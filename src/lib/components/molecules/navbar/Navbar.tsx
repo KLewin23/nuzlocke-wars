@@ -1,8 +1,8 @@
 'use client';
 
 import Title from '@images/Title';
-import cn, { VariantProps, cva } from 'cnfast';
-import useWindowSize from '@hooks/useWindowSize';
+import useWindowSize from '@/hooks/useWindowSize';
+import cn, { type VariantProps, cva } from 'cnfast';
 
 import MobileDropdown from './MobileDropdown';
 
@@ -43,7 +43,7 @@ const Navbar = ({
 							:	<button
 									key={`navlink-${title}`}
 									className="cursor-pointer"
-									onClick={async () => await action()}
+									onClick={() => void action()}
 								>
 									<p className="font-railroad-gothic text-xl font-bold">{title}</p>
 								</button>,

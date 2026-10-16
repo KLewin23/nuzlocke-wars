@@ -11,4 +11,4 @@ const BasicNavbar = () => (
 	/>
 );
 
-export { BasicNavbar };
+export default BasicNavbar;
