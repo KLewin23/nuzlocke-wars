@@ -6,13 +6,19 @@ const env = createEnv({
 		DATABASE_USERNAME: z.string(),
 		DATABASE_PASSWORD: z.string(),
 		DATABASE_NAME: z.string(),
-		DATABASE_PORT:  z.string().transform(s => parseInt(s, 10)),
+		DATABASE_PORT: z.string().transform(s => parseInt(s, 10)),
 		DATABASE_HOST: z.string(),
-		DATABASE_CA_CERTIFICATE: z.string().transform(s => Buffer.from(s, 'base64').toString()).optional(),
+		DATABASE_CA_CERTIFICATE: z
+			.string()
+			.transform(s => Buffer.from(s, 'base64').toString())
+			.optional(),
 		BETTER_AUTH_SECRET: z.string(),
 		BASE_URL: z.string(),
-		NODE_ENV: z.union([z.literal('testing'), z.literal('development'), z.literal('production')]),
-		VERCEL_ENV: z.union([z.literal('development'), z.literal('preview'), z.literal('production')]).optional(),
+		VERCEL_ENV: z
+			.union([z.literal('local'), z.literal('development'), z.literal('preview'), z.literal('production')])
+			.optional(),
+		ABLY_PUBLISH_API_KEY: z.string(),
+		ABLY_SUBSCRIBE_API_KEY: z.string(),
 	},
 	runtimeEnv: process.env,
 });
