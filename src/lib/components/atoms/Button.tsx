@@ -15,6 +15,7 @@ const buttonVariants = cva(
 				default: 'bg-none text-white',
 				gold: 'gradient-gold text-black',
 				blackOnWhite: 'bg-white text-black',
+				destructive: 'bg-destructive text-white',
 			},
 		},
 		defaultVariants: {
