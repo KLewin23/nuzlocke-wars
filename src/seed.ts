@@ -1,6 +1,6 @@
-import { auth } from '@auth';
-import { db, user } from '@db';
-import { eq } from 'drizzle-orm';
+import { Role } from '@/db';
+import { auth } from '@/auth';
+import logger from '@/logger';
 
 const seed = async () => {
 	await auth.api.signUpEmail({
@@ -9,6 +9,7 @@ const seed = async () => {
 			name: 'Basic',
 			username: 'Basic',
 			password: 'Basic123.',
+			role: Role.basic,
 		},
 	});
 	await auth.api.signUpEmail({
@@ -17,6 +18,7 @@ const seed = async () => {
 			name: 'Admin',
 			username: 'Admin',
 			password: 'Admin123.',
+			role: Role.admin,
 		},
 	});
 	await auth.api.signUpEmail({
@@ -25,13 +27,11 @@ const seed = async () => {
 			name: 'Super',
 			username: 'Super',
 			password: 'Super123.',
+			role: Role.super,
 		},
 	});
-
-	await db.update(user).set({role: 'admin'}).where(eq(user.name, 'Admin'))
-	await db.update(user).set({role: 'super'}).where(eq(user.name, 'Super'))
 };
 
 seed()
-	.then(() => console.log('Successfully seeded db'))
-	.catch(e => console.log(`Failed to seed db ${e}`));
+	.then(() => logger.info('Successfully seeded db'))
+	.catch(e => logger.error(`Failed to seed db ${e}`));

@@ -1,4 +1,4 @@
-import { clientEnv } from '@/lib/env/client';
+import { clientEnv } from '@/env/client';
 import { createAuthClient } from 'better-auth/client';
 import { usernameClient } from 'better-auth/client/plugins';
 
