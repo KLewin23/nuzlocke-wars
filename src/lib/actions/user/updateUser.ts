@@ -1,10 +1,9 @@
 'use server';
 
 import { Role, db, user } from '@/db';
-import { leftOf } from '@/util/either';
 import { and, eq, or } from 'drizzle-orm';
-import adminSession from '@/func/adminSession';
 import buildCRUDError from '@/error/crudError';
+import adminSession from '@/func/adminSession';
 import { type QueryState, successOr } from '@/util/query';
 
 interface UpdateUserPayload {
@@ -14,8 +13,6 @@ interface UpdateUserPayload {
 
 const updateUser = async (targetUserId: string, { role, imageUrl }: UpdateUserPayload): Promise<QueryState> =>
 	adminSession(async session => {
-		if (session.user.role === Role.basic) return leftOf({ type: 'Forbidden' as const });
-
 		const queryBase = db.update(user).set({
 			...(role ? { role } : {}),
 			image: imageUrl,
