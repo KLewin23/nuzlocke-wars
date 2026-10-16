@@ -3,7 +3,13 @@ import { boolean, index, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg
 
 // Generated with `pnpm dlx auth@latest generate`
 
-const roleEnum = pgEnum('role', ['super', 'admin', 'basic']);
+enum Role {
+	super = 'super',
+	admin = 'admin',
+	basic = 'basic'
+}
+
+const roleEnum = pgEnum('role', Role);
 
 const user = pgTable('user', {
 	id: text('id').primaryKey(),
@@ -16,9 +22,9 @@ const user = pgTable('user', {
 		.defaultNow()
 		.$onUpdate(() => /* @__PURE__ */ new Date())
 		.notNull(),
-	username: text('username').unique(),
+	username: text('username').unique().notNull(),
 	displayUsername: text('display_username'),
-	role: roleEnum(),
+	role: roleEnum().notNull().default(Role.basic),
 });
 
 const session = pgTable(
@@ -105,4 +111,4 @@ const authRelations = defineRelationsPart({ user, session, account, verification
 	},
 }));
 
-export { user, account, session, roleEnum, authRelations, verification };
+export { user, account, session, roleEnum, authRelations, verification, Role };

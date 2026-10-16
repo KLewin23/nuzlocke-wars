@@ -1,6 +1,6 @@
 <div align="center">
   <!-- <a href="https://nuzlocke-wars.com"> -->
-    <img alt="Nuzlocke Wars!" src="docs/images/icon.png" height="200" />
+    <img alt="Nuzlocke Wars!" src="docs/images/title.svg" height="200" />
   <!-- </a> -->
     <h1>Nuzlocke Wars!<h1>
 </div>
@@ -26,7 +26,6 @@
 - NEXT_PUBLIC_BASE_URL
 - BASE_URL
 - VERCEL_ENV=production
-- NODE_ENV=production
 - DATABASE_CA_CERTIFICATE
 
 
