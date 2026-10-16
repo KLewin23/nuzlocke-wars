@@ -1,4 +1,4 @@
-import { env } from '@/lib/env/server';
+import { env } from '@/env/server';
 import { drizzle } from 'drizzle-orm/node-postgres';
 
 import { authRelations } from './authSchema';

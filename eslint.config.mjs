@@ -5,8 +5,8 @@ import { globalIgnores } from 'eslint/config';
 import stylistic from '@stylistic/eslint-plugin';
 import functional from 'eslint-plugin-functional';
 import nextTs from 'eslint-config-next/typescript';
-import noBarrelFiles from 'eslint-plugin-no-barrel-files';
 import nextVitals from 'eslint-config-next/core-web-vitals';
+import requireUseServer from 'eslint-plugin-require-use-server';
 import preferArrowFunctions from 'eslint-plugin-prefer-arrow-functions';
 
 const config = [
@@ -18,7 +18,6 @@ const config = [
 	functional.configs.noMutations,
 	...tseslint.configs.stylisticTypeChecked,
 	functional.configs.stylistic,
-	...noBarrelFiles.configs['flat/recommended'],
 	...nextVitals,
 	...nextTs,
 	globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts', 'cypress/mocks.js', 'eslint.config.mjs']),
@@ -36,6 +35,7 @@ const config = [
 			react,
 			'@stylistic': stylistic,
 			'prefer-arrow-functions': preferArrowFunctions,
+			'require-use-server': requireUseServer,
 		},
 		settings: {
 			react: { version: '19.2.8' },
@@ -67,21 +67,7 @@ const config = [
 			'functional/no-mixed-types': 'off',
 			'@typescript-eslint/no-unsafe-enum-comparison': 'off',
 			'no-console': 'error',
-		},
-	},
-	{
-		files: ['src/lib/components/*/.{ts,tsx}'],
-		rules: {
-			'no-restricted-imports': [
-				'error',
-				{
-					paths: ['@atoms', '@molecules', '@organisms'].map(name => ({
-						name,
-						message:
-							'Use a direct import inside the component library to avoid barrel cycles and client/server leaks.',
-					})),
-				},
-			],
+			'require-use-server/require-use-server': ['error', { pathPattern: 'src/lib/actions/.*\\.ts$' }],
 		},
 	},
 ];

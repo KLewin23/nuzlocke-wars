@@ -5,14 +5,10 @@ import Input from '@atoms/Input';
 import Title from '@images/Title';
 import Button from '@atoms/Button';
 import { useRouter } from 'next/navigation';
-import { MouseEvent, useState } from 'react';
+import { type MouseEvent, useState } from 'react';
 import { authClient } from '@lib/auth-client';
 
-interface Props {
-	searchParams: Promise<Record<string, string> | Array<string> | undefined>;
-}
-
-const page = () => {
+const Page = () => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const router = useRouter();
@@ -46,7 +42,7 @@ const page = () => {
 					value={password}
 					onChange={e => setPassword(e.currentTarget.value)}
 				/>
-				<Button palette="gold" onClick={e => handleLogin(e)}>
+				<Button palette="gold" onClick={e => void handleLogin(e)}>
 					Login
 				</Button>
 			</form>
@@ -54,4 +50,4 @@ const page = () => {
 	);
 };
 
-export default page;
+export default Page;

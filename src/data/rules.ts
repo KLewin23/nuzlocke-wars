@@ -2,7 +2,7 @@ import Abacus from '@public/abacus.webp';
 import MercenaryDraft from '@public/MercenaryDraft.png';
 import Challenges from '@public/Challenges.png';
 import BonutyPoster from '@public/BountyPoster.png';
-import { RuleSegmentColour, type Ruleset } from '@type/rules';
+import { RuleSegmentColour, type Ruleset } from '@/type/rules';
 
 const ruleset: Ruleset = [
 	{

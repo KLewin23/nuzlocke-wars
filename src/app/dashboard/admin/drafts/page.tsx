@@ -1,29 +1,11 @@
-import Button from '@atoms/Button';
-import { count, eq } from 'drizzle-orm';
-import { eitherOr } from '@/lib/type/either';
-import { db, draft, usersToDrafts } from '@db';
+import Button from '@/atoms/Button';
 import { EllipsisVertical } from 'lucide-react';
-import { ErrorFallback } from '@atoms/ErrorFallback';
-import { DashboardNavbar } from '@organisms/DashboardNavbar';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@atoms/table';
+import getDrafts from '@/actions/draft/getDrafts';
+import DashboardNavbar from '@/organisms/DashboardNavbar';
+import { Table, TableBody, TableBodyDataHandler, TableCell, TableHead, TableHeader, TableRow } from '@/atoms/table';
 
 const page = async () => {
-	const drafts = await eitherOr(
-		db
-			.select({
-				id: draft.id,
-				name: draft.name,
-				status: draft.status,
-				playerCount: count(usersToDrafts.userId),
-			})
-			.from(draft)
-			.leftJoin(usersToDrafts, eq(draft.id, usersToDrafts.draftId))
-			.groupBy(draft.id),
-		e => {
-			console.error(e);
-			return 'Failed to fetch list of drafts.';
-		},
-	);
+	const drafts = await getDrafts();
 
 	return (
 		<div className="col w-full gap-16">
@@ -40,8 +22,8 @@ const page = async () => {
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{drafts._type === 'right' ?
-							drafts.value.map(draft => (
+						<TableBodyDataHandler noDataMessage="No drafts to display" dataResponse={drafts}>
+							{draft => (
 								<TableRow key={`draft-row-${draft.id}`}>
 									<TableCell>{draft.name}</TableCell>
 									<TableCell>{draft.playerCount}</TableCell>
@@ -52,13 +34,8 @@ const page = async () => {
 										</Button>
 									</TableCell>
 								</TableRow>
-							))
-						:	<TableRow>
-								<TableCell colSpan={4}>
-									<ErrorFallback message={drafts.value} className="min-h-80 leading-70" />
-								</TableCell>
-							</TableRow>
-						}
+							)}
+						</TableBodyDataHandler>
 					</TableBody>
 				</Table>
 			</div>

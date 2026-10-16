@@ -1,7 +1,7 @@
 'use client';
 
 import { Fragment } from 'react';
-import useWindowSize from '@hooks/useWindowSize';
+import useWindowSize from '@/hooks/useWindowSize';
 
 interface Props {
 	keyPrefix: string;

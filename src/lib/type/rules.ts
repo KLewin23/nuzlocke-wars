@@ -1,4 +1,4 @@
-import { StaticImageData } from 'next/image';
+import type { StaticImageData } from 'next/image';
 
 enum RuleSegmentColour {
 	Red = 'Red',
