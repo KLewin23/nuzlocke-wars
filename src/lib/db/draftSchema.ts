@@ -1,18 +1,39 @@
 import { defineRelationsPart } from 'drizzle-orm';
-import { AnyPgColumn, integer, pgEnum, pgTable, primaryKey, serial, text, timestamp } from 'drizzle-orm/pg-core';
+import { type AnyPgColumn, boolean, integer, pgEnum, pgTable, primaryKey, serial, text, timestamp } from 'drizzle-orm/pg-core';
 
 import { user } from './authSchema';
 
-const draftStatus = pgEnum('draft_status', ['closed', 'open', 'active', 'complete']);
-const teamRole = pgEnum('team_role', ['captain', 'player']);
-const roundStatus = pgEnum('round_status', ['pre_bidding', 'bidding', 'post_bidding']);
+enum DraftStatus {
+	closed = 'closed',
+	open = 'open',
+	active = 'active',
+	complete = 'complete',
+}
+
+const draftStatus = pgEnum('draft_status', DraftStatus);
+
+enum TeamRole {
+	captain = 'captain',
+	player = 'player',
+}
+
+const teamRole = pgEnum('team_role', TeamRole);
+
+enum RoundStatus {
+	pre_bidding = 'pre_bidding',
+	bidding = 'bidding',
+	post_bidding = 'post_bidding',
+}
+
+const roundStatus = pgEnum('round_status', RoundStatus);
 
 const draft = pgTable('draft', {
 	id: serial('id').primaryKey(),
 	name: text('name').notNull(),
-	status: draftStatus().notNull().default('closed'),
+	status: draftStatus('status').notNull().default(DraftStatus.closed),
 	roundLength: integer('round_length').notNull().default(60), //seconds
 	initialPlayerCoins: integer('initial_player_coins').default(60),
+	maxPlayersPerTeam: integer('max_players_per_team').notNull().default(8),
 	currentRoundId: integer('current_round_id').references((): AnyPgColumn => round.id),
 });
 
@@ -21,8 +42,11 @@ const round = pgTable('round', {
 	draftId: integer('draft_id')
 		.notNull()
 		.references((): AnyPgColumn => draft.id, { onDelete: 'cascade' }),
-	roundStatus: roundStatus().notNull().default('pre_bidding'),
-	bidding_start_time: timestamp(), // MUST BE UTC
+	targetUserId: text('target_user_id')
+		.notNull()
+		.references(() => user.id),
+	roundStatus: roundStatus('round_status').notNull().default(RoundStatus.pre_bidding),
+	biddingStartTime: timestamp('bidding_start_time', { mode: 'date' }), // MUST BE UTC
 });
 
 const bid = pgTable('bid', {
@@ -34,6 +58,7 @@ const bid = pgTable('bid', {
 		.notNull()
 		.references(() => round.id, { onDelete: 'cascade' }),
 	amount: integer('amount').notNull(),
+	isWinner: boolean()
 });
 
 const team = pgTable('team', {
@@ -52,7 +77,7 @@ const usersToDrafts = pgTable(
 			.notNull()
 			.references(() => draft.id),
 		teamId: integer('team_id').references(() => team.id),
-		teamRole: teamRole().notNull(),
+		teamRole: teamRole('team_role').notNull(),
 	},
 	t => [primaryKey({ columns: [t.draftId, t.userId] })],
 );
@@ -93,6 +118,11 @@ const draftRelations = defineRelationsPart({ user, draft, team, round, bid, user
 			to: r.draft.id,
 		}),
 		bids: r.many.bid(),
+		target: r.one.user({
+			alias: 'target_user_relation',
+			from: r.round.targetUserId,
+			to: r.user.id,
+		}),
 	},
 	bid: {
 		round: r.one.round({
@@ -110,10 +140,27 @@ const draftRelations = defineRelationsPart({ user, draft, team, round, bid, user
 			to: r.draft.id.through(r.usersToDrafts.draftId),
 		}),
 		bids: r.many.bid(),
+		rounds: r.many.round({
+			alias: 'target_user_relation',
+		}),
 	},
 	team: {
 		drafts: r.many.draft(),
 	},
 }));
 
-export { bid, draft, draftRelations, draftStatus, round, roundStatus, team, teamRole, usersToDrafts };
+export {
+	bid,
+	draft,
+	draftRelations,
+	draftStatus,
+	round,
+	roundStatus,
+	team,
+	teamRole,
+	teamsToDrafts,
+	usersToDrafts,
+	DraftStatus,
+	RoundStatus,
+	TeamRole,
+};
