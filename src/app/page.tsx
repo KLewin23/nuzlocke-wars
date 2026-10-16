@@ -1,9 +1,9 @@
 import Image from 'next/image';
 import { ruleset } from '@data/rules';
 import { Fragment } from 'react/jsx-runtime';
+import BasicNavbar from '@organisms/BasicNavbar';
 import { Header } from '@atoms/typography/Header';
 import { RuleSegment } from '@molecules/RuleSegment';
-import { BasicNavbar } from '@organisms/BasicNavbar';
 import { StripedSeperator } from '@atoms/StripedSeperator';
 import CandymanMainpage from '@public/CandymanMainpage.png';
 
@@ -21,6 +21,7 @@ const Home = () => {
 							CARNIVAL
 						</Header>
 						<Image
+							loading="eager"
 							src={CandymanMainpage}
 							alt="The candy man throwing a coin into a chest full of candy"
 							className="mt-0 -ml-20 max-w-80 self-auto md:max-w-lg xl:-mt-24 xl:self-start"
