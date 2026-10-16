@@ -1,9 +1,9 @@
-import { db } from '@/lib/db/database';
-import { env } from '@/lib/env/server';
+import { db } from '@/db/database';
+import { env } from '@/env/server';
 import { betterAuth } from 'better-auth';
-import * as schema from '@/lib/db/authSchema';
+import * as schema from '@/db/authSchema';
 import { nextCookies } from 'better-auth/next-js';
-import { customSession, username } from 'better-auth/plugins';
+import { username } from 'better-auth/plugins';
 import { drizzleAdapter } from '@better-auth/drizzle-adapter/relations-v2';
 
 const auth = betterAuth({
@@ -18,7 +18,7 @@ const auth = betterAuth({
 				type: ['super', 'admin', 'basic'],
 				defaultValue: 'basic',
 				required: true,
-				input: false,
+				input: true,
 			},
 		},
 	},
