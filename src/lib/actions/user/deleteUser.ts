@@ -1,15 +1,13 @@
 'use server';
 
 import { Role, db, user } from '@/db';
+import { eitherOr } from '@/util/either';
 import { and, eq, or } from 'drizzle-orm';
-import adminSession from '@/func/adminSession';
-import { eitherOr, leftOf } from '@/util/either';
 import buildCRUDError from '@/error/crudError';
+import adminSession from '@/func/adminSession';
 
 const deleteUser = async (userId: string) =>
 	adminSession(async session => {
-		if (session?.user.role === Role.basic) return leftOf('User forbidden from deleting user.');
-
 		const query =
 			session.user.role === Role.admin ?
 				db

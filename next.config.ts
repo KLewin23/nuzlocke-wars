@@ -1,5 +1,5 @@
-import "@env/client";
-import "@env/server";
+import "@/env/client";
+import "@/env/server";
 
 import type { NextConfig } from "next";
 

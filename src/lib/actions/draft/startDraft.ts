@@ -1,16 +1,18 @@
 'use server';
 
 import { and, eq } from 'drizzle-orm';
+import type { PublishResult } from 'ably';
 import { publishEvent } from '@/util/ably';
 import { DraftStatus, db, draft } from '@/db';
 import buildCRUDError from '@/error/crudError';
 import adminSession from '@/func/adminSession';
 import { eitherOr, rightOf } from '@/util/either';
+import { rejected, successOr } from '@/util/query';
 import buildAblyPublishError from '@/error/ablyPublishError';
-import { type QueryState, rejected, successOr } from '@/util/query';
+import type { QueryState, Rejected, Success } from '@/util/query';
 
 const startDraft = async (draftId: number): Promise<QueryState> =>
-	adminSession(async () => {
+	adminSession<Success<PublishResult> | Rejected>(async () => {
 		const startDraftResponse = await eitherOr(
 			db
 				.update(draft)

@@ -1,7 +1,7 @@
 'use server';
 
 import { Role } from '@/db';
-import { auth } from '@auth';
+import { auth } from '@/auth';
 import generator from 'generate-password';
 import adminSession from '@/func/adminSession';
 import { leftOf } from '@/util/either';
@@ -17,7 +17,7 @@ interface CreateUserPayload {
 
 const createUser = async ({ username, role, password, imageUrl }: CreateUserPayload): Promise<QueryState> =>
 	adminSession(async session => {
-		if (role === Role.super && session.user.role !== Role.super) return leftOf({ type: 'Forbidden' });
+		if (role === Role.super && session.user.role !== Role.super) return leftOf({ type: 'Forbidden' as const });
 
 		const passwd =
 			password ??

@@ -1,7 +1,7 @@
 import { cn } from 'cnfast';
 import Image from 'next/image';
 import { match } from 'ts-pattern';
-import { type RuleSegment, RuleSegmentColour } from '@/lib/type/rules';
+import { type RuleSegment, RuleSegmentColour } from '@/type/rules';
 
 interface Props {
 	ruleSegmentData: RuleSegment;
