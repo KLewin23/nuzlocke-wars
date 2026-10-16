@@ -1,6 +1,7 @@
 'use server';
 
 import logger from '@/logger';
+import type { QueryResult } from 'pg';
 import { and, eq, ne } from 'drizzle-orm';
 import buildCRUDError from '@/error/crudError';
 import adminSession from '@/func/adminSession';
