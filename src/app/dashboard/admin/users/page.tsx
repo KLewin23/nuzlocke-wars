@@ -1,8 +1,9 @@
-import Button from '@atoms/Button';
+import Link from 'next/link';
+import Button from '@/atoms/Button';
 import getUsers from '@/actions/user/getUsers';
-import DashboardNavbar from '@organisms/DashboardNavbar';
-import UserActionsContextMenu from '@organisms/userActionsContextMenu/UserActionsContextMenu';
-import { Table, TableBody, TableBodyDataHandler, TableCell, TableHead, TableHeader, TableRow } from '@atoms/table';
+import DashboardNavbar from '@/organisms/DashboardNavbar';
+import UserActionsContextMenu from '@/organisms/userActionsContextMenu/UserActionsContextMenu';
+import { Table, TableBody, TableBodyDataHandler, TableCell, TableHead, TableHeader, TableRow } from '@/atoms/table';
 
 const page = async () => {
 	const users = await getUsers();
@@ -11,7 +12,9 @@ const page = async () => {
 		<div className="col w-full gap-16">
 			<DashboardNavbar />
 			<div className="col w-full max-w-250 grow items-end gap-4 self-center">
-				<Button palette="blackOnWhite">Create User</Button>
+				<Link href="/dashboard/admin/users/create">
+					<Button palette="blackOnWhite">Create User</Button>
+				</Link>
 				<Table>
 					<TableHeader>
 						<TableRow>
