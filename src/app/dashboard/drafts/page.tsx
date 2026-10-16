@@ -1,4 +1,4 @@
-import DashboardNavbar from '@organisms/DashboardNavbar';
+import DashboardNavbar from '@/organisms/DashboardNavbar';
 
 const page = () => {
 	return (

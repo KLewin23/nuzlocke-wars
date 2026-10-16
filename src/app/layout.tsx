@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { Analytics } from "@vercel/analytics/next"
 import localFont from 'next/font/local';
-import { Toaster } from '@atoms/Toaster';
-import ThemeWrapper from '@atoms/ThemeWrapper';
+import { Toaster } from '@/atoms/Toaster';
+import ThemeWrapper from '@/atoms/ThemeWrapper';
 import { Quattrocento_Sans, Rye } from 'next/font/google';
 
 import './globals.css';

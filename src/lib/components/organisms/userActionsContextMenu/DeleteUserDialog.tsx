@@ -1,6 +1,6 @@
-import Input from '@atoms/Input';
-import Button from '@atoms/Button';
-import { DialogContent, DialogHeader, DialogTitle } from '@atoms/dialog';
+import Input from '@/atoms/Input';
+import Button from '@/atoms/Button';
+import { DialogContent, DialogHeader, DialogTitle } from '@/atoms/dialog';
 
 interface Props {
 	targetUsername: string;

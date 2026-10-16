@@ -1,12 +1,12 @@
 'use client';
 import { useState } from 'react';
-import Button from '@atoms/Button';
 import { match } from 'ts-pattern';
-import { Role } from '@lib/db/authSchema';
-import { Dialog } from '@atoms/dialog/Dialog';
-import { DialogTrigger } from '@atoms/dialog/DialogTrigger';
+import Button from '@/atoms/Button';
+import type { Role } from '@/db/authSchema';
+import { Dialog } from '@/atoms/dialog/Dialog';
+import { DialogTrigger } from '@/atoms/dialog/DialogTrigger';
 import { EllipsisVertical, Pencil, RectangleEllipsis, Trash } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@atoms/dropdownMenu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/atoms/dropdownMenu';
 
 import DeleteUserDialog from './DeleteUserDialog';
 

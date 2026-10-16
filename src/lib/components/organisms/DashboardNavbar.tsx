@@ -1,5 +1,5 @@
 import { auth } from '@/auth';
-import Navbar from '@molecules/navbar';
+import Navbar from '@/molecules/navbar';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 

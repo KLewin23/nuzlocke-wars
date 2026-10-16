@@ -1,8 +1,8 @@
-import Button from '@atoms/Button';
+import Button from '@/atoms/Button';
 import { EllipsisVertical } from 'lucide-react';
 import getDrafts from '@/actions/draft/getDrafts';
-import DashboardNavbar from '@organisms/DashboardNavbar';
-import { Table, TableBody, TableBodyDataHandler, TableCell, TableHead, TableHeader, TableRow } from '@atoms/table';
+import DashboardNavbar from '@/organisms/DashboardNavbar';
+import { Table, TableBody, TableBodyDataHandler, TableCell, TableHead, TableHeader, TableRow } from '@/atoms/table';
 
 const page = async () => {
 	const drafts = await getDrafts();

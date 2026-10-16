@@ -23,9 +23,9 @@
 			"@lib/*": ["./src/lib/*"],
 			"@public/*": ["./public/*"],
 			"@images/*": ["./src/lib/components/images/*"],
-			"@organisms/*": ["./src/lib/components/organisms/*"],
-			"@molecules/*": ["./src/lib/components/molecules/*"],
-			"@atoms/*": ["./src/lib/components/atoms/*"],
+			"@/organisms/*": ["./src/lib/components/organisms/*"],
+			"@/molecules/*": ["./src/lib/components/molecules/*"],
+			"@/atoms/*": ["./src/lib/components/atoms/*"],
 			"@data/*": ["./src/data/*"],
 			"@/db": ["./src/lib/db/index"],
 		}
