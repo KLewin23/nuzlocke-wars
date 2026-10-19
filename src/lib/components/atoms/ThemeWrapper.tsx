@@ -1,8 +1,8 @@
 'use client';
 
-import { ReactNode } from 'react';
-import { ThemeProvider } from 'next-themes';
+import type { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
+import { ThemeProvider } from '@teispace/next-themes';
 
 interface Props {
 	children: ReactNode;

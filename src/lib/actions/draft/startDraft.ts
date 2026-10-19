@@ -12,27 +12,32 @@ import buildAblyPublishError from '@/error/ablyPublishError';
 import type { QueryState, Rejected, Success } from '@/util/query';
 
 const startDraft = async (draftId: number): Promise<QueryState> =>
-	adminSession<Success<PublishResult> | Rejected>(async () => {
-		const startDraftResponse = await eitherOr(
-			db
-				.update(draft)
-				.set({
-					status: DraftStatus.active,
-				})
-				.where(and(eq(draft.id, draftId), eq(draft.status, DraftStatus.open)))
-				.returning({ id: draft.id }),
-			err => buildCRUDError('update', 'draft', err),
-		);
-
-		if (startDraftResponse._type === 'left') return startDraftResponse;
-		if (startDraftResponse.value.length === 0)
-			return rightOf(
-				rejected(
-					`Draft was not found when try to modify status, it may have had the wrong DraftStatus expected: open`,
-				),
+	adminSession<Success<PublishResult> | Rejected>(
+		async () => {
+			const startDraftResponse = await eitherOr(
+				db
+					.update(draft)
+					.set({
+						status: DraftStatus.active,
+					})
+					.where(and(eq(draft.id, draftId), eq(draft.status, DraftStatus.open)))
+					.returning({ id: draft.id }),
+				err => buildCRUDError('update', 'draft', err),
 			);
 
-		return successOr(publishEvent(draftId, 'DraftStarted'), err => buildAblyPublishError('DraftStarted', err));
-	});
+			if (startDraftResponse._type === 'left') return startDraftResponse;
+			if (startDraftResponse.value.length === 0)
+				return rightOf(
+					rejected(
+						`Draft was not found when try to modify status, it may have had the wrong DraftStatus expected: open`,
+					),
+				);
+
+			return successOr(publishEvent(draftId, 'DraftStarted'), err => buildAblyPublishError('DraftStarted', err));
+		},
+		{
+			draft: ['update'],
+		},
+	);
 
 export default startDraft;

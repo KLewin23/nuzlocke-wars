@@ -20,14 +20,15 @@
 		],
 		"paths": {
 			"@/*": ["./src/lib/*"],
-			"@lib/*": ["./src/lib/*"],
-			"@public/*": ["./public/*"],
-			"@images/*": ["./src/lib/components/images/*"],
+			"@/lib/*": ["./src/lib/*"],
+			"@/public/*": ["./public/*"],
+			"@/images/*": ["./src/lib/components/images/*"],
 			"@/organisms/*": ["./src/lib/components/organisms/*"],
 			"@/molecules/*": ["./src/lib/components/molecules/*"],
 			"@/atoms/*": ["./src/lib/components/atoms/*"],
-			"@data/*": ["./src/data/*"],
+			"@/data/*": ["./src/data/*"],
 			"@/db": ["./src/lib/db/index"],
+			"@/db/*": ["./src/lib/db/*"],
 		}
 	},
 	"include": [
@@ -38,7 +39,7 @@
 		".next/dev/types/**/*.ts",
 		"**/*.mts",
 		"src/seed.ts",
-		".next/dev/dev/types/**/*.ts"
+		".next/dev/dev/types/**/*.ts",
 	],
 	"exclude": ["node_modules"]
 }

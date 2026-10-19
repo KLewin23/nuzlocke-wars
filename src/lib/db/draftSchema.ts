@@ -63,7 +63,7 @@ const bid = pgTable('bid', {
 
 const team = pgTable('team', {
 	id: serial('id').primaryKey(),
-	displayName: text('display_name').notNull(),
+	displayName: text('display_name').notNull().unique(),
 	image: text('image'),
 });
 

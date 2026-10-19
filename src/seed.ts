@@ -1,33 +1,28 @@
 import { Role } from '@/db';
-import { auth } from '@/auth';
+import { auth } from '@/auth/auth';
 import logger from '@/logger';
 
 const seed = async () => {
-	await auth.api.signUpEmail({
+	await auth.api.createUser({
 		body: {
 			email: 'basic@basic.com',
 			name: 'Basic',
-			username: 'Basic',
 			password: 'Basic123.',
-			role: Role.basic,
+			role: Role.user,
+			data: {
+				username: 'Basic',
+			},
 		},
 	});
-	await auth.api.signUpEmail({
+	await auth.api.createUser({
 		body: {
 			email: 'admin@admin.com',
 			name: 'Admin',
-			username: 'Admin',
 			password: 'Admin123.',
-			role: Role.admin,
-		},
-	});
-	await auth.api.signUpEmail({
-		body: {
-			email: 'super@super.com',
-			name: 'Super',
-			username: 'Super',
-			password: 'Super123.',
-			role: Role.super,
+			role: 'admin',
+			data: {
+				username: 'Admin',
+			},
 		},
 	});
 };

@@ -14,6 +14,8 @@ body {
 	--color-popover-hover: var(--popover-hover);
 	--color-popover-foreground: var(--popover-foreground);
 
+	--color-select: var(--select);
+
 	--color-seperator-red: #7e3326;
 	--color-seperator-white: #fff5d6;
 	--color-destructive: oklch(0.577 0.245 27.325);
@@ -36,6 +38,7 @@ body {
 	--popover-hover: #1f1b2c;
 	--popover-foreground: oklch(0.985 0 0);
 	--radius: 4px;
+	--select: #292539;
 }
 
 [data-theme='dashboard'] {
@@ -46,6 +49,7 @@ body {
 	--popover: oklch(0.2684 0.0281 263.92);
 	--popover-hover: oklch(22.52% 0.02159 260.549);
 	--popover-foreground: oklch(0.985 0 0);
+	--select: #12161f;
 }
 
 @layer base {

@@ -4,9 +4,8 @@ import { boolean, index, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg
 // Generated with `pnpm dlx auth@latest generate`
 
 enum Role {
-	super = 'super',
+	user = 'user',
 	admin = 'admin',
-	basic = 'basic'
 }
 
 const roleEnum = pgEnum('role', Role);
@@ -24,7 +23,10 @@ const user = pgTable('user', {
 		.notNull(),
 	username: text('username').unique().notNull(),
 	displayUsername: text('display_username'),
-	role: roleEnum().notNull().default(Role.basic),
+	role: roleEnum().notNull().default(Role.user),
+	banned: boolean('banned').default(false),
+	banReason: text('ban_reason'),
+	banExpires: timestamp('ban_expires'),
 });
 
 const session = pgTable(
@@ -42,6 +44,7 @@ const session = pgTable(
 		userId: text('user_id')
 			.notNull()
 			.references(() => user.id, { onDelete: 'cascade' }),
+		impersonatedBy: text('impersonated_by'),
 	},
 	table => [index('session_userId_idx').on(table.userId)],
 );

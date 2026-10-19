@@ -22,7 +22,7 @@ const getDrafts = async (): Promise<Either<QueryFailureState, Success<DraftRespo
 			.groupBy(draft.id);
 
 		return successOr(
-			session.user.role === 'basic' ?
+			session.user.role === 'user' ?
 				baseQuery.where(
 					inArray(
 						draft.id,

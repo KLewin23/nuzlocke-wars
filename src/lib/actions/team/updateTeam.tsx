@@ -13,19 +13,24 @@ interface UpdateTeamPayload {
 }
 
 const deleteTeam = (teamId: number, { name, imageUrl }: UpdateTeamPayload): Promise<QueryState> =>
-	adminSession(async () => {
-		if (name === undefined && imageUrl === undefined)
-			return leftOf(badRequest(`Properties [name, imageUrl] where both undefined, one must be defined`));
-		return successOr(
-			db
-				.update(team)
-				.set({
-					...(name !== undefined ? { displayName: name } : {}),
-					...(imageUrl !== undefined ? { image: imageUrl } : {}),
-				})
-				.where(eq(team.id, teamId)),
-			err => buildCRUDError('delete', 'team', err),
-		);
-	});
+	adminSession(
+		async () => {
+			if (name === undefined && imageUrl === undefined)
+				return leftOf(badRequest(`Properties [name, imageUrl] where both undefined, one must be defined`));
+			return successOr(
+				db
+					.update(team)
+					.set({
+						...(name !== undefined ? { displayName: name } : {}),
+						...(imageUrl !== undefined ? { image: imageUrl } : {}),
+					})
+					.where(eq(team.id, teamId)),
+				err => buildCRUDError('delete', 'team', err),
+			);
+		},
+		{
+			team: ['update'],
+		},
+	);
 
 export default deleteTeam;

@@ -12,18 +12,23 @@ interface UpdateUserPayload {
 }
 
 const updateUser = async (targetUserId: string, { role, imageUrl }: UpdateUserPayload): Promise<QueryState> =>
-	adminSession(async session => {
-		const queryBase = db.update(user).set({
-			...(role ? { role } : {}),
-			image: imageUrl,
-		});
-		const query =
-			session.user.role === Role.admin ?
-				queryBase.where(
-					and(eq(user.id, targetUserId), or(eq(user.role, Role.basic), eq(user.role, Role.admin))),
-				)
-			:	queryBase.where(and(eq(user.id, targetUserId)));
+	adminSession(
+		async session => {
+			const queryBase = db.update(user).set({
+				...(role ? { role } : {}),
+				image: imageUrl,
+			});
+			const query =
+				session.user.role === Role.admin ?
+					queryBase.where(
+						and(eq(user.id, targetUserId), or(eq(user.role, Role.user), eq(user.role, Role.admin))),
+					)
+				:	queryBase.where(and(eq(user.id, targetUserId)));
 
-		return successOr(query, err => buildCRUDError('update', 'user', err));
-	});
+			return successOr(query, err => buildCRUDError('update', 'user', err));
+		},
+		{
+			user: ['update'],
+		},
+	);
 export default updateUser;

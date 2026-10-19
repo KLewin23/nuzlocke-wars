@@ -11,57 +11,62 @@ import { DraftStatus, RoundStatus, TeamRole, db, draft, round, user, usersToDraf
 
 // Tldr. Create the next round, set the target player, sets the drafts current round to the new one.
 const startNextRound = async (draftId: number): Promise<QueryState> =>
-	adminSession(async () => {
-		const nextTarget = await eitherOr(
-			db
-				.select({ userId: user.id })
-				.from(usersToDrafts)
-				.innerJoin(user, eq(user.id, usersToDrafts.userId))
-				.leftJoin(round, and(eq(user.id, round.targetUserId), eq(round.draftId, draftId)))
-				.where(
-					and(
-						eq(usersToDrafts.teamRole, TeamRole.player),
-						eq(usersToDrafts.draftId, draftId),
-						isNull(round.id),
-						eq(usersToDrafts.teamRole, TeamRole.player),
-					),
-				)
-				.orderBy(sql`RANDOM()`)
-				.limit(1),
-			err => buildCRUDError('read', 'next target player', err),
-		);
-		if (nextTarget._type === 'left') return nextTarget;
-		const target = nextTarget.value.at(0);
-		if (target === undefined) {
-			const endDraftResponse = await eitherOr(
-				db.update(draft).set({ status: DraftStatus.complete }).where(eq(draft.id, draftId)),
-				err => buildActionError('ending draft', 'end draft', err),
+	adminSession(
+		async () => {
+			const nextTarget = await eitherOr(
+				db
+					.select({ userId: user.id })
+					.from(usersToDrafts)
+					.innerJoin(user, eq(user.id, usersToDrafts.userId))
+					.leftJoin(round, and(eq(user.id, round.targetUserId), eq(round.draftId, draftId)))
+					.where(
+						and(
+							eq(usersToDrafts.teamRole, TeamRole.player),
+							eq(usersToDrafts.draftId, draftId),
+							isNull(round.id),
+							eq(usersToDrafts.teamRole, TeamRole.player),
+						),
+					)
+					.orderBy(sql`RANDOM()`)
+					.limit(1),
+				err => buildCRUDError('read', 'next target player', err),
 			);
-			if (endDraftResponse._type === 'left') return endDraftResponse;
-			return successOr(publishEvent(draftId, 'DraftEnded'), err => buildAblyPublishError('DraftEnded', err));
-		}
-
-		const startRoundResponse = await eitherOr(
-			db.transaction(async tx => {
-				const roundResponse = await tx
-					.insert(round)
-					.values({
-						draftId,
-						targetUserId: target.userId,
-						roundStatus: RoundStatus.pre_bidding,
-					})
-					.returning({ id: round.id });
-				const rnd = roundResponse.at(0);
-				if (rnd === undefined) return tx.rollback();
-				tx.update(draft).set({ currentRoundId: rnd.id }).where(eq(draft.id, draftId));
-			}),
-			err => buildActionError('creating role and updating draft', 'create and select next round', err),
-		);
-
-		return startRoundResponse._type === 'left' ?
-				startRoundResponse
-			:	successOr(publishEvent(draftId, 'NextRoundStarted'), err =>
-					buildAblyPublishError('NextRoundStarted', err),
+			if (nextTarget._type === 'left') return nextTarget;
+			const target = nextTarget.value.at(0);
+			if (target === undefined) {
+				const endDraftResponse = await eitherOr(
+					db.update(draft).set({ status: DraftStatus.complete }).where(eq(draft.id, draftId)),
+					err => buildActionError('ending draft', 'end draft', err),
 				);
-	});
+				if (endDraftResponse._type === 'left') return endDraftResponse;
+				return successOr(publishEvent(draftId, 'DraftEnded'), err => buildAblyPublishError('DraftEnded', err));
+			}
+
+			const startRoundResponse = await eitherOr(
+				db.transaction(async tx => {
+					const roundResponse = await tx
+						.insert(round)
+						.values({
+							draftId,
+							targetUserId: target.userId,
+							roundStatus: RoundStatus.pre_bidding,
+						})
+						.returning({ id: round.id });
+					const rnd = roundResponse.at(0);
+					if (rnd === undefined) return tx.rollback();
+					tx.update(draft).set({ currentRoundId: rnd.id }).where(eq(draft.id, draftId));
+				}),
+				err => buildActionError('creating role and updating draft', 'create and select next round', err),
+			);
+
+			return startRoundResponse._type === 'left' ?
+					startRoundResponse
+				:	successOr(publishEvent(draftId, 'NextRoundStarted'), err =>
+						buildAblyPublishError('NextRoundStarted', err),
+					);
+		},
+		{
+			draft: ['update'],
+		},
+	);
 export default startNextRound;

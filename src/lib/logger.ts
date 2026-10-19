@@ -4,7 +4,6 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 export default pino({
 	level: isProduction ? 'info' : 'debug',
-	
 	...(isProduction ?
 		{}
 	:	{

@@ -1,4 +1,5 @@
 import type { Role } from '@/db';
+
 import type { DraftStatus, TeamRole } from '../db/draftSchema';
 
 interface Player {
@@ -17,13 +18,20 @@ interface DraftResponse {
 interface UserResponse {
 	id: string;
 	username: string;
-	role: Role
+	role: Role;
 	createdAt: Date;
-	userSessionsCount: number
+	userSessionsCount: number;
 }
 
-type DraftResponseList = Array<DraftResponse>
-type UserResponseList = Array<UserResponse>
+type DraftResponseList = Array<DraftResponse>;
+type UserResponseList = Array<UserResponse>;
 type PlayerList = Array<Player>;
 
-export type { PlayerList, DraftResponseList, UserResponseList };
+interface CreateUserPayload {
+	username: string;
+	role: Role;
+	password?: string;
+	imageUrl?: string;
+}
+
+export type { PlayerList, DraftResponseList, UserResponseList, CreateUserPayload };

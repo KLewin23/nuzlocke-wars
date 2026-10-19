@@ -1,12 +1,12 @@
 import Image from 'next/image';
-import { ruleset } from '@data/rules';
+import { ruleset } from '@/data/rules';
 import { Fragment } from 'react/jsx-runtime';
 import BasicNavbar from '@/organisms/BasicNavbar';
 import { homepageContent } from '@/data/homepage';
 import  Header from '@/atoms/typography/Header';
 import { RuleSegment } from '@/molecules/RuleSegment';
 import { StripedSeperator } from '@/atoms/StripedSeperator';
-import CandymanMainpage from '@public/CandymanMainpage.png';
+import CandymanMainpage from '@/public/CandymanMainpage.png';
 
 const Home = () => (
 	<div className="gradient-radial-purple">

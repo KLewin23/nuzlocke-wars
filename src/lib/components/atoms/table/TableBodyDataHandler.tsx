@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import type { Either } from '@/util/either';
-import { TableCell, TableRow } from '@atoms/table';
+import { TableCell, TableRow } from '@/atoms/table';
 import type { QueryFailureState, Success } from '@/util/query';
 
 import { ErrorFallback } from '../ErrorFallback';

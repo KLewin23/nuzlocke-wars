@@ -1,6 +1,6 @@
-import { auth } from '@/auth';
-import Navbar from '@/molecules/navbar';
+import { auth } from '@/auth/auth';
 import { headers } from 'next/headers';
+import Navbar from '@/molecules/navbar';
 import { redirect } from 'next/navigation';
 
 const DashboardNavbar = async () => {
@@ -21,7 +21,7 @@ const DashboardNavbar = async () => {
 		<Navbar
 			variant="dashbord"
 			links={
-				role === 'admin' || role === 'super' ?
+				role === 'admin' ?
 					{
 						Drafts: '/dashboard/admin/drafts',
 						// USERS: '/dashboard/admin/users',

@@ -1,11 +1,12 @@
-import { auth } from '@/auth';
-import { Role } from '@/db/authSchema';
+import { auth } from '@/auth/auth';
 import { headers } from 'next/headers';
 import { type Either, leftOf } from '@/util/either';
+import type { Permissions } from '@/auth/permissions';
 import type { QueryFailureState } from '@/util/query';
 
 const adminSession = async <T>(
 	withSession: (session: typeof auth.$Infer.Session) => Promise<Either<QueryFailureState, T>>,
+	permissions?: Permissions,
 ): Promise<Either<QueryFailureState, T>> => {
 	const session = await auth.api.getSession({
 		headers: await headers(),
@@ -14,7 +15,14 @@ const adminSession = async <T>(
 		return leftOf({
 			type: 'Unauthorized' as const,
 		});
-	if (session.user.role === Role.basic) return leftOf({ type: 'Forbidden' as const });
+	const hasPermission = await auth.api.userHasPermission({
+		body: {
+			userId: session?.user.id,
+			role: 'admin',
+			permissions: permissions ?? {},
+		},
+	});
+	if (hasPermission.success === false) return leftOf({ type: 'Forbidden' as const });
 	return withSession(session);
 };
 

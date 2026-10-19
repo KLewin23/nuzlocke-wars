@@ -12,6 +12,7 @@ import DeleteUserDialog from './DeleteUserDialog';
 
 interface Props {
 	user: {
+		id: string;
 		username: string;
 		role: Role;
 	};
@@ -46,7 +47,13 @@ const UserActionsContextMenu = ({ user }: Props) => {
 					</DropdownMenuContent>
 				</DropdownMenu>
 				{match(openDialog)
-					.with('delete_user', () => <DeleteUserDialog targetUsername={user.username} />)
+					.with('delete_user', () => (
+						<DeleteUserDialog
+							userId={user.id}
+							targetUsername={user.username}
+							onClose={() => setOpenDialog('none')}
+						/>
+					))
 					.otherwise(() => null)}
 			</Dialog>
 		</>

@@ -1,6 +1,6 @@
 'use client';
 
-import Title from '@images/Title';
+import Title from '@/images/Title';
 import useWindowSize from '@/hooks/useWindowSize';
 import cn, { type VariantProps, cva } from 'cnfast';
 
