@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { ruleset } from '@data/rules';
 import { Fragment } from 'react/jsx-runtime';
+import { homepageContent } from '@/data/homepage';
 import { Header } from '@atoms/typography/Header';
 import { RuleSegment } from '@molecules/RuleSegment';
 import { BasicNavbar } from '@organisms/BasicNavbar';
@@ -20,11 +21,21 @@ const Home = () => {
 						<Header className="gradient-gold w-fit bg-clip-text font-bold text-transparent">
 							CARNIVAL
 						</Header>
-						<Image
-							src={CandymanMainpage}
-							alt="The candy man throwing a coin into a chest full of candy"
-							className="mt-0 -ml-20 max-w-80 self-auto md:max-w-lg xl:-mt-24 xl:self-start"
-						/>
+						<div className="row mt-0 -ml-20 self-auto xl:-mt-24 xl:self-start justify-between">
+							<Image
+								src={CandymanMainpage}
+								alt="The candy man throwing a coin into a chest full of candy"
+								className="max-w-80 md:max-w-lg"
+							/>
+							<div className="col gap-2 self-center">
+								{homepageContent.description.map(line => (
+									<div key={line} className="row ml-10 items-center gap-4">
+										<div className="gradient-gold min-h-5 min-w-5 rotate-45" />
+										<p className="text-white text-lg">{line}</p>
+									</div>
+								))}
+							</div>
+						</div>
 					</div>
 				</div>
 				{ruleset.map((segment, segIndex) => (
