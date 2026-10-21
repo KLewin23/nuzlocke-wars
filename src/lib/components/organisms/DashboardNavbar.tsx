@@ -24,13 +24,13 @@ const DashboardNavbar = async () => {
 			links={
 				role === 'admin' || role === 'super' ?
 					{
-						DRAFTS: '/dashboard/admin/drafts',
-						USERS: '/dashboard/admin/users',
-						'SIGN OUT': signOutAndRedirect,
+						Drafts: '/dashboard/admin/drafts',
+						// USERS: '/dashboard/admin/users',
+						// 'SIGN OUT': signOutAndRedirect,
 					}
 				:	{
-						DRAFTS: '/dashboard/drafts',
-						'SIGN OUT': signOutAndRedirect,
+						Drafts: '/dashboard/drafts',
+						'Sign Out': signOutAndRedirect,
 					}
 			}
 		/>

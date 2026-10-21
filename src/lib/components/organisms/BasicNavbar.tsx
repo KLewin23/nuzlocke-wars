@@ -3,10 +3,10 @@ import Navbar from '@molecules/navbar';
 const BasicNavbar = () => (
 	<Navbar
 		links={{
-			HOME: '/',
-			WARRIORS: '/',
-			HIGHLIGHTS: '/',
-			FAQ: '/',
+			// HOME: '/',
+			// WARRIORS: '/',
+			// HIGHLIGHTS: '/',
+			// FAQ: '/',
 		}}
 	/>
 );
