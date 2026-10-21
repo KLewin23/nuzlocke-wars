@@ -16,6 +16,8 @@ const rightOf = <V>(value: V): Right<V> => ({ _type: 'right', value });
 const eitherOr = <L, R>(promise: Promise<R>, or: (e: unknown) => L): Promise<Either<L, R>> =>
 	promise.then(rightOf).catch(e => leftOf(or(e)));
 
-export { eitherOr, leftOf, rightOf };
+const unwrap = <L, R>(either: Either<L, R>): L | R => (either._type === 'left' ? either.value : either.value);
+
+export { eitherOr, leftOf, rightOf, unwrap };
 
 export type { Either, Left, Right };

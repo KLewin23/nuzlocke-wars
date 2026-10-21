@@ -1,13 +1,13 @@
-import { successOr } from '@/util/query';
 import { db, usersToDrafts } from '@/db';
+import { successOr } from '@/util/query';
 import buildCRUDError from '@/error/crudError';
 import type { PlayerList } from '@/type/actions';
-import type { QueryFailureState, QueryState, Success } from '@/util/query';
+import type { QueryStateWithNonFailure, Success } from '@/util/query';
 
 const createDraftToPlayersInternal = (
 	draftId: number,
 	players: PlayerList,
-): Promise<QueryState<QueryFailureState, Success>> =>
+): Promise<QueryStateWithNonFailure<Success>> =>
 	successOr(
 		db.insert(usersToDrafts).values(
 			players.map(player => ({

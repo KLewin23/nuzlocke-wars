@@ -26,7 +26,7 @@ const createDraft = async ({
 	teams,
 	players,
 }: CreateDraftPayload): Promise<QueryStateWithNonFailure<Success>> =>
-	adminSession(
+	adminSession<Success>(
 		async () => {
 			if (players.length === 0) return leftOf(badRequest('Received 0 players when creating draft, minimum: 1'));
 			const nonCaptainPlayers = players.filter(p => p.teamRole === TeamRole.player);

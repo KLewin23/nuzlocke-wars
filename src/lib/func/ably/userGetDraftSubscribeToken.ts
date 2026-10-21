@@ -1,4 +1,4 @@
-import * as Ably from 'ably';
+import Ably from 'ably';
 import logger from '@/logger';
 import { env } from '@/env/server';
 import buildCRUDError from '@/error/crudError';
