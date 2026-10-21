@@ -44,7 +44,7 @@ const ruleset: Ruleset = [
 			'IM CHECKING MY PLUGIN... WAIT OK... IT SAID WE LOST',
 			'Using a calc while competing in the challenge of the day is forbidden... For the player',
 			'Their teammates? Well, there\'s only so much that can be done to regulate that kind of business. It\'s up to them how much they want to help their comrade with information...',
-			'For nerds who want some more in-depth rules, click here.'
+			['For nerds who want some more in-depth rules, ', {text: 'click here', url: 'https://docs.google.com/document/d/1O1fg8x6cqrJJp5P1Xzs8Z5R52ChdblpyggY8rjdiWe0/edit?usp=sharing'}]
 		],
 		image: Abacus,
 	},

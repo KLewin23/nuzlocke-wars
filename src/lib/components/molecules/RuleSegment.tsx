@@ -2,6 +2,7 @@ import { cn } from 'cnfast';
 import Image from 'next/image';
 import { match } from 'ts-pattern';
 import { type RuleSegment, RuleSegmentColour } from '@/lib/type/rules';
+import TextLine from '@atoms/TextLine';
 
 interface Props {
 	ruleSegmentData: RuleSegment;
@@ -33,7 +34,7 @@ const RuleSegment = ({ ruleSegmentData, reverseHorizontalFlow }: Props) => {
 					{ruleSegmentData.rules.map((rule, index) => (
 						<div key={`rule-${ruleSegmentData.title}-${index}`} className="row ml-10 items-center gap-4">
 							<div className="gradient-gold min-h-5 min-w-5 rotate-45" />
-							<p className="text-white">{rule}</p>
+							<p className="text-white">{typeof rule === 'string' ? rule : <TextLine line={rule}/>}</p>
 						</div>
 					))}
 				</div>

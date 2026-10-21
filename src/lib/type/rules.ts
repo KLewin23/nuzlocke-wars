@@ -7,14 +7,21 @@ enum RuleSegmentColour {
 	Green = 'Green',
 }
 
+interface Link {
+	text: string;
+	url:string
+}
+
+type Line = Array<string | Link>
+
 interface RuleSegment {
 	title: string;
 	colour: RuleSegmentColour;
-	rules: Array<string>;
+	rules: Array<string | Line>;
 	image: StaticImageData;
 }
 
 type Ruleset = Array<RuleSegment>;
 
-export type { Ruleset, RuleSegment };
+export type { Ruleset, RuleSegment, Line };
 export { RuleSegmentColour };
