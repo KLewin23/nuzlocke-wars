@@ -7,7 +7,7 @@ interface Props {
 	onDelete: () => void;
 }
 
-const TeamsActionsContextMenu = ({ onDelete }: Props) => (
+const DeletionContextMenu = ({ onDelete }: Props) => (
 	<DropdownMenu>
 		<DropdownMenuTrigger asChild>
 			<Button variant="ghost">
@@ -23,4 +23,4 @@ const TeamsActionsContextMenu = ({ onDelete }: Props) => (
 	</DropdownMenu>
 );
 
-export default TeamsActionsContextMenu;
+export default DeletionContextMenu;

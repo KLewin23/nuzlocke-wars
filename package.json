@@ -22,6 +22,7 @@
 		"@teispace/next-themes": "^3.0.2",
 		"ably": "^2.29.0",
 		"better-auth": "^1.7.6",
+		"cmdk": "^1.1.1",
 		"cnfast": "^0.2.0",
 		"dotenv": "^18.0.4",
 		"drizzle-orm": "1.0.0-rc.4",

@@ -58,12 +58,11 @@ const bid = pgTable('bid', {
 		.notNull()
 		.references(() => round.id, { onDelete: 'cascade' }),
 	amount: integer('amount').notNull(),
-	isWinner: boolean()
+	isWinner: boolean('is_winner')
 });
 
 const team = pgTable('team', {
-	id: serial('id').primaryKey(),
-	displayName: text('display_name').notNull().unique(),
+	name: text('name').primaryKey(),
 	image: text('image'),
 });
 
@@ -76,7 +75,7 @@ const usersToDrafts = pgTable(
 		draftId: integer('draft_id')
 			.notNull()
 			.references(() => draft.id),
-		teamId: integer('team_id').references(() => team.id),
+		teamName: text('team_name').references(() => team.name),
 		teamRole: teamRole('team_role').notNull(),
 	},
 	t => [primaryKey({ columns: [t.draftId, t.userId] })],
@@ -85,14 +84,14 @@ const usersToDrafts = pgTable(
 const teamsToDrafts = pgTable(
 	'teams_to_drafts',
 	{
-		teamId: integer('team_id')
+		teamName: text('team_name')
 			.notNull()
-			.references(() => team.id),
+			.references(() => team.name),
 		draftId: integer('draft_id')
 			.notNull()
 			.references(() => draft.id),
 	},
-	t => [primaryKey({ columns: [t.teamId, t.draftId] })],
+	t => [primaryKey({ columns: [t.teamName, t.draftId] })],
 );
 
 const draftRelations = defineRelationsPart({ user, draft, team, round, bid, usersToDrafts, teamsToDrafts }, r => ({
@@ -100,7 +99,7 @@ const draftRelations = defineRelationsPart({ user, draft, team, round, bid, user
 		players: r.many.user(),
 		team: r.many.team({
 			from: r.draft.id.through(r.teamsToDrafts.draftId),
-			to: r.team.id.through(r.teamsToDrafts.teamId),
+			to: r.team.name.through(r.teamsToDrafts.teamName),
 		}),
 		rounds: r.many.round({
 			alias: 'parent_draft_relation',

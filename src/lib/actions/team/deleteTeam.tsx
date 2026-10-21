@@ -6,9 +6,9 @@ import buildCRUDError from '@/error/crudError';
 import adminSession from '@/func/adminSession';
 import { type QueryState, successOr } from '@/util/query';
 
-const deleteTeam = (teamId: number): Promise<QueryState> =>
+const deleteTeam = (teamName: string): Promise<QueryState> =>
 	adminSession(
-		async () => successOr(db.delete(team).where(eq(team.id, teamId)), err => buildCRUDError('delete', 'team', err)),
+		async () => successOr(db.delete(team).where(eq(team.name, teamName)), err => buildCRUDError('delete', 'team', err)),
 		{
 			team: ['delete'],
 		},

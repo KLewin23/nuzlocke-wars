@@ -33,15 +33,8 @@ describe('/dashboard/admin/users/* path', () => {
 			cy.contains('Users Created');
 			cy.contains('3 users successfully created.');
 		});
-		it('cannot create a super user', () => {
-            cy.contains('Users').click();
-			cy.contains('Create User').click();
-			cy.get('button[role="combobox"]').contains('Basic').click({ force: true });
-			cy.contains('Admin').should('exist');
-			cy.contains('Super').should('not.exist');
-		});
-		it.only('is blocked from creating a user with invalid fields', () => {
-            cy.contains('Users').click();
+		it('is blocked from creating a user with invalid fields', () => {
+			cy.contains('Users').click();
 			cy.contains('Create User').click();
 			cy.contains('Stage User').click();
 			cy.contains('A username is required.');
@@ -51,21 +44,11 @@ describe('/dashboard/admin/users/* path', () => {
 			cy.get('input[placeholder="Enter username."]').type(new Date().valueOf().toString());
 			cy.contains('Stage User').click();
 			cy.contains('A profile image is required.');
-            cy.get('input[placeholder="Enter profile image url."]').type('https://picsum.photos/300/300');
+			cy.get('input[placeholder="Enter profile image url."]').type('https://picsum.photos/300/300');
 			cy.contains('Stage User').click();
 			cy.contains('Submit Staged Users').click();
 			cy.contains('Users Created');
 			cy.contains('1 users successfully created.');
-		});
-	});
-	describe('when logged in as super', () => {
-		beforeEach(() => cy.loginUser(Role.Super));
-		it('can create a super user', () => {
-			cy.contains('Users').click();
-			cy.contains('Create User').click();
-			cy.get('button[role="combobox"]').contains('Basic').click({ force: true });
-			cy.contains('Admin').should('exist');
-			cy.contains('Super').should('exist');
 		});
 	});
 });

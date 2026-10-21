@@ -1,5 +1,3 @@
-'use server';
-
 import { count, eq } from 'drizzle-orm';
 import { db, session, user } from '@/db';
 import type { Either } from '@/util/either';
@@ -24,6 +22,7 @@ const getUsers = async (): Promise<Either<QueryFailureState, Success<UserRespons
 					.leftJoin(session, eq(user.id, session.userId))
 					.groupBy(user.id),
 				err => buildCRUDError('read', 'drafts', err),
+				false,
 			),
 		{
 			user: ['get'],

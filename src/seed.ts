@@ -1,6 +1,6 @@
 import { Role } from '@/db';
-import { auth } from '@/auth/auth';
 import logger from '@/logger';
+import { auth } from '@/auth/auth';
 
 const seed = async () => {
 	await auth.api.createUser({

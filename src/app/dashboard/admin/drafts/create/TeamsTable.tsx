@@ -1,9 +1,9 @@
 import { Controller } from 'react-hook-form';
 import type { CreateDraftForm, RHFControl, User } from '@/type/form';
-import { Select, SelectContent, SelectGroup, SelectItem } from '@/components/atoms/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/atoms/table';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/atoms/select';
 
-import TeamsActionsContextMenu from './TeamsActionsContextMenu';
+import TeamsActionsContextMenu from './DeletionContextMenu';
 
 interface Props {
 	control: RHFControl<CreateDraftForm>;
@@ -38,7 +38,7 @@ const TeamsTable = ({ control, users }: Props) => (
 								<TableRow key={team.name}>
 									<TableCell>{team.name}</TableCell>
 									<TableCell className="capitalize">{'id' in team ? 'Existing' : 'New'}</TableCell>
-									<TableCell className="capitalize">
+									<TableCell className="row justify-center items-center">
 										<Select
 											value={team.captain?.username}
 											onValueChange={username =>
@@ -53,6 +53,9 @@ const TeamsTable = ({ control, users }: Props) => (
 												)
 											}
 										>
+											<SelectTrigger className="row max-w-50 text-center cursor-pointer">
+												<SelectValue placeholder={team.captain.username} />
+											</SelectTrigger>
 											<SelectContent>
 												<SelectGroup>
 													{users.map(user => (

@@ -1,12 +1,13 @@
 'use server';
 
 import { eq } from 'drizzle-orm';
+import { badRequest } from '@/util/query';
 import buildCRUDError from '@/error/crudError';
 import adminSession from '@/func/adminSession';
 import type { PlayerList } from '@/type/actions';
 import { eitherOr, leftOf, rightOf } from '@/util/either';
-import { type QueryState, badRequest } from '@/util/query';
 import { RoundStatus, TeamRole, db, draft, round, team } from '@/db';
+import type { Success, QueryStateWithNonFailure } from '@/util/query';
 import { createDraftToTeamInternal } from '@/func/draft/createDraftToTeamInternal';
 import { createDraftToPlayersInternal } from '@/func/draft/createDraftToPlayerInternal';
 
@@ -14,7 +15,7 @@ interface CreateDraftPayload {
 	name: string;
 	roundLength?: number;
 	initialPlayerCoins?: number;
-	teams: Array<{ id: number } | { name: string }>;
+	teams: Array<{ name: string; isNew: boolean }>;
 	players: PlayerList;
 }
 
@@ -24,7 +25,7 @@ const createDraft = async ({
 	roundLength,
 	teams,
 	players,
-}: CreateDraftPayload): Promise<QueryState> =>
+}: CreateDraftPayload): Promise<QueryStateWithNonFailure<Success>> =>
 	adminSession(
 		async () => {
 			if (players.length === 0) return leftOf(badRequest('Received 0 players when creating draft, minimum: 1'));
@@ -42,9 +43,9 @@ const createDraft = async ({
 				);
 			const firstTargetPlayer = nonCaptainPlayers[Math.floor(Math.random() * nonCaptainPlayers.length)];
 
-			const groupedTeams = teams.reduce<{ existing: Array<number>; new: Array<string> }>(
+			const groupedTeams = teams.reduce<{ existing: Array<string>; new: Array<string> }>(
 				(acc, cur) => {
-					if ('id' in cur) return { ...acc, existing: [...acc.existing, cur.id] };
+					if (!cur.isNew) return { ...acc, existing: [...acc.existing, cur.name] };
 					return { ...acc, new: [...acc.new, cur.name] };
 				},
 				{ existing: [], new: [] },
@@ -90,10 +91,10 @@ const createDraft = async ({
 							.insert(team)
 							.values(
 								groupedTeams.new.map(t => ({
-									displayName: t,
+									name: t,
 								})),
 							)
-							.returning({ id: team.id }),
+							.returning({ name: team.name }),
 						err => buildCRUDError('create', 'team', err),
 					)
 				:	rightOf([]);
@@ -102,7 +103,7 @@ const createDraft = async ({
 
 			const attatchTeamsResponse = await createDraftToTeamInternal(transactionResponse.value.id, [
 				...groupedTeams.existing,
-				...newTeams.value.map(nt => nt.id),
+				...newTeams.value.map(nt => nt.name),
 			]);
 			if (attatchTeamsResponse._type === 'left') return attatchTeamsResponse;
 

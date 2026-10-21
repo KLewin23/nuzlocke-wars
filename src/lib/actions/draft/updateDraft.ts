@@ -7,7 +7,7 @@ import adminSession from '@/func/adminSession';
 import { type DraftStatus, db, draft } from '@/db';
 import { type QueryState, successOr } from '@/util/query';
 
-interface CreateDraftPayload {
+interface UpdateDraftPayload {
 	name?: string;
 	roundLength?: number;
 	initialPlayerCoins?: number;
@@ -16,7 +16,7 @@ interface CreateDraftPayload {
 
 const updateDraft = async (
 	draftId: number,
-	{ name, initialPlayerCoins, roundLength, status }: CreateDraftPayload,
+	{ name, initialPlayerCoins, roundLength, status }: UpdateDraftPayload,
 ): Promise<QueryState> =>
 	adminSession(
 		async () => {

@@ -70,6 +70,9 @@ body {
 }
 
 @layer components {
+	.gradient-radial-green {
+		background-image: linear-gradient(135deg, #399660 0%, #12301F 100%);
+	}
 	.gradient-radial-purple {
 		background-image: linear-gradient(135deg, #392c4f 0%, #150f18 100%);
 	}

@@ -1,14 +1,14 @@
-'use server';
-import logger from '@/logger';
 import * as Ably from 'ably';
+import logger from '@/logger';
 import { env } from '@/env/server';
-import withSession from '@/func/withSession';
 import { internalServerError } from '@/util/query';
 import { type Either, eitherOr } from '@/util/either';
-import type { Created, QueryFailureState } from '@/util/query';
+import type { QueryFailureState, Success } from '@/util/query';
 
-const getSubscribeToken = (draftId: number): Promise<Either<QueryFailureState, Created<Ably.TokenRequest>>> =>
-	withSession(async session => {
+import adminSession from '../adminSession';
+
+const adminGetSubscribeToken = (draftId: number): Promise<Either<QueryFailureState, Success<Ably.TokenRequest>>> =>
+	adminSession(async session => {
 		const client = new Ably.Rest(env.ABLY_SUBSCRIBE_API_KEY);
 		const tokenRequestData = await eitherOr(
 			client.auth
@@ -18,7 +18,7 @@ const getSubscribeToken = (draftId: number): Promise<Either<QueryFailureState, C
 						[`${env.VERCEL_ENV}:${draftId}`]: ['subscribe'],
 					}),
 				})
-				.then(data => ({ type: 'Created' as const, data })),
+				.then(data => ({ type: 'Success' as const, data })),
 			err => {
 				logger.error(err, `Failed to generate subscriber token`);
 				return internalServerError('Failed to authenticate with event server.');
@@ -27,4 +27,4 @@ const getSubscribeToken = (draftId: number): Promise<Either<QueryFailureState, C
 		return tokenRequestData;
 	});
 
-export default getSubscribeToken;
+export default adminGetSubscribeToken;

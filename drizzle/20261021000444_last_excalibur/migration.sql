@@ -1,0 +1,1 @@
+ALTER TABLE "bid" RENAME COLUMN "isWinner" TO "is_winner";

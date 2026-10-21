@@ -1,18 +1,17 @@
 'use server';
 
 import logger from '@/logger';
-import type { QueryResult } from 'pg';
 import { and, eq, ne } from 'drizzle-orm';
 import buildCRUDError from '@/error/crudError';
 import adminSession from '@/func/adminSession';
-import { eitherOr, rightOf } from '@/util/either';
 import buildActionError from '@/error/actionError';
 import { rejected, successOr } from '@/util/query';
-import type { QueryState, Rejected, Success } from '@/util/query';
+import { eitherOr, leftOf, rightOf } from '@/util/either';
+import type { QueryStateWithNonFailure, Success } from '@/util/query';
 import { DraftStatus, RoundStatus, TeamRole, db, draft, round, usersToDrafts } from '@/db';
 
-const openDraft = async (draftId: number): Promise<QueryState> =>
-	adminSession<Success<QueryResult<never>> | Rejected>(
+const openDraft = async (draftId: number): Promise<QueryStateWithNonFailure<Success>> =>
+	adminSession<Success>(
 		async () => {
 			const draftResponse = await eitherOr(
 				db
@@ -25,7 +24,7 @@ const openDraft = async (draftId: number): Promise<QueryState> =>
 			if (draftResponse._type === 'left') return draftResponse;
 			if (draftResponse.value.length > 1) logger.warn('Multiple drafts found while opening draft.');
 			const draftRecord = draftResponse.value.at(0);
-			if (draftRecord === undefined) return rightOf(rejected('Draft was not found.'));
+			if (draftRecord === undefined) return leftOf(rejected('Draft was not found.'));
 
 			const participants = await eitherOr(
 				db.select().from(usersToDrafts).where(eq(usersToDrafts.draftId, draftId)),
@@ -34,17 +33,18 @@ const openDraft = async (draftId: number): Promise<QueryState> =>
 
 			if (participants._type === 'left') return participants;
 			if (participants.value.length === 0)
-				return rightOf(
+				return leftOf(
 					rejected(
 						'Draft did not meet minimum participant requirment. Requires a minmum of: 1 player, 1 captain',
 					),
 				);
+
 			const captains = participants.value.filter(p => p.teamRole === TeamRole.captain);
-			if (captains.length) return rightOf(rejected('Draft missing minimum capatins. Minmum of: 1 captain'));
+			if (captains.length === 0) return leftOf(rejected('Draft does not have at least 1 captain'));
 			const players = participants.value.filter(p => p.teamRole === TeamRole.player);
 			const targetPlayer = players.at(0);
 			if (targetPlayer === undefined)
-				return rightOf(rejected('Draft missing minimum players. Minmum of: 1 player'));
+				return leftOf(rejected('Draft missing minimum players. Minmum of: 1 player'));
 
 			const cleanUnexpectedRounds = await eitherOr(
 				db

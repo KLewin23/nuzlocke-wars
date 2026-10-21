@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Button from '@/atoms/Button';
-import getUsers from '@/actions/user/getUsers';
+import getUsers from '@/func/user/getUsers';
 import UserActionsContextMenu from './UserActionsContextMenu';
 import { Table, TableBody, TableBodyDataHandler, TableCell, TableHead, TableHeader, TableRow } from '@/atoms/table';
 

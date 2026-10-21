@@ -3,7 +3,7 @@ import { Slot } from 'radix-ui';
 import { type VariantProps, cn, cva } from 'cnfast';
 
 const buttonVariants = cva(
-	"group/button inline-flex shrink-0 cursor-pointer gap-2 items-center justify-center border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+	"group/button inline-flex shrink-0 cursor-pointer gap-2 items-center justify-center border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
 	{
 		variants: {
 			variant: {
@@ -13,9 +13,10 @@ const buttonVariants = cva(
 			},
 			palette: {
 				default: 'bg-none text-white',
-				gold: 'gradient-gold text-black',
-				blackOnWhite: 'bg-white text-black',
-				destructive: 'bg-destructive text-white',
+				gold: 'gradient-gold text-black border',
+				blackOnWhite: 'bg-white text-black border',
+				destructive: 'bg-destructive text-white border',
+				green: 'gradient-radial-green text-white shadow-[0px_0px_12.67px_0px_#337b51]'
 			},
 		},
 		defaultVariants: {

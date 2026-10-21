@@ -1,6 +1,4 @@
-'use server';
-
-import type { Either } from '@/util/either';
+import { type Either } from '@/util/either';
 import withSession from '@/func/withSession';
 import buildCRUDError from '@/error/crudError';
 import { db, draft, usersToDrafts } from '@/db';
@@ -8,7 +6,7 @@ import { count, eq, inArray } from 'drizzle-orm';
 import type { DraftResponseList } from '@/type/actions';
 import { type QueryFailureState, type Success, successOr } from '@/util/query';
 
-const getDrafts = async (): Promise<Either<QueryFailureState, Success<DraftResponseList>>> =>
+const getFullDraft = async (): Promise<Either<QueryFailureState, Success<DraftResponseList>>> =>
 	withSession(async session => {
 		const baseQuery = db
 			.select({
@@ -34,6 +32,8 @@ const getDrafts = async (): Promise<Either<QueryFailureState, Success<DraftRespo
 				)
 			:	baseQuery,
 			err => buildCRUDError('read', 'drafts', err),
+			false,
 		);
 	});
+
 export default getDrafts;

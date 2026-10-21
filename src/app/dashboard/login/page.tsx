@@ -33,7 +33,7 @@ const Page = () => {
 
 	return (
 		<div className="col mt-[30vh] w-87.5 items-center gap-16 p-4">
-			<Title />
+			<Title variant="dashboard" />
 			<form className="col w-full gap-8">
 				<Input
 					placeholder="Enter your username"

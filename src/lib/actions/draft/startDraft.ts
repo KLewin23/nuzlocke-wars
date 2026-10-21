@@ -6,13 +6,13 @@ import { publishEvent } from '@/util/ably';
 import { DraftStatus, db, draft } from '@/db';
 import buildCRUDError from '@/error/crudError';
 import adminSession from '@/func/adminSession';
-import { eitherOr, rightOf } from '@/util/either';
+import { eitherOr, leftOf } from '@/util/either';
 import { rejected, successOr } from '@/util/query';
+import type { QueryState, Success } from '@/util/query';
 import buildAblyPublishError from '@/error/ablyPublishError';
-import type { QueryState, Rejected, Success } from '@/util/query';
 
 const startDraft = async (draftId: number): Promise<QueryState> =>
-	adminSession<Success<PublishResult> | Rejected>(
+	adminSession<Success<PublishResult>>(
 		async () => {
 			const startDraftResponse = await eitherOr(
 				db
@@ -27,13 +27,13 @@ const startDraft = async (draftId: number): Promise<QueryState> =>
 
 			if (startDraftResponse._type === 'left') return startDraftResponse;
 			if (startDraftResponse.value.length === 0)
-				return rightOf(
+				return leftOf(
 					rejected(
 						`Draft was not found when try to modify status, it may have had the wrong DraftStatus expected: open`,
 					),
 				);
 
-			return successOr(publishEvent(draftId, 'DraftStarted'), err => buildAblyPublishError('DraftStarted', err));
+			return successOr(publishEvent(draftId, 'DraftStarted'), err => buildAblyPublishError('DraftStarted', err), false);
 		},
 		{
 			draft: ['update'],

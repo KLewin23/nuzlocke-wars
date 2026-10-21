@@ -46,6 +46,7 @@ const createUsers = async (users: Array<CreateUserPayload>): Promise<QueryState>
 					}),
 				),
 				err => buildAuthError(err, buildCRUDError('create', 'users', err)),
+				false
 			);
 		},
 		{

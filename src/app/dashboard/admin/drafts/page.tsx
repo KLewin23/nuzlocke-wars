@@ -1,8 +1,9 @@
-import Button from '@/atoms/Button';
-import { EllipsisVertical } from 'lucide-react';
-import getDrafts from '@/actions/draft/getDrafts';
-import { Table, TableBody, TableBodyDataHandler, TableCell, TableHead, TableHeader, TableRow } from '@/atoms/table';
 import Link from 'next/link';
+import Button from '@/atoms/Button';
+import getDrafts from '@/func/draft/getDrafts';
+import { Table, TableBody, TableBodyDataHandler, TableCell, TableHead, TableHeader, TableRow } from '@/atoms/table';
+
+import DraftActionsContextMenu from './DraftActionsContextMenu';
 
 const page = async () => {
 	const drafts = await getDrafts();
@@ -10,7 +11,7 @@ const page = async () => {
 	return (
 		<div className="col w-full max-w-250 grow items-end gap-4 self-center">
 			<Link href="/dashboard/admin/drafts/create">
-				<Button palette="blackOnWhite">CREATE DRAFT</Button>
+				<Button palette="blackOnWhite">Create Draft</Button>
 			</Link>
 			<Table>
 				<TableHeader>
@@ -29,9 +30,7 @@ const page = async () => {
 								<TableCell>{draft.playerCount}</TableCell>
 								<TableCell className="capitalize">{draft.status}</TableCell>
 								<TableCell>
-									<Button variant="ghost">
-										<EllipsisVertical />
-									</Button>
+									<DraftActionsContextMenu draft={draft} />
 								</TableCell>
 							</TableRow>
 						)}

@@ -1,9 +1,9 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "cd2b8649-f148-4c30-8a3c-c699d3cf8e56",
+  "id": "d715dbb6-b5f2-4b4e-b4e6-6b94777be3f0",
   "prevIds": [
-    "236bb3a7-96e4-41c1-9a8d-5e7b68d50346"
+    "c1e936d8-fe21-4dd2-accb-b113f98b0b92"
   ],
   "ddl": [
     {
@@ -38,9 +38,8 @@
     },
     {
       "values": [
-        "super",
-        "admin",
-        "basic"
+        "user",
+        "admin"
       ],
       "name": "role",
       "entityType": "enums",
@@ -166,7 +165,7 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "isWinner",
+      "name": "is_winner",
       "entityType": "columns",
       "schema": "public",
       "table": "bid"
@@ -328,19 +327,6 @@
       "table": "round"
     },
     {
-      "type": "serial",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "team"
-    },
-    {
       "type": "text",
       "typeSchema": null,
       "notNull": true,
@@ -348,7 +334,7 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "display_name",
+      "name": "name",
       "entityType": "columns",
       "schema": "public",
       "table": "team"
@@ -367,14 +353,14 @@
       "table": "team"
     },
     {
-      "type": "integer",
+      "type": "text",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "team_id",
+      "name": "team_name",
       "entityType": "columns",
       "schema": "public",
       "table": "teams_to_drafts"
@@ -419,14 +405,14 @@
       "table": "users_to_drafts"
     },
     {
-      "type": "integer",
+      "type": "text",
       "typeSchema": null,
       "notNull": false,
       "dimensions": 0,
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "team_id",
+      "name": "team_name",
       "entityType": "columns",
       "schema": "public",
       "table": "users_to_drafts"
@@ -720,6 +706,19 @@
     {
       "type": "text",
       "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "impersonated_by",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "session"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
       "default": null,
@@ -839,10 +838,49 @@
       "typeSchema": "public",
       "notNull": true,
       "dimensions": 0,
-      "default": "'basic'",
+      "default": "'user'",
       "generated": null,
       "identity": null,
       "name": "role",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "user"
+    },
+    {
+      "type": "boolean",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": "false",
+      "generated": null,
+      "identity": null,
+      "name": "banned",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "user"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "ban_reason",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "user"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "ban_expires",
       "entityType": "columns",
       "schema": "public",
       "table": "user"
@@ -1076,16 +1114,16 @@
     {
       "nameExplicit": false,
       "columns": [
-        "team_id"
+        "team_name"
       ],
       "schemaTo": "public",
       "tableTo": "team",
       "columnsTo": [
-        "id"
+        "name"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
-      "name": "teams_to_drafts_team_id_team_id_fkey",
+      "name": "teams_to_drafts_team_name_team_name_fkey",
       "entityType": "fks",
       "schema": "public",
       "table": "teams_to_drafts"
@@ -1144,16 +1182,16 @@
     {
       "nameExplicit": false,
       "columns": [
-        "team_id"
+        "team_name"
       ],
       "schemaTo": "public",
       "tableTo": "team",
       "columnsTo": [
-        "id"
+        "name"
       ],
       "onUpdate": "NO ACTION",
       "onDelete": "NO ACTION",
-      "name": "users_to_drafts_team_id_team_id_fkey",
+      "name": "users_to_drafts_team_name_team_name_fkey",
       "entityType": "fks",
       "schema": "public",
       "table": "users_to_drafts"
@@ -1194,7 +1232,7 @@
     },
     {
       "columns": [
-        "team_id",
+        "team_name",
         "draft_id"
       ],
       "nameExplicit": false,
@@ -1246,7 +1284,7 @@
     },
     {
       "columns": [
-        "id"
+        "name"
       ],
       "nameExplicit": false,
       "name": "team_pkey",
@@ -1329,7 +1367,6 @@
     }
   ],
   "renames": [
-    "public.round.roundStatus->public.round.round_status",
-    "public.users_to_drafts.teamRole->public.users_to_drafts.team_role"
+    "public.bid.isWinner->public.bid.is_winner"
   ]
 }

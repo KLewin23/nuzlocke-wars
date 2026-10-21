@@ -4,7 +4,7 @@ import type { DraftStatus, TeamRole } from '../db/draftSchema';
 
 interface Player {
 	userId: string;
-	teamId?: number;
+	teamName?: string;
 	teamRole: TeamRole;
 }
 

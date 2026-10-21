@@ -12,7 +12,7 @@ interface UpdateTeamPayload {
 	imageUrl?: string;
 }
 
-const deleteTeam = (teamId: number, { name, imageUrl }: UpdateTeamPayload): Promise<QueryState> =>
+const deleteTeam = (teamName: string, { name, imageUrl }: UpdateTeamPayload): Promise<QueryState> =>
 	adminSession(
 		async () => {
 			if (name === undefined && imageUrl === undefined)
@@ -24,7 +24,7 @@ const deleteTeam = (teamId: number, { name, imageUrl }: UpdateTeamPayload): Prom
 						...(name !== undefined ? { displayName: name } : {}),
 						...(imageUrl !== undefined ? { image: imageUrl } : {}),
 					})
-					.where(eq(team.id, teamId)),
+					.where(eq(team.name, teamName)),
 				err => buildCRUDError('delete', 'team', err),
 			);
 		},

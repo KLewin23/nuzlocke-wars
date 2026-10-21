@@ -5,7 +5,7 @@ interface Props {
 }
 
 const layout = ({ children }: Props) => (
-	<div className="col gradient-radial-blue h-screen max-h-screen w-full items-center overflow-hidden">{children}</div>
+	<div className="col gradient-radial-blue h-screen w-full items-center overflow-hidden">{children}</div>
 );
 
 export default layout;

@@ -6,13 +6,13 @@ import buildCRUDError from '@/error/crudError';
 import adminSession from '@/func/adminSession';
 import { type QueryState, successOr } from '@/util/query';
 
-const deleteDraftToTeam = (teamId: number, draftId: number): Promise<QueryState> =>
+const deleteDraftToTeam = (teamName: string, draftId: number): Promise<QueryState> =>
 	adminSession(
 		async () =>
 			successOr(
 				db
 					.delete(teamsToDrafts)
-					.where(and(eq(teamsToDrafts.teamId, teamId), eq(teamsToDrafts.draftId, draftId))),
+					.where(and(eq(teamsToDrafts.teamName, teamName), eq(teamsToDrafts.draftId, draftId))),
 				err => buildCRUDError('delete', 'draft to team mapping', err),
 			),
 		{

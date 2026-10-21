@@ -13,7 +13,7 @@ interface CreateTeamPayload {
 const createTeam = ({ name, imageUrl }: CreateTeamPayload): Promise<QueryState> =>
 	adminSession(
 		async () =>
-			successOr(db.insert(team).values({ displayName: name, image: imageUrl }), err =>
+			successOr(db.insert(team).values({ name, image: imageUrl }), err =>
 				buildCRUDError('create', 'team', err),
 			),
 		{

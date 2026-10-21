@@ -32,7 +32,7 @@ const Navbar = ({
 	return (
 		<nav data-variant={variant} className={cn(buttonVariants({ variant, className }))}>
 			<div className="row max-w-250 grow items-center justify-between gap-5 py-6">
-				<Title />
+				<Title variant={variant !== 'dashbord' ? 'default' : 'dashboard'} />
 				{isClient && width > 600 ?
 					<div className="row gap-8">
 						{Object.entries(links).map(([title, action]) =>
@@ -40,11 +40,7 @@ const Navbar = ({
 								<a href={action} key={`navlink-${title}-${action}`}>
 									<p className="font-railroad-gothic text-xl font-bold">{title}</p>
 								</a>
-							:	<button
-									key={`navlink-${title}`}
-									className="cursor-pointer"
-									onClick={() => void action()}
-								>
+							:	<button key={`navlink-${title}`} className="cursor-pointer" onClick={() => void action()}>
 									<p className="font-railroad-gothic text-xl font-bold">{title}</p>
 								</button>,
 						)}
