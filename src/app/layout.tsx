@@ -39,6 +39,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
 			<body className="flex min-h-full w-full flex-col">
 				<Toaster />
 				{children}
+				<Analytics />
 			</body>
 		</html>
 	);
