@@ -32,7 +32,7 @@ const draft = pgTable('draft', {
 	name: text('name').notNull(),
 	status: draftStatus('status').notNull().default(DraftStatus.closed),
 	roundLength: integer('round_length').notNull().default(60), //seconds
-	initialPlayerCoins: integer('initial_player_coins').default(60),
+	initialPlayerCoins: integer('initial_player_coins').notNull().default(60),
 	maxPlayersPerTeam: integer('max_players_per_team').notNull().default(8),
 	currentRoundId: integer('current_round_id').references((): AnyPgColumn => round.id),
 });
@@ -63,7 +63,6 @@ const bid = pgTable('bid', {
 
 const team = pgTable('team', {
 	name: text('name').primaryKey(),
-	image: text('image'),
 });
 
 const usersToDrafts = pgTable(

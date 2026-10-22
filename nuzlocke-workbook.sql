@@ -27,6 +27,67 @@ VALUES (
         'eGtTuLUNX5P14tRNlTBEH5xF89WAIcgX'
     )
 
+-- Load into draft
+-- First request when they come into draft
+SELECT
+    draft.name,
+    status,
+    round_length,
+    initial_player_coins,
+    max_players_per_team,
+    round_status,
+    bidding_start_time,
+    image, -- TARGET_USER_IMAGE
+    username -- TARGET_USER_UNAME
+FROM
+    draft
+    JOIN round ON draft.current_round_id = round.id
+    LEFT JOIN public."user" ON round.target_user_id = "public".user.id
+    JOIN users_to_drafts ON users_to_drafts.draft_id = draft.id
+WHERE
+    draft.id = 42
+    -- AND users_to_drafts.user_id = 'EHirX9rXVgweX6Wy2KFZ6F8yDzCJZiVY'
+
+-- Current amount spent for each team captain -- run on load (subtract from initial_player_coins)
+SELECT sum(bid.amount)
+FROM round
+    LEFT JOIN bid ON bid.round_id = round.id
+    JOIN users_to_drafts ON bid.user_id = users_to_drafts.user_id
+WHERE
+    round.draft_id = 42
+    AND users_to_drafts.draft_id = 42
+    AND team_role = 'captain'
+GROUP BY
+    users_to_drafts.user_id;
+
+-- Get Teams -- Run on Load &
+SELECT users_to_drafts.user_id, team.name, users_to_drafts.team_role, team.name, public."user".username, public."user".image
+FROM users_to_drafts
+JOIN team ON users_to_drafts.team_name = team.name
+JOIN public."user" ON users_to_drafts.user_id = public."user".id
+WHERE users_to_drafts.draft_id = 42
+
+-- Round Started
+SELECT image, username
+FROM draft
+    JOIN round ON draft.current_round_id = round.id
+    LEFT JOIN public."user" ON round.target_user_id = "public".user.id
+WHERE
+    draft.id = 42
+
+-- Bidding has started
+SELECT bidding_start_time
+FROM draft
+    JOIN round ON draft.current_round_id = round.id
+WHERE
+    draft.id = 42
+
+-- Bidding has ended, bid submitted, bid retracted
+SELECT bid.amount, bid.user_id
+FROM draft
+    JOIN round ON draft.current_round_id = round.id
+    JOIN bid ON bid.round_id = round.id
+
 SELECT *
 FROM
     users_to_drafts

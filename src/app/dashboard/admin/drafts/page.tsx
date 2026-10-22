@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Button from '@/atoms/Button';
-import getDrafts from '@/func/draft/getDrafts';
+import getDrafts from '@/func/draft/authenticated/getDrafts';
 import { Table, TableBody, TableBodyDataHandler, TableCell, TableHead, TableHeader, TableRow } from '@/atoms/table';
 
 import DraftActionsContextMenu from './DraftActionsContextMenu';

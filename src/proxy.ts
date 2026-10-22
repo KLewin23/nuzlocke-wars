@@ -25,6 +25,8 @@ export const proxy = async (req: NextRequest) => {
 	}
 
 	if (pathname.startsWith('/dashboard/admin')) return NextResponse.redirect(new URL('/dashboard/drafts', req.url));
+	if (pathname === '/dashboard')
+		return NextResponse.redirect(new URL(pathname.replace('/dashboard', '/dashboard/drafts'), req.url));
 
 	return NextResponse.next();
 };

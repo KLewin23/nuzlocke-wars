@@ -2,7 +2,7 @@
 
 import adminSession from '@/func/adminSession';
 import type { QueryState } from '@/util/query';
-import { createDraftToTeamInternal } from '@/func/draft/createDraftToTeamInternal';
+import { createDraftToTeamInternal } from '@/func/draft/authenticated/createDraftToTeamInternal';
 
 const createDraftToTeamMapping = (draftId: number, teamIds: Array<string>): Promise<QueryState> =>
 	adminSession(async () => createDraftToTeamInternal(draftId, teamIds), {

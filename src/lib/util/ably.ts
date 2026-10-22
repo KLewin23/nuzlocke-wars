@@ -7,9 +7,9 @@ type AblyEvent =
 	| 'NextRoundStarted'
 	| 'BiddingStarted'
 	| 'BiddingEnded'
-	| 'DraftEnded'
 	| 'BidSubmitted'
-	| 'BidRetracted';
+	| 'BidRetracted'
+	| 'DraftEnded';
 
 const ablyPublishClient = new Ably.Rest(env.ABLY_PUBLISH_API_KEY);
 

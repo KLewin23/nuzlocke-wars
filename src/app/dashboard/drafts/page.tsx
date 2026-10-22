@@ -2,7 +2,7 @@ import z from 'zod';
 import Link from 'next/link';
 import { DraftStatus } from '@/db';
 import Button from '@/atoms/Button';
-import getDrafts from '@/func/draft/getDrafts';
+import getDrafts from '@/func/draft/authenticated/getDrafts';
 import Title from '@/components/atoms/typography/Title';
 import DashboardNavbar from '@/organisms/DashboardNavbar';
 import ErrorToaster from '@/components/atoms/ErrorToaster';
@@ -25,8 +25,9 @@ const queryParamSchema = z.toZod<{
 );
 
 const page = async ({ searchParams }: { searchParams?: Record<string, string | undefined> }) => {
+	const params = await searchParams
 	const drafts = await getDrafts();
-	const error = queryParamSchema.safeParse(searchParams);
+	const error = queryParamSchema.safeParse(params);
 
 	return (
 		<div className="col h-screen max-h-screen w-full gap-8 overflow-hidden">

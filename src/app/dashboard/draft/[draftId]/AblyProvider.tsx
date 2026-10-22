@@ -13,13 +13,13 @@ interface Props {
 const AblyProvider = ({ userId, draftId, children }: Props) => {
 	const realtimeClient = new Ably.Realtime({
 		clientId: userId,
-		authUrl: '/ably',
+		authUrl: '/api/ably',
 		authMethod: 'POST',
 		authParams: {
 			draftId: draftId.toString(),
-		},
-		
+		}
 	});
+
 	return <AblyInternalProvider client={realtimeClient}>{children}</AblyInternalProvider>;
 };
 

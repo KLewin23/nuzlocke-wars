@@ -17,7 +17,7 @@ const POST = async (request: Request) => {
 	});
 	if (!session?.user) return unauthorized();
 	const data = await request.formData();
-	const parseDraftId = z.number().safeParse(data.get('draftId'));
+	const parseDraftId = z.coerce.number().safeParse(data.get('draftId'));
 	if (!parseDraftId.success) return routeErrorResponse(`Could not parse draftId \`${parseDraftId.data}\``, 400);
 
 	const draftIdWithAccess = await eitherOr(
@@ -28,6 +28,7 @@ const POST = async (request: Request) => {
 			.where(
 				and(
 					eq(draft.id, parseDraftId.data),
+					eq(usersToDrafts.userId, session.user.id),
 					ne(draft.status, DraftStatus.closed),
 					inArray(
 						draft.id,

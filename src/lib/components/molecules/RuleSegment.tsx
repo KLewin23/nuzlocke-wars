@@ -2,7 +2,7 @@ import { cn } from 'cnfast';
 import Image from 'next/image';
 import { match } from 'ts-pattern';
 import { type RuleSegment, RuleSegmentColour } from '@/type/rules';
-import TextLine from '@atoms/TextLine';
+import TextLine from '@/atoms/TextLine';
 
 interface Props {
 	ruleSegmentData: RuleSegment;

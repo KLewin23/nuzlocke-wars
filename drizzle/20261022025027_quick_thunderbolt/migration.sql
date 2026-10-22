@@ -1,0 +1,1 @@
+ALTER TABLE "draft" ALTER COLUMN "initial_player_coins" SET NOT NULL;

@@ -8,8 +8,8 @@ import type { PlayerList } from '@/type/actions';
 import { eitherOr, leftOf, rightOf } from '@/util/either';
 import { RoundStatus, TeamRole, db, draft, round, team } from '@/db';
 import type { Success, QueryStateWithNonFailure } from '@/util/query';
-import { createDraftToTeamInternal } from '@/func/draft/createDraftToTeamInternal';
-import { createDraftToPlayersInternal } from '@/func/draft/createDraftToPlayerInternal';
+import { createDraftToTeamInternal } from '@/func/draft/authenticated/createDraftToTeamInternal';
+import { createDraftToPlayersInternal } from '@/func/draft/authenticated/createDraftToPlayerInternal';
 
 interface CreateDraftPayload {
 	name: string;
