@@ -3,7 +3,6 @@
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
-import { TeamRole } from '@/db/draftSchema';
 import { Controller } from 'react-hook-form';
 import Button from '@/components/atoms/Button';
 import { Field } from '@/components/molecules/field/Field';
@@ -68,7 +67,6 @@ const PlayerTable = ({ control, users }: Props) => {
 									field.onChange([
 										...field.value,
 										{
-											teamRole: TeamRole.player,
 											userId: user.id,
 										},
 									]);

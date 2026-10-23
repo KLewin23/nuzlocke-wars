@@ -4,18 +4,18 @@ import { eq } from 'drizzle-orm';
 import { badRequest } from '@/util/query';
 import buildCRUDError from '@/error/crudError';
 import adminSession from '@/func/adminSession';
-import type { PlayerList } from '@/type/actions';
-import { eitherOr, leftOf, rightOf } from '@/util/either';
-import { RoundStatus, TeamRole, db, draft, round, team } from '@/db';
-import type { Success, QueryStateWithNonFailure } from '@/util/query';
-import { createDraftToTeamInternal } from '@/func/draft/authenticated/createDraftToTeamInternal';
-import { createDraftToPlayersInternal } from '@/func/draft/authenticated/createDraftToPlayerInternal';
+import { eitherOr, leftOf } from '@/util/either';
+import { RoundStatus, db, draft, round, team } from '@/db';
+import type { BaseTeamData, PlayerList, Team } from '@/type/actions';
+import type { QueryStateWithNonFailure, Success } from '@/util/query';
+import { createDraftToTeamInternal } from '@/func/createDraftToTeamInternal';
+import { createDraftToPlayersInternal } from '@/func/createDraftToPlayerInternal';
 
 interface CreateDraftPayload {
 	name: string;
 	roundLength?: number;
 	initialPlayerCoins?: number;
-	teams: Array<{ name: string; isNew: boolean }>;
+	teams: Array<Team>;
 	players: PlayerList;
 }
 
@@ -29,24 +29,20 @@ const createDraft = async ({
 	adminSession<Success>(
 		async () => {
 			if (players.length === 0) return leftOf(badRequest('Received 0 players when creating draft, minimum: 1'));
-			const nonCaptainPlayers = players.filter(p => p.teamRole === TeamRole.player);
-			const captains = players.filter(p => p.teamRole === TeamRole.captain);
 			if (teams.length === 0) return leftOf(badRequest('Received 0 teams for draft: minimum: 1'));
-			if (captains.length === 0) return leftOf(badRequest('Received 0 players with `captain` role, minimum: 1'));
-			if (nonCaptainPlayers.length === 0)
-				return leftOf(badRequest('Received 0 players with `player` role, minimum: 1'));
+			if (players.length === 0) return leftOf(badRequest('Received 0 players with `player` role, minimum: 1'));
 			if (teams.length > players.length)
 				return leftOf(
 					badRequest(
 						`Received less teams than players, each team must have at least one player (The Captian)`,
 					),
 				);
-			const firstTargetPlayer = nonCaptainPlayers[Math.floor(Math.random() * nonCaptainPlayers.length)];
+			const firstTargetPlayer = players[Math.floor(Math.random() * players.length)];
 
-			const groupedTeams = teams.reduce<{ existing: Array<string>; new: Array<string> }>(
+			const groupedTeams = teams.reduce<{ existing: Array<BaseTeamData>; new: Array<BaseTeamData> }>(
 				(acc, cur) => {
-					if (!cur.isNew) return { ...acc, existing: [...acc.existing, cur.name] };
-					return { ...acc, new: [...acc.new, cur.name] };
+					if ('captainId' in cur) return { ...acc, new: [...acc.new, cur] };
+					return { ...acc, existing: [...acc.existing, cur] };
 				},
 				{ existing: [], new: [] },
 			);
@@ -84,26 +80,20 @@ const createDraft = async ({
 
 			if (transactionResponse._type === 'left') return transactionResponse;
 
-			const newTeams =
-				groupedTeams.new.length !== 0 ?
-					await eitherOr(
-						db
-							.insert(team)
-							.values(
-								groupedTeams.new.map(t => ({
-									name: t,
-								})),
-							)
-							.returning({ name: team.name }),
-						err => buildCRUDError('create', 'team', err),
-					)
-				:	rightOf([]);
+			const newTeams = await eitherOr(
+				db.insert(team).values(
+					groupedTeams.new.map(t => ({
+						name: t.name,
+					})),
+				),
+				err => buildCRUDError('create', 'team', err),
+			);
 
 			if (newTeams._type === 'left') return newTeams;
 
 			const attatchTeamsResponse = await createDraftToTeamInternal(transactionResponse.value.id, [
 				...groupedTeams.existing,
-				...newTeams.value.map(nt => nt.name),
+				...groupedTeams.new,
 			]);
 			if (attatchTeamsResponse._type === 'left') return attatchTeamsResponse;
 

@@ -33,7 +33,6 @@ const ToggleOpenDraftDialog = ({ mode, draftId, targetDraftName, onClose }: Prop
 	const toggleDraftTransition = (draftId: number) =>
 		startSubmitTransition(async () => {
 			const response = mode === 'openDraft' ? await openDraft(draftId) : await closeDraft(draftId);
-			// console.log(response)
 			if (response._type === 'left') return failureAsTransition(response.value, startSubmitTransition);
 			return startSubmitTransition(() => {
 				onClose();

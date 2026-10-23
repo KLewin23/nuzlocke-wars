@@ -1,9 +1,9 @@
 'use server';
 
 import { and, eq } from 'drizzle-orm';
-import { db, usersToDrafts } from '@/db';
 import buildCRUDError from '@/error/crudError';
 import adminSession from '@/func/adminSession';
+import { db, playersToDrafts } from '@/db';
 import { type QueryState, successOr } from '@/util/query';
 
 const deleteDraftToPlayer = (userId: string, draftId: number): Promise<QueryState> =>
@@ -11,8 +11,8 @@ const deleteDraftToPlayer = (userId: string, draftId: number): Promise<QueryStat
 		async () =>
 			successOr(
 				db
-					.delete(usersToDrafts)
-					.where(and(eq(usersToDrafts.userId, userId), eq(usersToDrafts.draftId, draftId))),
+					.delete(playersToDrafts)
+					.where(and(eq(playersToDrafts.userId, userId), eq(playersToDrafts.draftId, draftId))),
 				err => buildCRUDError('delete', 'draft to player mapping', err),
 			),
 		{

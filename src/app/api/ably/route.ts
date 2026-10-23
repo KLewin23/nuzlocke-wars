@@ -1,15 +1,16 @@
 import z from 'zod';
 import Ably from 'ably';
 import logger from '@/logger';
+import { db, draft } from '@/db';
 import { auth } from '@/auth/auth';
 import { env } from '@/env/server';
+import { inArray } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { eitherOr, unwrap } from '@/util/either';
-import { and, eq, inArray, ne } from 'drizzle-orm';
+import isInDraftQuery from '@/func/isInDraftQuery';
 import routeErrorResponse from '@/func/routErrorResponse';
 import { forbidden, unauthorized } from 'next/navigation';
-import { DraftStatus, db, draft, usersToDrafts } from '@/db';
 
 const POST = async (request: Request) => {
 	const session = await auth.api.getSession({
@@ -24,21 +25,7 @@ const POST = async (request: Request) => {
 		db
 			.select({ id: draft.id })
 			.from(draft)
-			.innerJoin(usersToDrafts, eq(usersToDrafts.draftId, draft.id))
-			.where(
-				and(
-					eq(draft.id, parseDraftId.data),
-					eq(usersToDrafts.userId, session.user.id),
-					ne(draft.status, DraftStatus.closed),
-					inArray(
-						draft.id,
-						db
-							.select({ data: usersToDrafts.draftId })
-							.from(usersToDrafts)
-							.where(eq(usersToDrafts.userId, session.user.id)),
-					),
-				),
-			),
+			.where(inArray(draft.id, isInDraftQuery(session))),
 		err => {
 			logger.error(
 				Error.isError(err) ? err : new Error(`Unhandled data read error occurred reading a \`draft\` `),
@@ -49,7 +36,6 @@ const POST = async (request: Request) => {
 	if (draftIdWithAccess._type === 'left') return draftIdWithAccess.value;
 	if (draftIdWithAccess.value.length > 1)
 		logger.warn(`Expected one draft per id received: ${draftIdWithAccess.value.length}`);
-
 	if (draftIdWithAccess.value.length === 0) return forbidden();
 
 	const client = new Ably.Rest(env.ABLY_SUBSCRIBE_API_KEY);

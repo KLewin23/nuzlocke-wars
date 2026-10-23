@@ -7,7 +7,7 @@ import buildActionError from '@/error/actionError';
 import { and, eq, isNull, sql } from 'drizzle-orm';
 import { type QueryState, successOr } from '@/util/query';
 import buildAblyPublishError from '@/error/ablyPublishError';
-import { DraftStatus, RoundStatus, TeamRole, db, draft, round, user, usersToDrafts } from '@/db';
+import { DraftStatus, RoundStatus, db, draft, playersToDrafts, round, user } from '@/db';
 
 // Tldr. Create the next round, set the target player, sets the drafts current round to the new one.
 const startNextRound = async (draftId: number): Promise<QueryState> =>
@@ -16,17 +16,10 @@ const startNextRound = async (draftId: number): Promise<QueryState> =>
 			const nextTarget = await eitherOr(
 				db
 					.select({ userId: user.id })
-					.from(usersToDrafts)
-					.innerJoin(user, eq(user.id, usersToDrafts.userId))
+					.from(playersToDrafts)
+					.innerJoin(user, eq(user.id, playersToDrafts.userId))
 					.leftJoin(round, and(eq(user.id, round.targetUserId), eq(round.draftId, draftId)))
-					.where(
-						and(
-							eq(usersToDrafts.teamRole, TeamRole.player),
-							eq(usersToDrafts.draftId, draftId),
-							isNull(round.id),
-							eq(usersToDrafts.teamRole, TeamRole.player),
-						),
-					)
+					.where(and(eq(playersToDrafts.draftId, draftId), isNull(round.id)))
 					.orderBy(sql`RANDOM()`)
 					.limit(1),
 				err => buildCRUDError('read', 'next target player', err),

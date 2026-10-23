@@ -9,7 +9,7 @@ import buildActionError from '@/error/actionError';
 import { rejected, successOr } from '@/util/query';
 import { eitherOr, leftOf, rightOf } from '@/util/either';
 import type { QueryStateWithNonFailure, Success } from '@/util/query';
-import { DraftStatus, RoundStatus, TeamRole, db, draft, round, usersToDrafts } from '@/db';
+import { DraftStatus, RoundStatus, db, draft, playersToDrafts, round, teamsToDrafts } from '@/db';
 
 const openDraft = async (draftId: number): Promise<QueryStateWithNonFailure<Success>> =>
 	adminSession<Success>(
@@ -27,25 +27,29 @@ const openDraft = async (draftId: number): Promise<QueryStateWithNonFailure<Succ
 			const draftRecord = draftResponse.value.at(0);
 			if (draftRecord === undefined) return leftOf(rejected('Draft was not found.'));
 
-			const participants = await eitherOr(
-				db.select().from(usersToDrafts).where(eq(usersToDrafts.draftId, draftId)),
+			const players = await eitherOr(
+				db.select().from(playersToDrafts).where(eq(playersToDrafts.draftId, draftId)),
 				err => buildCRUDError('read', 'user to draft mapping', err),
 			);
 
-			if (participants._type === 'left') return participants;
-			if (participants.value.length === 0)
+			if (players._type === 'left') return players;
+			if (players.value.length === 0)
 				return leftOf(
-					rejected(
-						'Draft did not meet minimum participant requirment. Requires a minmum of: 1 player, 1 captain',
-					),
+					rejected('Draft did not meet minimum players requirment. Requires a minmum of: 1 player'),
 				);
 
-			const captains = participants.value.filter(p => p.teamRole === TeamRole.captain);
-			if (captains.length === 0) return leftOf(rejected('Draft does not have at least 1 captain'));
-			const players = participants.value.filter(p => p.teamRole === TeamRole.player);
-			const targetPlayer = players.at(0);
+			const targetPlayer = players.value.at(0);
 			if (targetPlayer === undefined)
 				return leftOf(rejected('Draft missing minimum players. Minmum of: 1 player'));
+
+			const teamsResponse = await eitherOr(
+				db.select().from(teamsToDrafts).where(eq(teamsToDrafts.draftId, draftId)),
+				err => buildCRUDError('read', 'team to draft mapping', err),
+			);
+
+			if (teamsResponse._type === 'left') return teamsResponse;
+			if (teamsResponse.value.length === 0)
+				return leftOf(rejected('Draft missing minimum teams. Minmum of: 1 team'));
 
 			const cleanUnexpectedRounds = await eitherOr(
 				db

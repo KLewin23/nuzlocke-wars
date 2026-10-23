@@ -4,11 +4,11 @@ import { publishEvent } from '@/util/ably';
 import withSession from '@/func/withSession';
 import buildCRUDError from '@/error/crudError';
 import { and, eq, inArray } from 'drizzle-orm';
-import { RoundStatus, bid, db, draft, round } from '@/db';
 import { type QueryState, successOr } from '@/util/query';
 import buildAblyPublishError from '@/error/ablyPublishError';
+import { RoundStatus, bid, db, round, teamsToDrafts } from '@/db';
 
-const updateBid = (bidId: number, draftId: number): Promise<QueryState> =>
+const retractBid = (bidId: number, draftId: number): Promise<QueryState> =>
 	withSession(async session => {
 		const deleteBidResponse = await successOr(
 			db
@@ -16,14 +16,24 @@ const updateBid = (bidId: number, draftId: number): Promise<QueryState> =>
 				.where(
 					and(
 						eq(bid.id, bidId),
-						eq(bid.userId, session.user.id),
 						inArray(
 							bid.id,
 							db
-								.select({ roundId: round.id })
-								.from(round)
-								.innerJoin(draft, eq(draft.currentRoundId, round.id))
-								.where(and(eq(round.roundStatus, RoundStatus.bidding), eq(draft.id, round.draftId))),
+								.select({ data: bid.id })
+								.from(bid)
+								.innerJoin(
+									teamsToDrafts,
+									and(
+										eq(teamsToDrafts.draftId, bid.draftId),
+										eq(teamsToDrafts.teamName, bid.teamName),
+									),
+								)
+								.where(
+									and(
+										eq(round.roundStatus, RoundStatus.bidding),
+										eq(teamsToDrafts.captainId, session.user.id),
+									),
+								),
 						),
 					),
 				)
@@ -35,4 +45,4 @@ const updateBid = (bidId: number, draftId: number): Promise<QueryState> =>
 		return successOr(publishEvent(draftId, 'BidRetracted'), err => buildAblyPublishError('BidRetracted', err));
 	});
 
-export default updateBid;
+export default retractBid;

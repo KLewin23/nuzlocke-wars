@@ -1,6 +1,7 @@
 import type { CreateDraftPayload } from '@/actions/draft/createDraft';
 import type { Control, FieldPath, FieldValues, RegisterOptions } from 'react-hook-form';
 
+import { Team } from './actions';
 import type { ArrElement } from './util';
 
 type RHFControl<T extends FieldValues> = Control<T, unknown, T>;
@@ -16,17 +17,16 @@ interface User {
 	id: string;
 	username: string;
 }
-interface Team {
-	name: string;
-	captain: User;
-	isNew: boolean
+
+interface FormTeam extends Team {
+	captainUsername: string
 }
 
 type CreateDraftPayloadOmitLessTeams = Omit<CreateDraftPayload, 'teams'>;
 
 type CreateDraftForm = Omit<CreateDraftPayloadOmitLessTeams, 'players'> & {
-	teams: Array<Team>;
+	teams: Array<FormTeam>;
 	players: Array<ArrElement<CreateDraftPayloadOmitLessTeams['players']> & { username: string }>;
 };
 
-export type { RHFControl, RHFWatch, RHFProps, Team, CreateDraftForm, User };
+export type { RHFControl, RHFWatch, RHFProps, CreateDraftForm, User, FormTeam };

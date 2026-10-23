@@ -1,8 +1,8 @@
-import { DraftStatus, RoundStatus } from '@/db';
+import type { DraftStatus, RoundStatus } from '@/db';
 
 type GetCurrentCaptainSpend = Array<{
 	coinsSpent: number | null;
-	captainId: string;
+	teamName: string;
 }>;
 
 interface DraftResponse {
@@ -22,7 +22,7 @@ interface DraftResponse {
 interface UserData {
 	username: string;
 	image: string | null;
-	id: string
+	id: string;
 }
 
 // Key = team name
@@ -31,12 +31,20 @@ type GetTeams = Record<
 	{
 		captain: UserData;
 		players: Array<UserData>;
+		coinsSpent: number;
 	}
 >;
+
+interface GetCurrentRound {
+	biddingStartTime: Date | null;
+	roundLength: number;
+	targetPlayer: UserData | null;
+	roundStatus: RoundStatus;
+}
 
 interface GetFullDraft extends DraftResponse {
 	captainSpend: GetCurrentCaptainSpend;
 	teams: GetTeams;
 }
 
-export type { GetCurrentCaptainSpend, GetFullDraft, GetTeams };
+export type { GetCurrentCaptainSpend, GetFullDraft, GetTeams, GetCurrentRound };

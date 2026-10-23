@@ -2,10 +2,10 @@ import z from 'zod';
 import Link from 'next/link';
 import { DraftStatus } from '@/db';
 import Button from '@/atoms/Button';
-import getDrafts from '@/func/draft/authenticated/getDrafts';
 import Title from '@/components/atoms/typography/Title';
 import DashboardNavbar from '@/organisms/DashboardNavbar';
 import ErrorToaster from '@/components/atoms/ErrorToaster';
+import getDrafts from '@/func/serverFunctions/getDrafts';
 import SubTitle from '@/components/atoms/typography/SubTitle';
 import { type QueryFailureState, readableFromFailureType, readableQueryFailure } from '@/util/query';
 
@@ -24,8 +24,8 @@ const queryParamSchema = z.toZod<{
 	}),
 );
 
-const page = async ({ searchParams }: { searchParams?: Record<string, string | undefined> }) => {
-	const params = await searchParams
+const page = async ({ searchParams }: { searchParams?: Promise<Record<string, string | undefined>> }) => {
+	const params = await searchParams;
 	const drafts = await getDrafts();
 	const error = queryParamSchema.safeParse(params);
 

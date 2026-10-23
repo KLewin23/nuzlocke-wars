@@ -1,5 +1,16 @@
 import { defineRelationsPart } from 'drizzle-orm';
-import { type AnyPgColumn, boolean, integer, pgEnum, pgTable, primaryKey, serial, text, timestamp } from 'drizzle-orm/pg-core';
+import {
+	type AnyPgColumn,
+	foreignKey,
+	integer,
+	pgEnum,
+	pgTable,
+	primaryKey,
+	serial,
+	text,
+	timestamp,
+	unique,
+} from 'drizzle-orm/pg-core';
 
 import { user } from './authSchema';
 
@@ -11,13 +22,6 @@ enum DraftStatus {
 }
 
 const draftStatus = pgEnum('draft_status', DraftStatus);
-
-enum TeamRole {
-	captain = 'captain',
-	player = 'player',
-}
-
-const teamRole = pgEnum('team_role', TeamRole);
 
 enum RoundStatus {
 	pre_bidding = 'pre_bidding',
@@ -47,26 +51,37 @@ const round = pgTable('round', {
 		.references(() => user.id),
 	roundStatus: roundStatus('round_status').notNull().default(RoundStatus.pre_bidding),
 	biddingStartTime: timestamp('bidding_start_time', { mode: 'date' }), // MUST BE UTC
-});
+}, t => [
+	unique('targeted_user').on(t.draftId, t.targetUserId)
+]);
 
-const bid = pgTable('bid', {
-	id: serial('id').primaryKey(),
-	userId: text('user_id')
-		.notNull()
-		.references(() => user.id),
-	roundId: integer('round_id')
-		.notNull()
-		.references(() => round.id, { onDelete: 'cascade' }),
-	amount: integer('amount').notNull(),
-	isWinner: boolean('is_winner')
-});
+const bid = pgTable(
+	'bid',
+	{
+		id: serial('id').primaryKey(),
+		draftId: integer('draft_id').notNull(),
+		teamName: text('team_name').notNull(),
+		roundId: integer('round_id')
+			.notNull()
+			.references(() => round.id, { onDelete: 'cascade' }),
+		amount: integer('amount').notNull(),
+	},
+	table => [
+		unique('draft_teams_bid').on(table.draftId, table.roundId, table.teamName),
+		foreignKey({
+			columns: [table.draftId, table.teamName],
+			foreignColumns: [teamsToDrafts.draftId, teamsToDrafts.teamName],
+			name: 'draft_team',
+		}).onDelete('cascade'),
+	],
+);
 
 const team = pgTable('team', {
 	name: text('name').primaryKey(),
 });
 
-const usersToDrafts = pgTable(
-	'users_to_drafts',
+const playersToDrafts = pgTable(
+	'players_to_drafts',
 	{
 		userId: text('user_id')
 			.notNull()
@@ -74,8 +89,7 @@ const usersToDrafts = pgTable(
 		draftId: integer('draft_id')
 			.notNull()
 			.references(() => draft.id),
-		teamName: text('team_name').references(() => team.name),
-		teamRole: teamRole('team_role').notNull(),
+		teamName: text('team_name').references(() => team.name, { onDelete: 'cascade' }),
 	},
 	t => [primaryKey({ columns: [t.draftId, t.userId] })],
 );
@@ -85,15 +99,19 @@ const teamsToDrafts = pgTable(
 	{
 		teamName: text('team_name')
 			.notNull()
-			.references(() => team.name),
+			.references(() => team.name, { onDelete: 'cascade' }),
 		draftId: integer('draft_id')
 			.notNull()
-			.references(() => draft.id),
+			.references(() => draft.id, { onDelete: 'cascade' }),
+		captainId: text('captain_id').notNull(),
 	},
-	t => [primaryKey({ columns: [t.teamName, t.draftId] })],
+	t => [
+		unique('one_captain').on(t.draftId, t.captainId),
+		primaryKey({ columns: [t.teamName, t.draftId] })
+	],
 );
 
-const draftRelations = defineRelationsPart({ user, draft, team, round, bid, usersToDrafts, teamsToDrafts }, r => ({
+const draftRelations = defineRelationsPart({ user, draft, team, round, bid, playersToDrafts, teamsToDrafts }, r => ({
 	draft: {
 		players: r.many.user(),
 		team: r.many.team({
@@ -104,7 +122,7 @@ const draftRelations = defineRelationsPart({ user, draft, team, round, bid, user
 			alias: 'parent_draft_relation',
 		}),
 		currentRound: r.one.round({
-			alias: 'current_round_rlaton',
+			alias: 'current_round_relation',
 			from: r.draft.currentRoundId,
 			to: r.round.id,
 		}),
@@ -127,23 +145,27 @@ const draftRelations = defineRelationsPart({ user, draft, team, round, bid, user
 			from: r.bid.id,
 			to: r.round.id,
 		}),
-		user: r.one.user({
-			from: r.bid.userId,
-			to: r.user.id,
+		team: r.one.team({
+			from: r.bid.teamName.through(r.teamsToDrafts.teamName),
+			to: r.team.name.through(r.teamsToDrafts.teamName),
+		}),
+		draft: r.one.draft({
+			from: r.bid.draftId.through(r.teamsToDrafts.draftId),
+			to: r.draft.id.through(r.teamsToDrafts.draftId),
 		}),
 	},
 	user: {
 		drafts: r.many.draft({
-			from: r.user.id.through(r.usersToDrafts.userId),
-			to: r.draft.id.through(r.usersToDrafts.draftId),
+			from: r.user.id.through(r.playersToDrafts.userId),
+			to: r.draft.id.through(r.playersToDrafts.draftId),
 		}),
-		bids: r.many.bid(),
 		rounds: r.many.round({
 			alias: 'target_user_relation',
 		}),
 	},
 	team: {
 		drafts: r.many.draft(),
+		bids: r.many.bid()
 	},
 }));
 
@@ -152,13 +174,11 @@ export {
 	draft,
 	draftRelations,
 	draftStatus,
+	DraftStatus,
+	playersToDrafts,
 	round,
 	roundStatus,
-	team,
-	teamRole,
-	teamsToDrafts,
-	usersToDrafts,
-	DraftStatus,
 	RoundStatus,
-	TeamRole,
+	team,
+	teamsToDrafts,
 };

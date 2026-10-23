@@ -40,7 +40,7 @@ const TeamsTable = ({ control, users }: Props) => (
 									<TableCell className="capitalize">{'id' in team ? 'Existing' : 'New'}</TableCell>
 									<TableCell className="row justify-center items-center">
 										<Select
-											value={team.captain?.username}
+											value={team.captainUsername}
 											onValueChange={username =>
 												field.onChange(
 													field.value.map(t => ({
@@ -54,7 +54,7 @@ const TeamsTable = ({ control, users }: Props) => (
 											}
 										>
 											<SelectTrigger className="row max-w-50 text-center cursor-pointer">
-												<SelectValue placeholder={team.captain.username} />
+												<SelectValue placeholder={team.captainUsername} />
 											</SelectTrigger>
 											<SelectContent>
 												<SelectGroup>

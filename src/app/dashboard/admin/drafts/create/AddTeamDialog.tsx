@@ -2,7 +2,7 @@
 
 import { toast } from 'sonner';
 import { useState } from 'react';
-import type { Team, User } from '@/type/form';
+import type { FormTeam, User } from '@/type/form';
 import Button from '@/components/atoms/Button';
 import { Plus, UserGroup } from 'lucide-react';
 import toastErrorMesage from '@/util/formError';
@@ -24,9 +24,9 @@ import TeamNameCombobox from './TeamNameCombobox';
 
 interface Props {
 	existingTeams: Array<string>;
-	teamsInForm: Array<Team>;
+	teamsInForm: Array<FormTeam>;
 	users: Array<User>;
-	onTeamSubmission: (team: Team) => void;
+	onTeamSubmission: (team: FormTeam) => void;
 }
 
 interface NewTeamForm {
@@ -54,7 +54,8 @@ const AddTeamDialog = ({ existingTeams, teamsInForm, users, onTeamSubmission }: 
 		toast.success('Team staged.');
 		onTeamSubmission({
 			name: values.teamName,
-			captain,
+			captainId: captain.id,
+			captainUsername: captain.username,
 			isNew: existingTeams.every(team => team !== values.teamName),
 		});
 		return setIsOpen(false);
@@ -104,7 +105,7 @@ const AddTeamDialog = ({ existingTeams, teamsInForm, users, onTeamSubmission }: 
 						rules={{
 							required: { message: 'A team name is required.', value: true },
 							validate: captainUsername => {
-								if (teamsInForm.some(t => t.captain.username === captainUsername))
+								if (teamsInForm.some(t => t.captainUsername === captainUsername))
 									return 'A user can only captain one team in each draft.';
 								if (users.every(u => u.username !== captainUsername))
 									return "Captains username must be a valid user's username.";

@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import { Analytics } from "@vercel/analytics/next"
 import localFont from 'next/font/local';
 import { Toaster } from '@/atoms/Toaster';
 import ThemeWrapper from '@/atoms/ThemeWrapper';
+import { TRPCReactProvider } from '@/trpc/client';
+import { Analytics } from '@vercel/analytics/next';
 import { Quattrocento_Sans, Rye } from 'next/font/google';
 
 import './globals.css';
@@ -40,7 +41,9 @@ const RootLayout = ({ children }: LayoutProps<'/'>) => (
 		<body className="flex min-h-full w-full flex-col">
 			<ThemeWrapper>
 				<Toaster />
-				{children}
+				<TRPCReactProvider>
+					{children}
+				</TRPCReactProvider>
 				<Analytics />
 			</ThemeWrapper>
 		</body>

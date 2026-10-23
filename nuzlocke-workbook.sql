@@ -1,5 +1,6 @@
 -- Active: 1791947165204@@127.0.0.1@54321
 SELECT * FROM public."user";
+SELECT * FROM public."account";
 
 SELECT * FROM public."draft";
 
@@ -8,24 +9,24 @@ SELECT * FROM public."round";
 SELECT * FROM public."bid";
 
 SELECT * FROM public."team";
+SELECT * FROM public."round";
 
-SELECT * FROM public."users_to_drafts";
+SELECT * FROM public."players_to_drafts";
 
 SELECT * FROM public."teams_to_drafts";
 
-INSERT INTO
-    public."bid" (
-        amount,
-        is_winner,
-        round_id,
-        user_id
-    )
-VALUES (
-        20,
-        true,
-        42,
-        'eGtTuLUNX5P14tRNlTBEH5xF89WAIcgX'
-    )
+SELECT * FROM public."user" WHERE id = 'CdZBwbuGsvfQSUADoJfp4M8QkyGXfSWQ'
+
+SELECT draft.id, draft.name, draft.status, count(players_to_drafts.user_id)
+FROM draft
+LEFT JOIN players_to_drafts ON players_to_drafts.draft_id = draft.id
+WHERE draft.id IN (
+    select players.draft_id FROM players_to_drafts as players WHERE players.user_id = 'CdZBwbuGsvfQSUADoJfp4M8QkyGXfSWQ'
+)
+GROUP BY draft.id
+
+
+SELECT * FROM players_to_drafts WHERE players_to_drafts.user_id = 'CdZBwbuGsvfQSUADoJfp4M8QkyGXfSWQ';
 
 -- Load into draft
 -- First request when they come into draft
@@ -49,136 +50,42 @@ WHERE
     -- AND users_to_drafts.user_id = 'EHirX9rXVgweX6Wy2KFZ6F8yDzCJZiVY'
 
 -- Current amount spent for each team captain -- run on load (subtract from initial_player_coins)
-SELECT sum(bid.amount)
-FROM round
-    LEFT JOIN bid ON bid.round_id = round.id
-    JOIN users_to_drafts ON bid.user_id = users_to_drafts.user_id
-WHERE
-    round.draft_id = 42
-    AND users_to_drafts.draft_id = 42
-    AND team_role = 'captain'
-GROUP BY
-    users_to_drafts.user_id;
+
+SELECT sum(bid.amount), teams_to_drafts.team_name
+FROM teams_to_drafts
+JOIN bid ON teams_to_drafts.team_name = bid.team_name AND teams_to_drafts.draft_id = bid.draft_id
+WHERE teams_to_drafts.draft_id = 1
+GROUP BY teams_to_drafts.team_name
+
 
 -- Get Teams -- Run on Load &
 SELECT users_to_drafts.user_id, team.name, users_to_drafts.team_role, team.name, public."user".username, public."user".image
 FROM users_to_drafts
 JOIN team ON users_to_drafts.team_name = team.name
 JOIN public."user" ON users_to_drafts.user_id = public."user".id
+JOIN public."user" ON teamsToDrafts.captain_id = public."user".id
 WHERE users_to_drafts.draft_id = 42
+GROUP BY public."user".id
 
--- Round Started
-SELECT image, username
+SELECT teams_to_drafts.team_name, public."user".username, public."user".image
+FROM teams_to_drafts
+JOIN public."user" ON teams_to_drafts.captain_id = public."user".id
+JOIN draft ON teams_to_drafts.draft_id = draft.id
+JOIN players_to_drafts ON players_to_drafts.draft_id = draft.id
+
+
+-- Bidding has ended, bid submitted, bid retracted
+SELECT teams_to_drafts.captain_id,teams_to_drafts.team_name, public."user".username, public."user".image, sum(bid.amount)
+FROM teams_to_drafts
+JOIN public."user" ON teams_to_drafts.captain_id = public."user".id
+LEFT JOIN bid ON teams_to_drafts.team_name = bid.team_name AND teams_to_drafts.draft_id = bid.draft_id
+GROUP BY teams_to_drafts.captain_id, teams_to_drafts.team_name, public."user".username, public."user".image
+
+
+-- Round Started or Bidding has started
+SELECT round.bidding_start_time, draft.round_length, public."user".id, public."user".username, public."user".image
 FROM draft
     JOIN round ON draft.current_round_id = round.id
     LEFT JOIN public."user" ON round.target_user_id = "public".user.id
 WHERE
-    draft.id = 42
-
--- Bidding has started
-SELECT bidding_start_time
-FROM draft
-    JOIN round ON draft.current_round_id = round.id
-WHERE
-    draft.id = 42
-
--- Bidding has ended, bid submitted, bid retracted
-SELECT bid.amount, bid.user_id
-FROM draft
-    JOIN round ON draft.current_round_id = round.id
-    JOIN bid ON bid.round_id = round.id
-
-SELECT *
-FROM
-    users_to_drafts
-    JOIN draft ON draft.id = users_to_drafts.draft_id
-    JOIN round ON draft.id = round.draft_id
-    LEFT JOIN bid ON bid.round_id = round.id
-WHERE
-    users_to_drafts.team_name = '1792449847103-team'
-    AND users_to_drafts.draft_id = 42
-    AND (
-        bid.is_winner = true
-        OR users_to_drafts.team_role = 'captain'
-    )
-
-SELECT *
-FROM information_schema.columns
-WHERE
-    table_schema = 'public'
-    AND table_name = 'round';
-
-SELECT *
-FROM public.users_to_drafts
-    INNER JOIN public."user" ON users_to_drafts.user_id = public."user".id
-    LEFT JOIN round ON round.target_user_id = public."user".id
-    AND round.draft_id = 1
-WHERE
-    users_to_drafts.draft_id = 1
-    AND round.id IS null
-    AND team_role = 'player';
-
--- INSERT INTO public.team (display_name) VALUES ('my_team');
-
--- INSERT INTO public.draft  (name, status, round_length) VALUES
---     ('test', 'active', 60);
-
-INSERT INTO
-    public.round (
-        draft_id,
-        round_status,
-        target_user_id
-    )
-VALUES (
-        1,
-        'bidding',
-        '3SdBeodKutroNI8zCdXi8yVrVpQj4IOB'
-    );
-
-INSERT INTO
-    public.users_to_drafts (
-        draft_id,
-        user_id,
-        team_role,
-        team_id
-    )
-VALUES (
-        1,
-        '3SdBeodKutroNI8zCdXi8yVrVpQj4IOB',
-        'player',
-        null
-    );
-
-SELECT *
-FROM public.users_to_drafts
-    INNER JOIN draft ON users_to_drafts.draft_id = draft.id
-    INNER JOIN round ON draft.current_round_id = round.id
-WHERE
-    user_id = '0f1fwHW9eqkhKqyuWUpI6xozmoFpnoo1'
-    AND users_to_drafts.draft_id = 1
-    AND team_role = 'captain'
-    AND draft.status = 'active'
-    AND round_status = 'bidding'
-    AND CURRENT_TIMESTAMP < round.bidding_start_time + draft.round_length * interval '1 second'
-
-UPDATE public.round
-SET
-    bidding_start_time = current_timestamp
-WHERE
-    id = 3
-
--- .select({
--- 	id: draft.id,
--- 	name: draft.name,
--- 	status: draft.status,
--- 	playerCount: count(usersToDrafts.userId),
--- })
--- .from(draft)
--- .leftJoin(usersToDrafts, eq(draft.id, usersToDrafts.draftId))
--- .groupBy(draft.id);
-
-SELECT draft.id, count(usersToDrafts.userId)
-FROM public.draft
-    LEFT JOIN users_to_drafts ON draft.id = "public.users_to_drafts".draft_id
-GROUP BY
-    draft.id
+    draft.id = 1

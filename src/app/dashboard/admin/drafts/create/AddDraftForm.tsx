@@ -2,7 +2,6 @@
 
 import { toast } from 'sonner';
 import { useTransition } from 'react';
-import { TeamRole } from '@/db/draftSchema';
 import Button from '@/components/atoms/Button';
 import toastErrorMesage from '@/util/formError';
 import { readableQueryFailure } from '@/util/query';
@@ -39,13 +38,7 @@ const AddDraftForm = ({ existingTeams, users }: Props) => {
 				...values,
 				players: [
 					...values.players.map(p => ({
-						teamRole: TeamRole.player,
 						userId: p.userId,
-					})),
-					...values.teams.map(t => ({
-						teamName: t.name,
-						teamRole: TeamRole.captain,
-						userId: t.captain.id,
 					})),
 				],
 			});

@@ -1,11 +1,19 @@
 import type { Role } from '@/db';
 
-import type { DraftStatus, TeamRole } from '../db/draftSchema';
+import type { DraftStatus } from '../db/draftSchema';
+
+interface BaseTeamData {
+	name: string;
+	captainId: string;
+}
+
+interface Team extends BaseTeamData {
+	isNew: boolean;
+}
 
 interface Player {
 	userId: string;
 	teamName?: string;
-	teamRole: TeamRole;
 }
 
 interface DraftResponse {
@@ -34,4 +42,4 @@ interface CreateUserPayload {
 	imageUrl?: string;
 }
 
-export type { PlayerList, DraftResponseList, UserResponseList, CreateUserPayload };
+export type { PlayerList, DraftResponseList, UserResponseList, CreateUserPayload, Team, BaseTeamData };

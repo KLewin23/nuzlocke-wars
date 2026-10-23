@@ -8,7 +8,7 @@ import buildCRUDError from '@/error/crudError';
 import { eitherOr, leftOf } from '@/util/either';
 import buildAblyPublishError from '@/error/ablyPublishError';
 import { type QueryState, type Success, rejected, successOr } from '@/util/query';
-import { DraftStatus, RoundStatus, TeamRole, bid, db, draft, round, usersToDrafts } from '@/db';
+import { DraftStatus, RoundStatus, bid, db, draft, round, teamsToDrafts } from '@/db';
 
 const createBid = (draftId: number, bidAmount: number): Promise<QueryState> =>
 	withSession<Success>(async session => {
@@ -16,17 +16,16 @@ const createBid = (draftId: number, bidAmount: number): Promise<QueryState> =>
 			db
 				.select({
 					roundId: round.id,
+					teamName: teamsToDrafts.teamName,
 				})
-				.from(usersToDrafts)
-				.innerJoin(draft, eq(draft.id, usersToDrafts.draftId))
+				.from(draft)
 				.innerJoin(round, eq(round.id, draft.currentRoundId))
+				.innerJoin(teamsToDrafts, eq(teamsToDrafts.draftId, draft.id))
 				.where(
 					and(
-						eq(usersToDrafts.userId, session.user.id),
-						eq(usersToDrafts.draftId, draftId),
-						eq(usersToDrafts.teamRole, TeamRole.captain),
-						eq(draft.status, DraftStatus.active),
+						eq(teamsToDrafts.captainId, session.user.id),
 						eq(round.roundStatus, RoundStatus.bidding),
+						eq(draft.status, DraftStatus.active),
 						sql`${new Date()} < ${round.biddingStartTime} + ${draft.roundLength} * interval '1 second'`,
 					),
 				),
@@ -40,7 +39,14 @@ const createBid = (draftId: number, bidAmount: number): Promise<QueryState> =>
 		if (onlyCurrentRound === undefined) return leftOf(rejected('Round was not found, it may have closed.'));
 
 		const createBidResponse = await eitherOr(
-			db.insert(bid).values({ roundId: onlyCurrentRound.roundId, userId: session.user.id, amount: bidAmount }),
+			db
+				.insert(bid)
+				.values({
+					roundId: onlyCurrentRound.roundId,
+					teamName: onlyCurrentRound.teamName,
+					draftId: draftId,
+					amount: bidAmount,
+				}),
 			err => buildCRUDError('create', 'bid', err),
 		);
 		if (createBidResponse._type === 'left') return createBidResponse;

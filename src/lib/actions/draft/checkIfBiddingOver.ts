@@ -1,12 +1,12 @@
 'use server';
 
 import logger from '@/logger';
+import { eq, sql } from 'drizzle-orm';
 import { publishEvent } from '@/util/ably';
 import buildCRUDError from '@/error/crudError';
 import adminSession from '@/func/adminSession';
-import { RoundStatus, bid, db, draft, round } from '@/db';
+import { RoundStatus, db, draft, round } from '@/db';
 import { eitherOr, leftOf, rightOf } from '@/util/either';
-import { and, desc, eq, inArray, sql } from 'drizzle-orm';
 import buildAblyPublishError from '@/error/ablyPublishError';
 import { internalServerError, successOr } from '@/util/query';
 
@@ -36,21 +36,9 @@ const checkIfBiddingOver = (draftId: number) =>
 				type: 'Success' as const,
 			});
 
-		const highestBid = db.select({ data: bid.amount }).from(bid).limit(1).orderBy(desc(bid.amount));
-
 		const setWinnerResponse = await eitherOr(
-			db.transaction(tx =>
-				Promise.all([
-					tx
-						.update(round)
-						.set({ roundStatus: RoundStatus.post_bidding })
-						.where(eq(round.id, currentRound.roundId)),
-					tx
-						.update(bid)
-						.set({ isWinner: true })
-						.where(and(eq(bid.roundId, currentRound.roundId), inArray(bid.id, highestBid))),
-				]),
-			),
+			db.update(round).set({ roundStatus: RoundStatus.post_bidding }).where(eq(round.id, currentRound.roundId)),
+
 			err => buildCRUDError('update', 'round and bid', err),
 		);
 

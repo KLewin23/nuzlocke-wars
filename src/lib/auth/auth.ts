@@ -38,7 +38,7 @@ const auth = betterAuth({
 		enabled: true,
 		autoSignIn: false,
 	},
-	plugins: [username(), nextCookies(), adminPlugin({ ac, roles: { admin, user } })],
+	plugins: [username(), adminPlugin({ ac, roles: { admin, user } }), nextCookies()],
 	rateLimit: {
 		enabled: true,
 		window: 60,
