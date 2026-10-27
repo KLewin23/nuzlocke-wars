@@ -24,6 +24,7 @@ const getUsers = async (): Promise<Either<QueryFailureState, Success<UserRespons
 					.leftJoin(session, eq(user.id, session.userId))
 					.groupBy(user.id),
 				err => buildCRUDError('read', 'drafts', err),
+				false,
 			),
 		{
 			user: ['get'],

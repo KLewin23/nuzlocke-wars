@@ -1,5 +1,5 @@
 import logger from '@/logger';
-import type { AblyEvent } from '@/util/ably';
+import type { AblyEvent } from '@/type/ably';
 import { internalServerError } from '@/util/query';
 
 const buildAblyPublishError = (event: AblyEvent, err: unknown) => {
