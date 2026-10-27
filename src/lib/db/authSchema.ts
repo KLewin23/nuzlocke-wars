@@ -3,7 +3,12 @@ import { boolean, index, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg
 
 // Generated with `pnpm dlx auth@latest generate`
 
-const roleEnum = pgEnum('role', ['super', 'admin', 'basic']);
+enum Role {
+	user = 'user',
+	admin = 'admin',
+}
+
+const roleEnum = pgEnum('role', Role);
 
 const user = pgTable('user', {
 	id: text('id').primaryKey(),
@@ -16,9 +21,12 @@ const user = pgTable('user', {
 		.defaultNow()
 		.$onUpdate(() => /* @__PURE__ */ new Date())
 		.notNull(),
-	username: text('username').unique(),
+	username: text('username').unique().notNull(),
 	displayUsername: text('display_username'),
-	role: roleEnum(),
+	role: roleEnum().notNull().default(Role.user),
+	banned: boolean('banned').default(false),
+	banReason: text('ban_reason'),
+	banExpires: timestamp('ban_expires'),
 });
 
 const session = pgTable(
@@ -36,6 +44,7 @@ const session = pgTable(
 		userId: text('user_id')
 			.notNull()
 			.references(() => user.id, { onDelete: 'cascade' }),
+		impersonatedBy: text('impersonated_by'),
 	},
 	table => [index('session_userId_idx').on(table.userId)],
 );
@@ -105,4 +114,4 @@ const authRelations = defineRelationsPart({ user, session, account, verification
 	},
 }));
 
-export { user, account, session, roleEnum, authRelations, verification };
+export { user, account, session, roleEnum, authRelations, verification, Role };

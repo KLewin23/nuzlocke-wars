@@ -13,6 +13,8 @@ env:
   DATABASE_PORT: 54321
   DATABASE_HOST: 0.0.0.0
   DATABASE_NAME: nuzlocke-wars
+  ABLY_PUBLISH_API_KEY: ${secrets.ABLY_PUBLISH_API_KEY}
+  ABLY_SUBSCRIBE_API_KEY: ${secrets.ABLY_SUBSCRIBE_API_KEY}
 
 jobs:
   cypress-run:
@@ -28,6 +30,11 @@ jobs:
 
       - name: Setup DB
         run: docker compose up -d
+
+      - name: Seed DB
+        run: |
+          pnpm db:migrate
+          pnpm db:seed
 
       - name: Cypress run
         uses: cypress-io/github-action@v7

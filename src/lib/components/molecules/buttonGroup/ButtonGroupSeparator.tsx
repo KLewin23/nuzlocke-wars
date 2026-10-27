@@ -1,0 +1,20 @@
+import cn from 'cnfast';
+import Separator from '@/atoms/Separator';
+
+const ButtonGroupSeparator = ({
+	className,
+	orientation = 'vertical',
+	...props
+}: React.ComponentProps<typeof Separator>) => (
+	<Separator
+		data-slot="button-group-separator"
+		orientation={orientation}
+		className={cn(
+			'bg-input relative self-stretch data-horizontal:mx-px data-horizontal:w-auto data-vertical:my-px data-vertical:h-auto',
+			className,
+		)}
+		{...props}
+	/>
+);
+
+export default ButtonGroupSeparator;

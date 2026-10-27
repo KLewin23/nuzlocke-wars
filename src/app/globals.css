@@ -1,13 +1,20 @@
 @import 'tailwindcss';
 
-:root {
-	--background: #292539;
-	--foreground: oklch(0.97 0.0418 92.2);
+body {
+	color: var(--foreground);
+	font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
 @theme {
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
+	--color-outline: var(--outline);
+
+	--color-popover: var(--popover);
+	--color-popover-hover: var(--popover-hover);
+	--color-popover-foreground: var(--popover-foreground);
+
+	--color-select: var(--select);
 
 	--color-seperator-red: #7e3326;
 	--color-seperator-white: #fff5d6;
@@ -17,22 +24,34 @@
 
 	--font-sans: var(--font-quattrocento-sans);
 	--font-railroad-gothic: var(--font-railroad-gothic);
+	--font-ithaca: var(--font-ithaca);
 	--font-rye: var(--font-rye);
 
 	--breakpoint-xs: 20rem;
-}
-
-body {
-	color: var(--foreground);
-	font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+	--breakpoint-3xl: 130rem;
 }
 
 :root {
-	
+	--background: #292539;
+	--foreground: oklch(0.97 0.0418 92.2);
+	--outline: #100e17;
 	--border: oklch(0.922 0 0);
-	--popover: oklch(1 0 0);
-	--popover-foreground: oklch(0.145 0 0);
+	--popover: #292539;
+	--popover-hover: #1f1b2c;
+	--popover-foreground: oklch(0.985 0 0);
 	--radius: 4px;
+	--select: #292539;
+}
+
+[data-theme='dashboard'] {
+	--background: oklch(0.2684 0.0281 263.92);
+	--foreground: oklch(100% 0 271.152);
+	--outline: #151a24;
+	--border: oklch(100% 0 271.152);
+	--popover: oklch(0.2684 0.0281 263.92);
+	--popover-hover: oklch(22.52% 0.02159 260.549);
+	--popover-foreground: oklch(0.985 0 0);
+	--select: #12161f;
 }
 
 @layer base {
@@ -50,9 +69,20 @@ body {
 		display: flex;
 		flex-direction: column;
 	}
+	input[type='number'] {
+		appearance: textfield
+	}
+	input[type='number']::-webkit-inner-spin-button,
+	input[type='number']::-webkit-outer-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
 }
 
 @layer components {
+	.gradient-radial-green {
+		background-image: linear-gradient(135deg, #399660 0%, #12301f 100%);
+	}
 	.gradient-radial-purple {
 		background-image: linear-gradient(135deg, #392c4f 0%, #150f18 100%);
 	}
@@ -61,6 +91,9 @@ body {
 	}
 	.gradient-gold {
 		background-image: linear-gradient(0deg, #f4bd8d 20%, #cbc5c5 100%);
+	}
+	.border-gradient-gold {
+		border-image: linear-gradient(0deg, #f4bd8d 20%, #cbc5c5 100%) 1;
 	}
 	.gradient-red {
 		background-image: linear-gradient(0deg, #6a4139 0%, #c23b23 100%);

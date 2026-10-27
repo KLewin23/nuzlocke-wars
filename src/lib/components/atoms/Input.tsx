@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { type VariantProps, cn, cva } from 'cnfast';
 
 const buttonVariants = cva(
@@ -16,22 +16,20 @@ const buttonVariants = cva(
 	},
 );
 
-const Input = ({
-	className,
-	variant = 'default',
-	type,
-	...props
-}: React.ComponentProps<'input'> &
+type InputProps = React.ComponentProps<'input'> &
 	VariantProps<typeof buttonVariants> & {
 		asChild?: boolean;
-	}) => (
+	};
+
+const Input = ({ className, variant = 'default', type, ...props }: InputProps) => (
 	<input
 		type={type}
 		data-variant={variant}
 		data-slot="input"
 		className={cn(buttonVariants({ variant, className }))}
 		{...props}
+		value={type === 'number' && props.value === undefined ? '' : props.value}
 	/>
 );
 
-export default Input;
+export { Input, type InputProps };

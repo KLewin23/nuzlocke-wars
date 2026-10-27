@@ -1,4 +1,4 @@
-import { Line } from "@/lib/type/rules";
+import { Line } from "@/type/rules";
 import Link from "next/link";
 
 interface Props {

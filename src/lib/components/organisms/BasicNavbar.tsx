@@ -1,4 +1,4 @@
-import Navbar from '@molecules/navbar';
+import Navbar from '@/molecules/navbar';
 
 const BasicNavbar = () => (
 	<Navbar
@@ -11,4 +11,4 @@ const BasicNavbar = () => (
 	/>
 );
 
-export { BasicNavbar };
+export default BasicNavbar;

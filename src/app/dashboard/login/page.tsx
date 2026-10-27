@@ -1,18 +1,14 @@
 'use client';
 
 import { toast } from 'sonner';
-import Input from '@atoms/Input';
-import Title from '@images/Title';
-import Button from '@atoms/Button';
+import Title from '@/images/Title';
+import Button from '@/atoms/Button';
+import { Input } from '@/atoms/Input';
 import { useRouter } from 'next/navigation';
-import { MouseEvent, useState } from 'react';
-import { authClient } from '@lib/auth-client';
+import { authClient } from '@/auth/auth-client';
+import { type MouseEvent, useState } from 'react';
 
-interface Props {
-	searchParams: Promise<Record<string, string> | Array<string> | undefined>;
-}
-
-const page = () => {
+const Page = () => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const router = useRouter();
@@ -21,19 +17,26 @@ const page = () => {
 		e.preventDefault();
 		if (username === '') return toast.error('A username is required');
 		if (password === '') return toast.error('A password is required');
-		await authClient.signIn.username({
-			username,
-			password,
-			fetchOptions: {
-				onSuccess: () => void router.push('/dashboard/drafts'),
-				onError: () => void toast.error('Invalid credentials, please try again.'),
-			},
-		});
+		await authClient.signIn
+			.username({
+				username,
+				password,
+				fetchOptions: {
+					onSuccess: () => void router.push('/dashboard/drafts'),
+					onError: err => {
+						// console.error(new Error(err.error.message, { cause: err.error.cause }), 'Login Error');
+						toast.error(err.error.message ?? 'Invalid credentials, please try again.');
+					},
+				},
+			})
+			.catch(
+				() => void toast.error('Login Failure', { description: 'An error occoured when attempting to login.' }),
+			);
 	};
 
 	return (
 		<div className="col mt-[30vh] w-87.5 items-center gap-16 p-4">
-			<Title />
+			<Title variant="dashboard" />
 			<form className="col w-full gap-8">
 				<Input
 					placeholder="Enter your username"
@@ -46,7 +49,7 @@ const page = () => {
 					value={password}
 					onChange={e => setPassword(e.currentTarget.value)}
 				/>
-				<Button palette="gold" onClick={e => handleLogin(e)}>
+				<Button palette="gold" onClick={e => void handleLogin(e)}>
 					Login
 				</Button>
 			</form>
@@ -54,4 +57,4 @@ const page = () => {
 	);
 };
 
-export default page;
+export default Page;

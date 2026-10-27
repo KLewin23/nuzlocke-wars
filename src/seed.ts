@@ -1,37 +1,125 @@
-import { auth } from '@auth';
-import { db, user } from '@db';
-import { eq } from 'drizzle-orm';
+import logger from '@/logger';
+import { auth } from '@/auth/auth';
+import { faker } from '@faker-js/faker';
+import { Role, db, draft, playersToDrafts, team, teamsToDrafts } from '@/db';
 
-const seed = async () => {
-	await auth.api.signUpEmail({
+const arrayOf = (length: number): Array<unknown> => Array.from(Array(length));
+
+const setupCoreUsers = async () => {
+	await auth.api.createUser({
 		body: {
 			email: 'basic@basic.com',
 			name: 'Basic',
-			username: 'Basic',
-			password: 'Basic123.',
+			password: 'Basic',
+			role: Role.user,
+			data: {
+				username: 'Basic',
+			},
 		},
 	});
-	await auth.api.signUpEmail({
+	await auth.api.createUser({
 		body: {
 			email: 'admin@admin.com',
 			name: 'Admin',
-			username: 'Admin',
-			password: 'Admin123.',
+			password: 'Admin',
+			role: 'admin',
+			data: {
+				username: 'Admin',
+			},
 		},
 	});
-	await auth.api.signUpEmail({
-		body: {
-			email: 'super@super.com',
-			name: 'Super',
-			username: 'Super',
-			password: 'Super123.',
-		},
-	});
-
-	await db.update(user).set({role: 'admin'}).where(eq(user.name, 'Admin'))
-	await db.update(user).set({role: 'super'}).where(eq(user.name, 'Super'))
 };
 
-seed()
-	.then(() => console.log('Successfully seeded db'))
-	.catch(e => console.log(`Failed to seed db ${e}`));
+const seedUser = async (role: Role) => {
+	const name = faker.person.fullName();
+	const username = `${faker.internet.username().replace(/[^0-9a-z]/gi, '')}${faker.date.anytime().getFullYear()}`;
+
+	return await auth.api.createUser({
+		body: {
+			email: `${username}@nuzlocke-wars.com`,
+			name: name,
+			password: 'password',
+			role,
+			data: {
+				username: username,
+			},
+		},
+	});
+};
+
+const seedDraft = async (usersPerTeam: number, teamCount: number) => {
+	const users = await Promise.all(arrayOf(usersPerTeam * teamCount).map(() => seedUser(Role.user)));
+	const teams = await db
+		.insert(team)
+		.values(arrayOf(teamCount).map(() => ({ name: faker.company.name().replace(/[^0-9a-z]/gi, '') })))
+		.returning({ name: team.name });
+	const draftResponse = await db
+		.insert(draft)
+		.values({
+			name: `${faker.animal.type()} Draft`,
+			initialPlayerCoins: faker.number.int({ max: 120, min: 30 }),
+			maxPlayersPerTeam: faker.number.int({ max: 8, min: 3 }),
+			roundLength: faker.number.int({ max: 180, min: 30 }),
+		})
+		.returning({ id: draft.id });
+	const createdDraft = draftResponse.at(0);
+	if (!createdDraft) throw new Error('Failed to create draft...');
+	const captains = users.slice(0, teamCount);
+	const players = users.slice(teamCount);
+
+	await db.insert(playersToDrafts).values(
+		players.map(p => ({
+			userId: p.user.id,
+			draftId: createdDraft.id,
+		})),
+	);
+	await db.insert(teamsToDrafts).values(
+		captains.map((c, index) => ({
+			teamName: teams[index].name,
+			draftId: createdDraft.id,
+			captainId: c.user.id,
+		})),
+	);
+};
+
+const main = async () => {
+	await setupCoreUsers();
+	await seedDraft(5, 4);
+	await Promise.all(arrayOf(50).map(() => seedUser(Role.user)));
+	await Promise.all(arrayOf(10).map(() => seedUser(Role.admin)));
+	// const teams = await db
+	// 	.insert(team)
+	// 	.values(arrayOf(10).map(() => ({ name: faker.company.name().replace(/[^0-9a-z]/gi, '') })))
+	// 	.returning({ name: team.name });
+	// const drafts = await db
+	// 	.insert(draft)
+	// 	.values(
+	// 		arrayOf(10).map(() => ({
+	// 			name: `${faker.animal.type()} Draft`,
+	// 			initialPlayerCoins: faker.number.int({ max: 120, min: 30 }),
+	// 			maxPlayersPerTeam: faker.number.int({ max: 8, min: 3 }),
+	// 			roundLength: faker.number.int({ max: 180, min: 30 }),
+	// 		})),
+	// 	)
+	// 	.returning({ id: draft.id });
+	// const simpleUserIds = await db.select({ id: user.id }).from(user).where(eq(user.role, Role.user));
+	// await db.insert(teamsToDrafts).values(
+	// 	teams.flatMap(({ name }, index) => {
+	// 		const draftId = drafts.at(index);
+	// 		const captainId = simpleUserIds.at(index);
+	// 		return draftId && captainId ?
+	// 				[
+	// 					{
+	// 						draftId: draftId.id,
+	// 						teamName: name,
+	// 						captainId: captainId.id,
+	// 					},
+	// 				]
+	// 			:	[];
+	// 	}),
+	// );
+};
+
+main()
+	.then(() => logger.info('Successfully seeded db'))
+	.catch(e => logger.error(`Failed to seed db ${e}`));

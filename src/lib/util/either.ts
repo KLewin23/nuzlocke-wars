@@ -1,0 +1,28 @@
+interface Left<V> {
+	_type: 'left';
+	value: V;
+}
+
+interface Right<V> {
+	_type: 'right';
+	value: V;
+}
+
+type Either<L, R> = Left<L> | Right<R>;
+
+const leftOf = <V>(value: V): Left<V> => ({ _type: 'left', value });
+const rightOf = <V>(value: V): Right<V> => ({ _type: 'right', value });
+
+const eitherOr = <L, R>(promise: Promise<R>, or: (e: unknown) => L): Promise<Either<L, R>> =>
+	promise.then(rightOf).catch(e => leftOf(or(e)));
+
+const unwrap = <L, R>(either: Either<L, R>): L | R => (either._type === 'left' ? either.value : either.value);
+
+const throwOnLeft = <L, R>(either: Either<L, R>, leftArError: (left: L) => Error): R => {
+	if (either._type === 'left') throw leftArError(either.value);
+	return either.value;
+};
+
+export { eitherOr, leftOf, rightOf, unwrap, throwOnLeft };
+
+export type { Either, Left, Right };

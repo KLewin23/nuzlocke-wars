@@ -1,10 +1,18 @@
 import type { Metadata } from 'next';
-import { Analytics } from "@vercel/analytics/next"
 import localFont from 'next/font/local';
+import { Toaster } from '@/atoms/Toaster';
+import ThemeWrapper from '@/atoms/ThemeWrapper';
+import { TRPCReactProvider } from '@/trpc/client';
+import { Analytics } from '@vercel/analytics/next';
 import { Quattrocento_Sans, Rye } from 'next/font/google';
+import TooltipProvider from '@/components/atoms/tooltip/TooltipProvider';
 
 import './globals.css';
-import { Toaster } from '@atoms/Toaster';
+
+const ithaca = localFont({
+	src: '../../public/Ithaca.ttf',
+	variable: '--font-ithaca',
+});
 
 const railroadGothic = localFont({
 	src: '../../public/RailroadGothicCC.ttf',
@@ -26,21 +34,26 @@ export const metadata: Metadata = {
 	description: 'Nuzlocke Wars',
 };
 
-export default function RootLayout({ children }: LayoutProps<'/'>) {
-	return (
-		<html
-			lang="en"
-			className={`${quattrocentoSans.variable} ${railroadGothic.variable} ${rye.variable} h-full antialiased`}
-		>
-			<head>
-				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-				<meta lang="en" />
-			</head>
-			<body className="flex min-h-full w-full flex-col">
+const RootLayout = ({ children }: LayoutProps<'/'>) => (
+	<html
+		lang="en"
+		suppressHydrationWarning
+		className={`${quattrocentoSans.variable} ${railroadGothic.variable} ${rye.variable} ${ithaca.variable} h-full antialiased`}
+	>
+		<head>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+			<meta lang="en" />
+		</head>
+		<body className="flex min-h-full w-full flex-col">
+			<ThemeWrapper>
 				<Toaster />
-				{children}
+				<TooltipProvider>
+					<TRPCReactProvider>{children}</TRPCReactProvider>
+				</TooltipProvider>
 				<Analytics />
-			</body>
-		</html>
-	);
-}
+			</ThemeWrapper>
+		</body>
+	</html>
+);
+
+export default RootLayout;

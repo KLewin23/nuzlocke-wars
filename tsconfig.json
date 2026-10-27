@@ -19,30 +19,28 @@
 			}
 		],
 		"paths": {
-			"@/*": ["./src/*"],
-			"@lib/*": ["./src/lib/*"],
-			"@public/*": ["./public/*"],
-			"@type/*": ["./src/lib/type/*"],
-			"@images/*": ["./src/lib/components/images/*"],
-			"@organisms/*": ["./src/lib/components/organisms/*"],
-			"@molecules/*": ["./src/lib/components/molecules/*"],
-			"@atoms/*": ["./src/lib/components/atoms/*"],
-			"@hooks/*": ["./src/lib/hooks/*"],
-			"@data/*": ["./src/data/*"],
-			"@auth": ["./src/lib/auth"],
-			"@env/*": ["./src/lib/env/*"],
-			"@db": ["./src/lib/db/index"]
+			"@/*": ["./src/lib/*"],
+			"@/lib/*": ["./src/lib/*"],
+			"@/public/*": ["./public/*"],
+			"@/images/*": ["./src/lib/components/images/*"],
+			"@/organisms/*": ["./src/lib/components/organisms/*"],
+			"@/molecules/*": ["./src/lib/components/molecules/*"],
+			"@/atoms/*": ["./src/lib/components/atoms/*"],
+			"@/data/*": ["./src/data/*"],
+			"@/db": ["./src/lib/db/index"],
+			"@/db/*": ["./src/lib/db/*"],
 		}
 	},
 	"include": [
 		"next-env.d.ts",
+		"src/svg.d.ts",
 		"**/*.ts",
 		"**/*.tsx",
 		".next/types/**/*.ts",
 		".next/dev/types/**/*.ts",
 		"**/*.mts",
 		"src/seed.ts",
-		".next/dev/dev/types/**/*.ts"
+		".next/dev/dev/types/**/*.ts",
 	],
 	"exclude": ["node_modules"]
 }

@@ -37,9 +37,9 @@ This is a guide to add new rules and rule segments to the website homepage
 1. Copy your preferably square image into `./public` we accept most standard types
 2. Add the import statement to the top of the `./src/data/rules.ts` file e.g. 
     ```ts 
-        import MyImage from '@public/MySpecialImage.png';
+        import MyImage from '@/public/MySpecialImage.png';
     ```
-    The name of the import before the `from` does not have to match the file name, but it must be unique in the `rules.ts` file. The `@public` just means in the `./public` folder.
+    The name of the import before the `from` does not have to match the file name, but it must be unique in the `rules.ts` file. The `@/public` just means in the `./public` folder.
 3. Use the import name `MyImage` in the above in as the value for the image property in a rule segment
 
 ## Colours
