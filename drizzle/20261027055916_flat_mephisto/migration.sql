@@ -32,7 +32,8 @@ CREATE TABLE "round" (
 	"draft_id" integer NOT NULL,
 	"target_user_id" text NOT NULL,
 	"round_status" "round_status" DEFAULT 'pre_bidding'::"round_status" NOT NULL,
-	"bidding_start_time" timestamp
+	"bidding_start_time" timestamp,
+	CONSTRAINT "targeted_user" UNIQUE("draft_id","target_user_id")
 );
 --> statement-breakpoint
 CREATE TABLE "team" (
@@ -43,7 +44,8 @@ CREATE TABLE "teams_to_drafts" (
 	"team_name" text,
 	"draft_id" integer,
 	"captain_id" text NOT NULL,
-	CONSTRAINT "teams_to_drafts_pkey" PRIMARY KEY("team_name","draft_id")
+	CONSTRAINT "teams_to_drafts_pkey" PRIMARY KEY("team_name","draft_id"),
+	CONSTRAINT "one_captain" UNIQUE("draft_id","captain_id")
 );
 --> statement-breakpoint
 CREATE TABLE "account" (

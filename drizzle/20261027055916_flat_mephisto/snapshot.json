@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "ce88c7e7-6b60-4548-bbda-c4950aa40b28",
+  "id": "fd69104a-a05f-4a38-92a9-ad9e57ed00ea",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
@@ -1324,6 +1324,30 @@
       "entityType": "uniques",
       "schema": "public",
       "table": "bid"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "draft_id",
+        "target_user_id"
+      ],
+      "nullsNotDistinct": false,
+      "name": "targeted_user",
+      "entityType": "uniques",
+      "schema": "public",
+      "table": "round"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "draft_id",
+        "captain_id"
+      ],
+      "nullsNotDistinct": false,
+      "name": "one_captain",
+      "entityType": "uniques",
+      "schema": "public",
+      "table": "teams_to_drafts"
     },
     {
       "nameExplicit": false,
