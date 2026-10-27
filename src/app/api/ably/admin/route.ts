@@ -5,9 +5,9 @@ import { auth } from '@/auth/auth';
 import { env } from '@/env/server';
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { forbidden, unauthorized } from 'next/navigation';
 import { eitherOr, unwrap } from '@/util/either';
 import routeErrorResponse from '@/func/routErrorResponse';
+import { forbidden, unauthorized } from 'next/navigation';
 
 const POST = async (request: Request) => {
 	const session = await auth.api.getSession({
@@ -15,17 +15,11 @@ const POST = async (request: Request) => {
 	});
 	if (!session?.user) return unauthorized();
 
-	const hasPermission = await auth.api.userHasPermission({
-		body: {
-			userId: session?.user.id,
-			role: 'admin',
-			permissions: {},
-		},
-	});
-	if (!hasPermission) return forbidden()
+	
+	if (session.user.role !== 'admin') return forbidden();
 
 	const data = await request.formData();
-	const parseDraftId = z.number().safeParse(data.get('draftId'));
+	const parseDraftId = z.coerce.number().safeParse(data.get('draftId'));
 	if (!parseDraftId.success) return routeErrorResponse(`Could not parse draftId \`${parseDraftId.data}\``, 400);
 
 	const client = new Ably.Rest(env.ABLY_SUBSCRIBE_API_KEY);

@@ -17,6 +17,20 @@ SELECT * FROM public."teams_to_drafts";
 
 SELECT * FROM public."user" WHERE id = 'CdZBwbuGsvfQSUADoJfp4M8QkyGXfSWQ'
 
+UPDATE round
+SET round_status = 'pre_bidding', bidding_start_time = NULL
+WHERE id = 1; 
+
+
+SELECT round.target_user_id, draft.id, bid.team_name
+FROM draft
+JOIN round ON draft.id = round.draft_id
+JOIN bid ON draft.id = bid.draft_id AND bid.round_id = round.id
+WHERE draft.id = 1 
+ORDER BY bid.amount DESC
+LIMIT 1;
+
+
 SELECT draft.id, draft.name, draft.status, count(players_to_drafts.user_id)
 FROM draft
 LEFT JOIN players_to_drafts ON players_to_drafts.draft_id = draft.id
@@ -89,3 +103,4 @@ FROM draft
     LEFT JOIN public."user" ON round.target_user_id = "public".user.id
 WHERE
     draft.id = 1
+

@@ -8,36 +8,31 @@ import { type QueryState, successOr } from '@/util/query';
 import buildAblyPublishError from '@/error/ablyPublishError';
 import { RoundStatus, bid, db, round, teamsToDrafts } from '@/db';
 
-const retractBid = (bidId: number, draftId: number): Promise<QueryState> =>
+const retractBid = async (bidId: number, draftId: number): Promise<QueryState> =>
 	withSession(async session => {
 		const deleteBidResponse = await successOr(
-			db
-				.delete(bid)
-				.where(
-					and(
-						eq(bid.id, bidId),
-						inArray(
-							bid.id,
-							db
-								.select({ data: bid.id })
-								.from(bid)
-								.innerJoin(
-									teamsToDrafts,
-									and(
-										eq(teamsToDrafts.draftId, bid.draftId),
-										eq(teamsToDrafts.teamName, bid.teamName),
-									),
-								)
-								.where(
-									and(
-										eq(round.roundStatus, RoundStatus.bidding),
-										eq(teamsToDrafts.captainId, session.user.id),
-									),
+			db.delete(bid).where(
+				and(
+					eq(bid.id, bidId),
+					inArray(
+						bid.id,
+						db
+							.select({ data: bid.id })
+							.from(bid)
+							.innerJoin(
+								teamsToDrafts,
+								and(eq(teamsToDrafts.draftId, bid.draftId), eq(teamsToDrafts.teamName, bid.teamName)),
+							)
+							.innerJoin(round, eq(bid.roundId, round.id))
+							.where(
+								and(
+									eq(round.roundStatus, RoundStatus.bidding),
+									eq(teamsToDrafts.captainId, session.user.id),
 								),
-						),
+							),
 					),
-				)
-				.returning({}),
+				),
+			),
 			err => buildCRUDError('read', 'bid', err),
 		);
 		if (deleteBidResponse._type === 'left') return deleteBidResponse;

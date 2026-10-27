@@ -3,38 +3,23 @@ import Link from 'next/link';
 import { DraftStatus } from '@/db';
 import Button from '@/atoms/Button';
 import Title from '@/components/atoms/typography/Title';
+import getDrafts from '@/func/serverFunctions/getDrafts';
 import DashboardNavbar from '@/organisms/DashboardNavbar';
 import ErrorToaster from '@/components/atoms/ErrorToaster';
-import getDrafts from '@/func/serverFunctions/getDrafts';
 import SubTitle from '@/components/atoms/typography/SubTitle';
-import { type QueryFailureState, readableFromFailureType, readableQueryFailure } from '@/util/query';
-
-const queryParamSchema = z.toZod<{
-	type: QueryFailureState['type'];
-}>()(
-	z.object({
-		type: z.union([
-			z.literal('Forbidden'),
-			z.literal('NotFound'),
-			z.literal('Unauthorized'),
-			z.literal('Rejected'),
-			z.literal('BadRequest'),
-			z.literal('InternalServerError'),
-		]),
-	}),
-);
+import { queryFailureSchema, readableFromFailureType, readableQueryFailure } from '@/util/query';
 
 const page = async ({ searchParams }: { searchParams?: Promise<Record<string, string | undefined>> }) => {
 	const params = await searchParams;
 	const drafts = await getDrafts();
-	const error = queryParamSchema.safeParse(params);
+	const error = z.object({ errorType: queryFailureSchema }).safeParse(params);
 
 	return (
 		<div className="col h-screen max-h-screen w-full gap-8 overflow-hidden">
 			<ErrorToaster
 				error={
 					error.success ?
-						{ title: 'Error loading draft.', description: readableFromFailureType(error.data.type) }
+						{ title: 'Error loading draft.', description: readableFromFailureType(error.data.errorType) }
 					:	undefined
 				}
 			/>

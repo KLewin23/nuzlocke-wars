@@ -28,6 +28,7 @@ const Input = ({ className, variant = 'default', type, ...props }: InputProps) =
 		data-slot="input"
 		className={cn(buttonVariants({ variant, className }))}
 		{...props}
+		value={type === 'number' && props.value === undefined ? '' : props.value}
 	/>
 );
 

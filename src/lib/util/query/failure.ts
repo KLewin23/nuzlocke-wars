@@ -1,5 +1,7 @@
+import z from 'zod';
 import { toast } from 'sonner';
 import { match } from 'ts-pattern';
+import type { TRPCError } from '@trpc/server';
 import type { TransitionStartFunction } from 'react';
 
 // Something has gone wrong.
@@ -99,6 +101,51 @@ const failureAsTransition = (failureState: QueryFailureState, startTransitionFn:
 		toast(failure.title, { description: failure.description });
 	});
 
+const queryFailureSchema = z.toZod<QueryFailureState['type']>()(
+	z.union([
+		z.literal('Forbidden'),
+		z.literal('NotFound'),
+		z.literal('Unauthorized'),
+		z.literal('Rejected'),
+		z.literal('BadRequest'),
+		z.literal('InternalServerError'),
+	]),
+);
+
+const asTRPCError = (failureState: QueryFailureState): TRPCError =>
+	match(failureState)
+		.with({ type: 'BadRequest' }, (err): TRPCError => ({
+			name: 'TRPCError',
+			code: 'BAD_REQUEST',
+			message: err.cause,
+		}))
+		.with({ type: 'Forbidden' }, (): TRPCError => ({
+			name: 'TRPCError',
+			code: 'FORBIDDEN',
+			message: 'User is not authorized to access the requested resource.',
+		}))
+		.with({ type: 'Unauthorized' }, (): TRPCError => ({
+			name: 'TRPCError',
+			code: 'UNAUTHORIZED',
+			message: 'User is not authenticated (logged in)',
+		}))
+		.with({ type: 'NotFound' }, (err): TRPCError => ({
+			name: 'TRPCError',
+			code: 'NOT_FOUND',
+			message: err.message,
+		}))
+		.with({ type: 'Rejected' }, (err): TRPCError => ({
+			name: 'TRPCError',
+			code: 'PRECONDITION_FAILED',
+			message: err.reason,
+		}))
+		.with({ type: 'InternalServerError' }, (err): TRPCError => ({
+			name: 'TRPCError',
+			code: 'INTERNAL_SERVER_ERROR',
+			message: err.message,
+		}))
+		.exhaustive();
+
 export {
 	internalServerError,
 	badRequest,
@@ -107,6 +154,8 @@ export {
 	failureAsTransition,
 	rejected,
 	readableFromFailureType,
+	asTRPCError,
+	queryFailureSchema,
 };
 
 export type { InternalServerError, QueryFailureState };

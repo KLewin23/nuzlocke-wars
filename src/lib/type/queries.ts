@@ -5,19 +5,16 @@ type GetCurrentCaptainSpend = Array<{
 	teamName: string;
 }>;
 
-interface DraftResponse {
+interface DraftInfo {
 	name: string;
 	status: DraftStatus;
 	roundLength: number;
 	initialPlayerCoins: number;
 	maxPlayersPerTeam: number;
 	roundStatus: RoundStatus;
-	biddingStartTime: Date | null;
-	targetUser: {
-		username: string;
-		image: string | null;
-	} | null;
 }
+
+type TargetUser = Omit<UserData, 'id'> | null;
 
 interface UserData {
 	username: string;
@@ -25,26 +22,45 @@ interface UserData {
 	id: string;
 }
 
+interface TeamData {
+	captain: UserData;
+	players: Array<UserData>;
+	coinsSpent: number;
+	// latestBid: number | null
+}
+
 // Key = team name
-type GetTeams = Record<
-	string,
-	{
-		captain: UserData;
-		players: Array<UserData>;
-		coinsSpent: number;
-	}
->;
+type GetTeams = Record<string, TeamData>;
+
+interface Bid {
+	id: number
+	teamName: string;
+	amount: number;
+	captainId: string;
+}
 
 interface GetCurrentRound {
 	biddingStartTime: Date | null;
 	roundLength: number;
 	targetPlayer: UserData | null;
 	roundStatus: RoundStatus;
+	bids: Array<Bid>;
 }
 
-interface GetFullDraft extends DraftResponse {
-	captainSpend: GetCurrentCaptainSpend;
-	teams: GetTeams;
+interface GetFullDraft {
+	// captainSpend: GetCurrentCaptainSpend;
+	info?: DraftInfo;
+	teams?: GetTeams;
+	currentRound?: GetCurrentRound;
 }
 
-export type { GetCurrentCaptainSpend, GetFullDraft, GetTeams, GetCurrentRound };
+export type {
+	GetCurrentCaptainSpend,
+	GetFullDraft,
+	GetTeams,
+	GetCurrentRound,
+	TargetUser,
+	TeamData,
+	UserData,
+	DraftInfo,
+};

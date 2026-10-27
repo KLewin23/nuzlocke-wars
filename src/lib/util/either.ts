@@ -18,6 +18,11 @@ const eitherOr = <L, R>(promise: Promise<R>, or: (e: unknown) => L): Promise<Eit
 
 const unwrap = <L, R>(either: Either<L, R>): L | R => (either._type === 'left' ? either.value : either.value);
 
-export { eitherOr, leftOf, rightOf, unwrap };
+const throwOnLeft = <L, R>(either: Either<L, R>, leftArError: (left: L) => Error): R => {
+	if (either._type === 'left') throw leftArError(either.value);
+	return either.value;
+};
+
+export { eitherOr, leftOf, rightOf, unwrap, throwOnLeft };
 
 export type { Either, Left, Right };

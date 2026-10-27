@@ -8,7 +8,7 @@ import adminSession from '@/func/adminSession';
 import buildAblyPublishError from '@/error/ablyPublishError';
 import type { QueryStateWithNonFailure, Success } from '@/util/query';
 
-const startNextRound = async (draftId: number): Promise<QueryStateWithNonFailure<Success>> =>
+const startBidding = async (draftId: number): Promise<QueryStateWithNonFailure<Success>> =>
 	adminSession(
 		async () => {
 			const updateResponse = await eitherOr(
@@ -24,4 +24,4 @@ const startNextRound = async (draftId: number): Promise<QueryStateWithNonFailure
 			draft: ['update'],
 		},
 	);
-export default startNextRound;
+export default startBidding;

@@ -1,13 +1,12 @@
 'use server';
 
 import logger from '@/logger';
-import type { QueryResult } from 'pg';
 import { and, eq, ne } from 'drizzle-orm';
 import buildCRUDError from '@/error/crudError';
 import adminSession from '@/func/adminSession';
 import buildActionError from '@/error/actionError';
-import { rejected, successOr } from '@/util/query';
 import { eitherOr, leftOf, rightOf } from '@/util/either';
+import { notFound, rejected, successOr } from '@/util/query';
 import type { QueryStateWithNonFailure, Success } from '@/util/query';
 import { DraftStatus, RoundStatus, db, draft, playersToDrafts, round, teamsToDrafts } from '@/db';
 
@@ -25,7 +24,7 @@ const openDraft = async (draftId: number): Promise<QueryStateWithNonFailure<Succ
 			if (draftResponse._type === 'left') return draftResponse;
 			if (draftResponse.value.length > 1) logger.warn('Multiple drafts found while opening draft.');
 			const draftRecord = draftResponse.value.at(0);
-			if (draftRecord === undefined) return leftOf(rejected('Draft was not found.'));
+			if (draftRecord === undefined) return leftOf(notFound('Draft was not found.'));
 
 			const players = await eitherOr(
 				db.select().from(playersToDrafts).where(eq(playersToDrafts.draftId, draftId)),
@@ -40,7 +39,7 @@ const openDraft = async (draftId: number): Promise<QueryStateWithNonFailure<Succ
 
 			const targetPlayer = players.value.at(0);
 			if (targetPlayer === undefined)
-				return leftOf(rejected('Draft missing minimum players. Minmum of: 1 player'));
+				return leftOf(rejected('Draft does not have minimum players. Minmum of: 1 player'));
 
 			const teamsResponse = await eitherOr(
 				db.select().from(teamsToDrafts).where(eq(teamsToDrafts.draftId, draftId)),
@@ -49,7 +48,7 @@ const openDraft = async (draftId: number): Promise<QueryStateWithNonFailure<Succ
 
 			if (teamsResponse._type === 'left') return teamsResponse;
 			if (teamsResponse.value.length === 0)
-				return leftOf(rejected('Draft missing minimum teams. Minmum of: 1 team'));
+				return leftOf(rejected('Draft does not have minimum teams. Minmum of: 1 team'));
 
 			const cleanUnexpectedRounds = await eitherOr(
 				db

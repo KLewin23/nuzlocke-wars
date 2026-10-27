@@ -10,7 +10,7 @@ import buildAblyPublishError from '@/error/ablyPublishError';
 import { type QueryState, type Success, rejected, successOr } from '@/util/query';
 import { DraftStatus, RoundStatus, bid, db, draft, round, teamsToDrafts } from '@/db';
 
-const createBid = (draftId: number, bidAmount: number): Promise<QueryState> =>
+const createBid = async (draftId: number, bidAmount: number): Promise<QueryState> =>
 	withSession<Success>(async session => {
 		const currentRound = await eitherOr(
 			db
@@ -39,14 +39,12 @@ const createBid = (draftId: number, bidAmount: number): Promise<QueryState> =>
 		if (onlyCurrentRound === undefined) return leftOf(rejected('Round was not found, it may have closed.'));
 
 		const createBidResponse = await eitherOr(
-			db
-				.insert(bid)
-				.values({
-					roundId: onlyCurrentRound.roundId,
-					teamName: onlyCurrentRound.teamName,
-					draftId: draftId,
-					amount: bidAmount,
-				}),
+			db.insert(bid).values({
+				roundId: onlyCurrentRound.roundId,
+				teamName: onlyCurrentRound.teamName,
+				draftId: draftId,
+				amount: bidAmount,
+			}),
 			err => buildCRUDError('create', 'bid', err),
 		);
 		if (createBidResponse._type === 'left') return createBidResponse;

@@ -8,12 +8,13 @@ interface Props {
 	userId: string;
 	draftId: number;
 	children: ReactNode;
+	mode?: 'admin' | 'basic'
 }
 
-const AblyProvider = ({ userId, draftId, children }: Props) => {
+const AblyProvider = ({ userId, draftId, children, mode = 'basic' }: Props) => {
 	const realtimeClient = new Ably.Realtime({
 		clientId: userId,
-		authUrl: '/api/ably',
+		authUrl: mode === 'basic' ? '/api/ably' : '/api/ably/admin',
 		authMethod: 'POST',
 		authParams: {
 			draftId: draftId.toString(),

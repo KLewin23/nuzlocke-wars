@@ -8,7 +8,8 @@ import { type Either, eitherOr, leftOf, rightOf } from '@/util/either';
 import { type QueryFailureState, type Success, notFound } from '@/util/query';
 
 import getTeams from './getTeams';
-import getCaptainSpend from './getCaptainSpend';
+// import getCaptainSpend from './getCaptainSpend';
+import getCurrentRound from './getCurrentRound';
 
 const getFullDraft = async (
 	session: typeof auth.$Infer.Session,
@@ -46,18 +47,22 @@ const getFullDraft = async (
 	const targetDraft = draftResponse.value.at(0);
 	if (!targetDraft) return leftOf(notFound(`Target draft \`${draftId}\` not found in getFullDraft`));
 
-	const captainSpends = await getCaptainSpend(session, draftId);
-	if (captainSpends._type === 'left') return captainSpends;
+	// const captainSpends = await getCaptainSpend(session, draftId);
+	// if (captainSpends._type === 'left') return captainSpends;
 
 	const teams = await getTeams(session, draftId);
 	if (teams._type === 'left') return teams;
-
+	
+	const currentRound = await getCurrentRound(session, draftId)
+	if (currentRound._type === 'left') return currentRound;
+	
 	const result: Success<GetFullDraft> = {
 		type: 'Success' as const,
 		data: {
 			...targetDraft,
-			captainSpend: captainSpends.value.data,
+			// captainSpend: captainSpends.value.data,
 			teams: teams.value.data,
+			currentRound: currentRound.value.data
 		},
 	};
 

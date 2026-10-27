@@ -1,12 +1,13 @@
 'use client';
 
+import Link from 'next/link';
+import { useState } from 'react';
 import { match } from 'ts-pattern';
 import Button from '@/atoms/Button';
-import { useState } from 'react';
 import { Dialog } from '@/atoms/dialog/Dialog';
 import { DraftStatus } from '@/db/draftSchema';
 import { DialogTrigger } from '@/atoms/dialog/DialogTrigger';
-import { EllipsisVertical, LockKeyhole, LockKeyholeOpen } from 'lucide-react';
+import { EllipsisVertical, LockKeyhole, LockKeyholeOpen, SquarePlus } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/atoms/dropdownMenu';
 
 import ToggleOpenDraftDialog from './ToggleOpenDraftDialog';
@@ -33,18 +34,26 @@ const DraftActionsContextMenu = ({ draft }: Props) => {
 					</DropdownMenuTrigger>
 					<DropdownMenuContent>
 						{draft.status === DraftStatus.closed || draft.status === DraftStatus.open ?
-							<DialogTrigger onClick={() => setOpenDialog('open_draft')} asChild>
-								{draft.status === DraftStatus.closed ?
+							draft.status === DraftStatus.closed ?
+								<DialogTrigger onClick={() => setOpenDialog('open_draft')} asChild>
 									<DropdownMenuItem variant="default">
 										<LockKeyholeOpen />
 										Open Draft
 									</DropdownMenuItem>
-								:	<DropdownMenuItem variant="default">
+								</DialogTrigger>
+							:	<>
+									<DropdownMenuItem variant="default" asChild>
+										<Link href={`/dashboard/admin/draft/${draft.id}`}>
+											<SquarePlus />
+											Join Draft
+										</Link>
+									</DropdownMenuItem>
+									<DropdownMenuItem variant="default">
 										<LockKeyhole />
 										Close Draft
 									</DropdownMenuItem>
-								}
-							</DialogTrigger>
+								</>
+
 						:	<DropdownMenuItem variant="default">I&apos;m empty...</DropdownMenuItem>}
 					</DropdownMenuContent>
 				</DropdownMenu>

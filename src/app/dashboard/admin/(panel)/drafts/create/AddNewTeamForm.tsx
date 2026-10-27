@@ -13,7 +13,6 @@ interface Props {
 	triggerFormValidation: UseFormTrigger<CreateDraftForm>;
 }
 
-// onAddTeam={newTeam => field.onChange([...field.value, { name: newTeam }])}
 
 const AddNewTeamForm = ({ users, control, getFormValues, triggerFormValidation }: Props) => {
 	const updateTeams = async (field: ControllerRenderProps<CreateDraftForm, 'teams'>) => {
@@ -49,7 +48,7 @@ const AddNewTeamForm = ({ users, control, getFormValues, triggerFormValidation }
 				rules={{
 					required: { message: 'A team name is required.', value: true },
 					validate: captain =>
-						getFormValues().teams.some(t => t.captain?.username === captain) ?
+						getFormValues().teams.some(t => t.captainUsername === captain) ?
 							'A user can only captain one team in each draft.'
 						:	true,
 				}}

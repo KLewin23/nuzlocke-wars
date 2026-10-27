@@ -1,7 +1,7 @@
 import type { CreateDraftPayload } from '@/actions/draft/createDraft';
 import type { Control, FieldPath, FieldValues, RegisterOptions } from 'react-hook-form';
 
-import { Team } from './actions';
+import type { Team } from './actions';
 import type { ArrElement } from './util';
 
 type RHFControl<T extends FieldValues> = Control<T, unknown, T>;
@@ -27,6 +27,8 @@ type CreateDraftPayloadOmitLessTeams = Omit<CreateDraftPayload, 'teams'>;
 type CreateDraftForm = Omit<CreateDraftPayloadOmitLessTeams, 'players'> & {
 	teams: Array<FormTeam>;
 	players: Array<ArrElement<CreateDraftPayloadOmitLessTeams['players']> & { username: string }>;
+	newTeamName: string;
+	newTeamCaptainUsername: string;
 };
 
 export type { RHFControl, RHFWatch, RHFProps, CreateDraftForm, User, FormTeam };

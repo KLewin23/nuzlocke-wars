@@ -5,8 +5,14 @@ import ThemeWrapper from '@/atoms/ThemeWrapper';
 import { TRPCReactProvider } from '@/trpc/client';
 import { Analytics } from '@vercel/analytics/next';
 import { Quattrocento_Sans, Rye } from 'next/font/google';
+import TooltipProvider from '@/components/atoms/tooltip/TooltipProvider';
 
 import './globals.css';
+
+const ithaca = localFont({
+	src: '../../public/Ithaca.ttf',
+	variable: '--font-ithaca',
+});
 
 const railroadGothic = localFont({
 	src: '../../public/RailroadGothicCC.ttf',
@@ -32,7 +38,7 @@ const RootLayout = ({ children }: LayoutProps<'/'>) => (
 	<html
 		lang="en"
 		suppressHydrationWarning
-		className={`${quattrocentoSans.variable} ${railroadGothic.variable} ${rye.variable} h-full antialiased`}
+		className={`${quattrocentoSans.variable} ${railroadGothic.variable} ${rye.variable} ${ithaca.variable} h-full antialiased`}
 	>
 		<head>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -41,9 +47,9 @@ const RootLayout = ({ children }: LayoutProps<'/'>) => (
 		<body className="flex min-h-full w-full flex-col">
 			<ThemeWrapper>
 				<Toaster />
-				<TRPCReactProvider>
-					{children}
-				</TRPCReactProvider>
+				<TooltipProvider>
+					<TRPCReactProvider>{children}</TRPCReactProvider>
+				</TooltipProvider>
 				<Analytics />
 			</ThemeWrapper>
 		</body>

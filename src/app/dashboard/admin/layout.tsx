@@ -1,15 +1,11 @@
 import type { ReactNode } from 'react';
-import DashboardNavbar from '@/organisms/DashboardNavbar';
 
 interface Props {
 	children: ReactNode;
 }
 
 const layout = ({ children }: Props) => (
-	<div className="col w-full gap-8 h-screen max-h-screen overflow-hidden">
-		<DashboardNavbar />
-		{children}
-	</div>
+	<div className="col h-screen max-h-screen w-full gap-8 overflow-hidden">{children}</div>
 );
 
 export default layout;

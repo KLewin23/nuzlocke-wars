@@ -4,24 +4,50 @@ import { publishEvent } from '@/util/ably';
 import buildCRUDError from '@/error/crudError';
 import adminSession from '@/func/adminSession';
 import buildActionError from '@/error/actionError';
-import { and, eq, isNull, sql } from 'drizzle-orm';
 import { type QueryState, successOr } from '@/util/query';
 import buildAblyPublishError from '@/error/ablyPublishError';
-import { DraftStatus, RoundStatus, db, draft, playersToDrafts, round, user } from '@/db';
+import { and, asc, desc, eq, isNotNull, ne, sql } from 'drizzle-orm';
+import { DraftStatus, RoundStatus, bid, db, draft, playersToDrafts, round, user } from '@/db';
 
 // Tldr. Create the next round, set the target player, sets the drafts current round to the new one.
 const startNextRound = async (draftId: number): Promise<QueryState> =>
 	adminSession(
 		async () => {
+			const highestBidResponse = await eitherOr(
+				db
+					.select({ userId: round.targetUserId, teamName: bid.teamName })
+					.from(draft)
+					.innerJoin(round, eq(round.id, draft.currentRoundId))
+					.innerJoin(bid, and(eq(draft.id, bid.draftId), eq(bid.roundId, round.id)))
+					.where(eq(draft.id, draftId))
+					.orderBy(desc(bid.amount), asc(bid.id)) // highest or first
+					.limit(1),
+				err => buildCRUDError('read', 'highest bid', err),
+			);
+
+			if (highestBidResponse._type === 'left') return highestBidResponse;
+			const highestBid = highestBidResponse.value.at(0);
+			if (highestBid) {
+				const assignUserToTeamResponse = await eitherOr(
+					db
+						.update(playersToDrafts)
+						.set({ teamName: highestBid.teamName })
+						.where(
+							and(eq(playersToDrafts.userId, highestBid.userId), eq(playersToDrafts.draftId, draftId)),
+						),
+					err => buildCRUDError('update', 'players to team assignments', err),
+				);
+				if (assignUserToTeamResponse._type === 'left') return assignUserToTeamResponse;
+			}
+
 			const nextTarget = await eitherOr(
 				db
 					.select({ userId: user.id })
 					.from(playersToDrafts)
 					.innerJoin(user, eq(user.id, playersToDrafts.userId))
-					.leftJoin(round, and(eq(user.id, round.targetUserId), eq(round.draftId, draftId)))
-					.where(and(eq(playersToDrafts.draftId, draftId), isNull(round.id)))
-					.orderBy(sql`RANDOM()`)
-					.limit(1),
+					.leftJoin(round, and(ne(user.id, round.targetUserId), eq(round.draftId, draftId))) //NOTE THIS SEEMS WRONG should be not equal to user
+					.where(and(eq(playersToDrafts.draftId, draftId), isNotNull(round.id)))
+					.orderBy(sql`RANDOM()`),
 				err => buildCRUDError('read', 'next target player', err),
 			);
 			if (nextTarget._type === 'left') return nextTarget;
@@ -47,7 +73,12 @@ const startNextRound = async (draftId: number): Promise<QueryState> =>
 						.returning({ id: round.id });
 					const rnd = roundResponse.at(0);
 					if (rnd === undefined) return tx.rollback();
-					tx.update(draft).set({ currentRoundId: rnd.id }).where(eq(draft.id, draftId));
+
+					await tx
+						.update(draft)
+						.set({ currentRoundId: rnd.id })
+						.where(eq(draft.id, draftId))
+						.returning({ draftId: draft.id });
 				}),
 				err => buildActionError('creating role and updating draft', 'create and select next round', err),
 			);

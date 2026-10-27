@@ -1,15 +1,7 @@
-'use server';
+
 import * as Ably from 'ably';
 import { env } from '@/env/server';
-
-type AblyEvent =
-	| 'DraftStarted'
-	| 'NextRoundStarted'
-	| 'BiddingStarted'
-	| 'BiddingEnded'
-	| 'BidSubmitted'
-	| 'BidRetracted'
-	| 'DraftEnded';
+import type { AblyEvent } from '@/type/ably';
 
 const ablyPublishClient = new Ably.Rest(env.ABLY_PUBLISH_API_KEY);
 
@@ -20,4 +12,4 @@ const publishEvent = async (draftId: number, event: AblyEvent) => {
 	return channel.publish(event, undefined);
 };
 
-export { type AblyEvent, publishEvent, draftChannel };
+export { publishEvent, draftChannel };

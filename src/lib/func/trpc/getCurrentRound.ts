@@ -1,10 +1,10 @@
 import logger from '@/logger';
 import type { auth } from '@/auth/auth';
-import { eq, inArray } from 'drizzle-orm';
-import { db, draft, round, user } from '@/db';
 import buildCRUDError from '@/error/crudError';
+import { and, eq, inArray } from 'drizzle-orm';
 import type { GetCurrentRound } from '@/type/queries';
 import { eitherOr, leftOf, rightOf } from '@/util/either';
+import { bid, db, draft, round, teamsToDrafts, user } from '@/db';
 import { type QueryStateWithNonFailure, type Success, notFound } from '@/util/query';
 
 import isInDraftQuery from '../isInDraftQuery';
@@ -15,6 +15,7 @@ const getCurrentRound = async (
 ): Promise<QueryStateWithNonFailure<Success<GetCurrentRound>>> => {
 	const baseQuery = db
 		.select({
+			roundId: round.id,
 			biddingStartTime: round.biddingStartTime,
 			roundStatus: round.roundStatus,
 			roundLength: draft.roundLength,
@@ -39,9 +40,22 @@ const getCurrentRound = async (
 	const currentRound = roundResponse.value.at(0);
 	if (!currentRound) return leftOf(notFound(`Current round not found for draft: ${draftId}`));
 
+	const bidResponse = await eitherOr(
+		db
+			.select({ teamName: bid.teamName, amount: bid.amount, captainId: teamsToDrafts.captainId, id: bid.id })
+			.from(bid)
+			.innerJoin(
+				teamsToDrafts,
+				and(eq(teamsToDrafts.teamName, bid.teamName), eq(teamsToDrafts.draftId, bid.draftId)),
+			)
+			.where(eq(bid.roundId, currentRound.roundId)),
+		err => buildCRUDError('read', 'bids', err),
+	);
+	if (bidResponse._type === 'left') return bidResponse;
+
 	return rightOf({
 		type: 'Success' as const,
-		data: currentRound,
+		data: { ...currentRound, bids: bidResponse.value },
 	});
 };
 
