@@ -31,6 +31,11 @@ jobs:
       - name: Setup DB
         run: docker compose up -d
 
+      - name: Seed DB
+        run: |
+          pnpm db:migrate
+          pnpm db:seed
+
       - name: Cypress run
         uses: cypress-io/github-action@v7
         with:

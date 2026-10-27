@@ -68,6 +68,7 @@ const PlayerTable = ({ control, users }: Props) => {
 										...field.value,
 										{
 											userId: user.id,
+											username: user.username,
 										},
 									]);
 								}}

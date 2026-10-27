@@ -40,7 +40,7 @@ const auth = betterAuth({
 	},
 	plugins: [username(), adminPlugin({ ac, roles: { admin, user } }), nextCookies()],
 	rateLimit: {
-		enabled: true,
+		enabled: env.VERCEL_ENV === 'local' ? false : true,
 		window: 60,
 		max: 100,
 	},

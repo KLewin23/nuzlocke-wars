@@ -24,8 +24,8 @@ const DashboardNavbar = async () => {
 				role === 'admin' ?
 					{
 						Drafts: '/dashboard/admin/drafts',
-						USERS: '/dashboard/admin/users',
-						'SIGN OUT': signOutAndRedirect,
+						Users: '/dashboard/admin/users',
+						'Sign Out': signOutAndRedirect,
 					}
 				:	{
 						Drafts: '/dashboard/drafts',

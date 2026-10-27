@@ -10,7 +10,7 @@ const setupCoreUsers = async () => {
 		body: {
 			email: 'basic@basic.com',
 			name: 'Basic',
-			password: 'Password',
+			password: 'Basic',
 			role: Role.user,
 			data: {
 				username: 'Basic',
@@ -21,7 +21,7 @@ const setupCoreUsers = async () => {
 		body: {
 			email: 'admin@admin.com',
 			name: 'Admin',
-			password: 'Password',
+			password: 'Admin',
 			role: 'admin',
 			data: {
 				username: 'Admin',
@@ -67,7 +67,6 @@ const seedDraft = async (usersPerTeam: number, teamCount: number) => {
 	const captains = users.slice(0, teamCount);
 	const players = users.slice(teamCount);
 
-	logger.info(captains.map(c => c.user.id));
 	await db.insert(playersToDrafts).values(
 		players.map(p => ({
 			userId: p.user.id,

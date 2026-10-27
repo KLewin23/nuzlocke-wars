@@ -11,7 +11,6 @@ describe('/dashboard/admin/users/* path', () => {
 		beforeEach(() => cy.loginUser(Role.Admin));
 		it('can retrieve a list of existing user', () => {
 			cy.contains('Users').click();
-			cy.get('tr td:contains("super")').should('exist');
 			cy.get('tr td:contains("admin")').should('exist');
 			cy.get('tr td:contains("basic")').should('exist');
 		});
@@ -23,11 +22,11 @@ describe('/dashboard/admin/users/* path', () => {
 				cy.get('fieldset[data-testid="new-user-form"]').within(() => {
 					cy.get('input[placeholder="Enter username."]').type(username);
 					cy.get('input[placeholder="Enter password."]').type(username);
-					cy.get('button[role="combobox"]').contains('Basic').click({ force: true });
+					cy.get('input[placeholder="Enter profile image url."]').type('https://picsum.photos/300/300');
+					cy.get('button[role="combobox"]').contains('User').click({ force: true });
 					cy.contains('Admin').should('exist');
-					cy.contains('Super').should('not.exist');
 				});
-				cy.contains('Stage User').click();
+				cy.contains('Stage User').click({force: true});
 			});
 			cy.contains('Submit Staged Users').click();
 			cy.contains('Users Created');
@@ -48,7 +47,7 @@ describe('/dashboard/admin/users/* path', () => {
 			cy.contains('Stage User').click();
 			cy.contains('Submit Staged Users').click();
 			cy.contains('Users Created');
-			cy.contains('1 users successfully created.');
+			cy.contains('1 user successfully created.');
 		});
 	});
 });

@@ -23,7 +23,10 @@ const Page = () => {
 				password,
 				fetchOptions: {
 					onSuccess: () => void router.push('/dashboard/drafts'),
-					onError: () => void toast.error('Invalid credentials, please try again.'),
+					onError: err => {
+						// console.error(new Error(err.error.message, { cause: err.error.cause }), 'Login Error');
+						toast.error(err.error.message ?? 'Invalid credentials, please try again.');
+					},
 				},
 			})
 			.catch(

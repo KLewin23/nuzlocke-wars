@@ -19,14 +19,14 @@ interface User {
 }
 
 interface FormTeam extends Team {
-	captainUsername: string
+	captainUsername: string;
 }
 
 type CreateDraftPayloadOmitLessTeams = Omit<CreateDraftPayload, 'teams'>;
 
 type CreateDraftForm = Omit<CreateDraftPayloadOmitLessTeams, 'players'> & {
 	teams: Array<FormTeam>;
-	players: Array<ArrElement<CreateDraftPayloadOmitLessTeams['players']> & { username: string }>;
+	players: Array<ArrElement<CreateDraftPayloadOmitLessTeams['players']> & { username: string; userId: string }>;
 	newTeamName: string;
 	newTeamCaptainUsername: string;
 };
