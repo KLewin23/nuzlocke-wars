@@ -1,8 +1,7 @@
 <div align="center">
-  <!-- <a href="https://nuzlocke-wars.com"> -->
+  <a href="https://nuzlocke-wars.vercel.app">
     <img alt="Nuzlocke Wars!" src="docs/images/title.svg" height="200" />
-  <!-- </a> -->
-    <h1>Nuzlocke Wars!<h1>
+  </a> 
 </div>
 
 # Requirements
