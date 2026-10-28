@@ -23,7 +23,7 @@ const createBid = async (draftId: number, bidAmount: number): Promise<QueryState
 				.from(draft)
 				.innerJoin(round, eq(round.id, draft.currentRoundId))
 				.innerJoin(teamsToDrafts, eq(teamsToDrafts.draftId, draft.id))
-				.innerJoin(
+				.leftJoin(
 					playersToDrafts,
 					and(eq(playersToDrafts.draftId, draft.id), eq(playersToDrafts.teamName, teamsToDrafts.teamName)),
 				)

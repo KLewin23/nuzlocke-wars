@@ -32,7 +32,11 @@ const useDraft = (draftId: number) => {
 				await getCurrentRound.refetch();
 			})
 			.with('BiddingStarted', () => getCurrentRound.refetch())
-			.with('DraftEnded', () => getDraftInfo.refetch())
+			.with('DraftEnded', async () => {
+				await getDraftInfo.refetch();
+				await getCurrentRound.refetch();
+				await getTeams.refetch();
+			})
 			.exhaustive();
 	};
 

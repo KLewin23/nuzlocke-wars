@@ -24,18 +24,21 @@ const assignTargetUser = async (
 	const randomTargetTeamResponse = await eitherOr(
 		db
 			.select({
-				targetUserId: round.targetUserId,
 				teamName: teamsToDrafts.teamName,
+				targetUserId: round.targetUserId
 			})
 			.from(draft)
 			.innerJoin(round, eq(round.id, draft.currentRoundId))
 			.innerJoin(teamsToDrafts, eq(teamsToDrafts.draftId, draft.id))
-			.innerJoin(
+			.leftJoin(
 				playersToDrafts,
 				and(eq(playersToDrafts.draftId, draft.id), eq(playersToDrafts.teamName, teamsToDrafts.teamName)),
 			)
-			.where(and(eq(round.roundStatus, RoundStatus.bidding), eq(draft.status, DraftStatus.active)))
-			.having(lt(sql`count(playersToDrafts.userId) + 1`, draft.maxPlayersPerTeam)),
+			.where(and(eq(round.roundStatus, RoundStatus.post_bidding), eq(draft.status, DraftStatus.active)))
+			.groupBy( teamsToDrafts.teamName, draft.maxPlayersPerTeam, round.targetUserId)
+			.having(lt(sql`count(${playersToDrafts.userId}) + 1`, draft.maxPlayersPerTeam))
+			.orderBy(sql`RANDOM()`)
+			.limit(1),
 		err => buildCRUDError('read', 'random team', err),
 	);
 

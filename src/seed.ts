@@ -52,7 +52,7 @@ const seedUser = async (role: Role) => {
 };
 
 const seedDraft = async (usersPerTeam: number, teamCount: number) => {
-	const users = await Promise.all(arrayOf(usersPerTeam * teamCount).map(() => seedUser(Role.user)));
+	const users = await Promise.all(arrayOf((usersPerTeam * teamCount) + teamCount).map(() => seedUser(Role.user)));
 	const teams = await db
 		.insert(team)
 		.values(arrayOf(teamCount).map(() => ({ name: faker.company.name().replace(/[^0-9a-z]/gi, '') })))
@@ -88,7 +88,7 @@ const seedDraft = async (usersPerTeam: number, teamCount: number) => {
 
 const main = async () => {
 	await setupCoreUsers();
-	await seedDraft(5, 4);
+	await seedDraft(2, 2);
 	await Promise.all(arrayOf(50).map(() => seedUser(Role.user)));
 	await Promise.all(arrayOf(10).map(() => seedUser(Role.admin)));
 	// const teams = await db
