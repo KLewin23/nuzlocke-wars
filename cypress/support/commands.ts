@@ -7,4 +7,11 @@ const loginUser = (role: TRole) => {
 	cy.get('button').contains('Login').click()
 };
 
-Cypress.Commands.addAll({ loginUser });
+const loginCreds = (username: string, password: string) => {
+	cy.visit('/dashboard/login');
+	cy.get('input[placeholder="Enter your username"]').type(username);
+	cy.get('input[placeholder="Enter your password"]').type(password);
+	cy.get('button').contains('Login').click()
+};
+
+Cypress.Commands.addAll({ loginUser, loginCreds });

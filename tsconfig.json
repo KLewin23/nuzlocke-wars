@@ -28,7 +28,7 @@
 			"@/atoms/*": ["./src/lib/components/atoms/*"],
 			"@/data/*": ["./src/data/*"],
 			"@/db": ["./src/lib/db/index"],
-			"@/db/*": ["./src/lib/db/*"],
+			"@/db/*": ["./src/lib/db/*"]
 		}
 	},
 	"include": [
@@ -40,7 +40,7 @@
 		".next/dev/types/**/*.ts",
 		"**/*.mts",
 		"src/seed.ts",
-		".next/dev/dev/types/**/*.ts",
+		".next/dev/dev/types/**/*.ts"
 	],
 	"exclude": ["node_modules"]
 }

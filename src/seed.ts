@@ -32,7 +32,10 @@ const setupCoreUsers = async () => {
 
 const seedUser = async (role: Role) => {
 	const name = faker.person.fullName();
-	const username = `${faker.internet.username().replace(/[^0-9a-z]/gi, '')}${faker.date.anytime().getFullYear()}`;
+	const username = faker.internet
+		.username()
+		.replace(/[^0-9a-z]/gi, '')
+		.substring(0, 15);
 
 	return await auth.api.createUser({
 		body: {
@@ -41,6 +44,7 @@ const seedUser = async (role: Role) => {
 			password: 'password',
 			role,
 			data: {
+				image: 'https://picsum.photos/300/300',
 				username: username,
 			},
 		},

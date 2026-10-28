@@ -1,10 +1,9 @@
 'use client';
 
 import useDraft from '@/hooks/useDraft';
-import { entries } from '@/util/extension';
-import TeamRow from '@/components/molecules/TeamRow';
+import { DraftStatus } from '@/db/draftSchema';
 import TargetUserImage from '@/atoms/TargetUserImage';
-import { DraftStatus, RoundStatus } from '@/db/draftSchema';
+import DraftingTeamGrid from '@/organisms/DraftingTeamGrid';
 
 import UserControls from './UserControls';
 
@@ -26,22 +25,7 @@ const DraftContent = ({ draftId }: Props) => {
 				/>
 				<UserControls draftId={draftId} draft={draft} />
 			</div>
-			{entries(draft?.teams ?? {}).map(([teamName, team]) => {
-				const currentBid = draft.currentRound?.bids.find(b => b.teamName === teamName);
-				return (
-					<TeamRow
-						key={teamName}
-						captain={team.captain}
-						coinsSpent={team.coinsSpent}
-						currentBid={currentBid !== undefined ? currentBid.amount : null}
-						initialTeamCoins={draft.info?.initialPlayerCoins}
-						maxPlayers={draft.info?.maxPlayersPerTeam ?? 0}
-						players={team.players}
-						teamName={teamName}
-						shouldRevealBid={draft.currentRound?.roundStatus === RoundStatus.post_bidding}
-					/>
-				);
-			})}
+			<DraftingTeamGrid draft={draft} />
 		</div>
 	);
 };

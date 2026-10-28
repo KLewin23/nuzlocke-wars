@@ -18,7 +18,7 @@ const UserFieldsetContent = ({ control }: Props) => (
 				placeholder="Enter username."
 				rules={{
 					minLength: { message: 'Username must be at least 3 characters long.', value: 3 },
-					maxLength: { message: 'Username must be shorter than 32 characters long.', value: 32 },
+					maxLength: { message: 'Username must be shorter than 16 characters long.', value: 16 },
 					required: { message: 'A username is required.', value: true },
 				}}
 			/>

@@ -6,6 +6,7 @@ import type { QueryFailureState, Success } from '@/util/query';
 import { ErrorFallback } from '../ErrorFallback';
 
 interface Props<D> {
+	columnCount: number
 	noDataMessage?: string;
 	errorMessage?: string;
 	dataResponse: Either<QueryFailureState, Success<Array<D>>>;
@@ -13,6 +14,7 @@ interface Props<D> {
 }
 
 const TableBodyDataHandler = <Data,>({
+	columnCount,
 	noDataMessage = 'No data to display',
 	errorMessage = 'Something went wrong retrieving data',
 	dataResponse,
@@ -21,13 +23,13 @@ const TableBodyDataHandler = <Data,>({
 	dataResponse._type === 'right' ?
 		dataResponse.value.data.length === 0 ?
 			<TableRow>
-				<TableCell colSpan={4}>
+				<TableCell colSpan={columnCount}>
 					<p className="font-white min-h-80 font-sans text-lg leading-70">{noDataMessage}</p>
 				</TableCell>
 			</TableRow>
 		:	dataResponse.value.data.map(children)
-	:	<TableRow>
-			<TableCell colSpan={4}>
+	:	<TableRow >
+			<TableCell colSpan={columnCount}>
 				<ErrorFallback message={errorMessage} className="min-h-80 leading-70" />
 			</TableCell>
 		</TableRow>;

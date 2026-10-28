@@ -10,6 +10,7 @@ const withSession = async <T>(
 		headers: await headers(),
 	});
 	if (!session?.user) return leftOf({ type: 'Unauthorized' as const });
+	if (session.user.role === 'admin' && !session.user.twoFactorEnabled) return leftOf({ type: 'Forbidden' });
 	return withSession(session);
 };
 

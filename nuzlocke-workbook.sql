@@ -1,5 +1,6 @@
 -- Active: 1791947165204@@127.0.0.1@54321
 SELECT * FROM public."user";
+SELECT * FROM public."two_factor";
 SELECT * FROM public."account";
 
 SELECT * FROM public."draft";
@@ -11,7 +12,7 @@ SELECT * FROM public."bid";
 SELECT * FROM public."team";
 SELECT * FROM public."round";
 
-SELECT * FROM public."players_to_drafts";
+SELECT * FROM public."players_to_drafts"-- JOIN public."user" ON public."user".id = players_to_drafts.user_id;
 
 SELECT * FROM public."teams_to_drafts";
 

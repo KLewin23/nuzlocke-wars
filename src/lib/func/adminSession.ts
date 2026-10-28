@@ -22,7 +22,8 @@ const adminSession = async <T>(
 			permissions: permissions ?? {},
 		},
 	});
-	if (hasPermission.success === false) return leftOf({ type: 'Forbidden' as const });
+	if (hasPermission.success === false || !session.user.twoFactorEnabled)
+		return leftOf({ type: 'Forbidden' as const });
 	return withSession(session);
 };
 

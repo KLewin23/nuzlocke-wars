@@ -1,5 +1,5 @@
 import { defineRelationsPart } from 'drizzle-orm';
-import { boolean, index, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { boolean, index, integer, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 // Generated with `pnpm dlx auth@latest generate`
 
@@ -23,6 +23,7 @@ const user = pgTable('user', {
 		.notNull(),
 	username: text('username').unique().notNull(),
 	displayUsername: text('display_username'),
+	twoFactorEnabled: boolean('two_factor_enabled').default(false),
 	role: roleEnum().notNull().default(Role.user),
 	banned: boolean('banned').default(false),
 	banReason: text('ban_reason'),
@@ -89,7 +90,23 @@ const verification = pgTable(
 	table => [index('verification_identifier_idx').on(table.identifier)],
 );
 
-const authRelations = defineRelationsPart({ user, session, account, verification }, r => ({
+const twoFactor = pgTable(
+	'two_factor',
+	{
+		id: text('id').primaryKey(),
+		secret: text('secret').notNull(),
+		backupCodes: text('backup_codes').notNull(),
+		userId: text('user_id')
+			.notNull()
+			.references(() => user.id, { onDelete: 'cascade' }),
+		verified: boolean('verified').default(true),
+		failedVerificationCount: integer('failed_verification_count').default(0),
+		lockedUntil: timestamp('locked_until'),
+	},
+	table => [index('twoFactor_secret_idx').on(table.secret), index('twoFactor_userId_idx').on(table.userId)],
+);
+
+const authRelations = defineRelationsPart({ user, session, account, verification, twoFactor }, r => ({
 	user: {
 		sessions: r.many.session({
 			from: r.user.id,
@@ -98,6 +115,10 @@ const authRelations = defineRelationsPart({ user, session, account, verification
 		accounts: r.many.account({
 			from: r.user.id,
 			to: r.account.userId,
+		}),
+		twoFactors: r.many.twoFactor({
+			from: r.user.id,
+			to: r.twoFactor.userId,
 		}),
 	},
 	session: {
@@ -112,6 +133,12 @@ const authRelations = defineRelationsPart({ user, session, account, verification
 			to: r.user.id,
 		}),
 	},
+	twoFactor: {
+		user: r.one.user({
+			from: r.twoFactor.userId,
+			to: r.user.id,
+		}),
+	},
 }));
 
-export { user, account, session, roleEnum, authRelations, verification, Role };
+export { user, account, session, roleEnum, authRelations, verification, Role, twoFactor };
