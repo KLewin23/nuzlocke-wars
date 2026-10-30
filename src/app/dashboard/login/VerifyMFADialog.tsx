@@ -53,7 +53,7 @@ const VerifyMFADialog = ({ isOpen, onClose }: Props) => {
 			>
 				<DialogContent>
 					<DialogHeader>
-						<DialogTitle>MFA Setup</DialogTitle>
+						<DialogTitle>MFA Verification</DialogTitle>
 						<DialogDescription>Enter the code shown on your authenticator app</DialogDescription>
 					</DialogHeader>
 					<div className="col w-full items-center gap-2">
