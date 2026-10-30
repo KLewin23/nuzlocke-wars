@@ -19,7 +19,7 @@ const DashboardNavbar = async () => {
 
 	return (
 		<Navbar
-			variant="dashbord"
+			variant="dashboard"
 			links={
 				role === 'admin' ?
 					{

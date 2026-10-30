@@ -19,6 +19,18 @@ const setupCoreUsers = async () => {
 			},
 		},
 	});
+	// For manual work login as this user
+	await auth.api.createUser({
+		body: {
+			email: 'manual.admin@admin.com',
+			name: 'ManualAdmin',
+			password: 'password',
+			role: 'admin',
+			data: {
+				username: 'ManualAdmin',
+			},
+		},
+	});
 	const user = await auth.api.createUser({
 		body: {
 			email: 'admin@admin.com',

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import Title from '@/images/Title';
 import useWindowSize from '@/hooks/useWindowSize';
 import cn, { type VariantProps, cva } from 'cnfast';
@@ -10,7 +11,7 @@ const buttonVariants = cva('row font-railroad-gothic relative justify-center px-
 	variants: {
 		variant: {
 			default: 'bg-background',
-			dashbord: '',
+			dashboard: '',
 		},
 	},
 	defaultVariants: {
@@ -32,7 +33,9 @@ const Navbar = ({
 	return (
 		<nav data-variant={variant} className={cn(buttonVariants({ variant, className }))}>
 			<div className="row max-w-250 grow items-center justify-between gap-5 py-6">
-				<Title variant={variant !== 'dashbord' ? 'default' : 'dashboard'} />
+				<Link href={variant === 'dashboard' ? "/dashboard/drafts" : '/'}>
+					<Title variant={variant !== 'dashboard' ? 'default' : 'dashboard'} />
+				</Link>
 				{isClient && width > 600 ?
 					<div className="row gap-8">
 						{Object.entries(links).map(([title, action]) =>

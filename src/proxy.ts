@@ -17,6 +17,7 @@ export const proxy = async (req: NextRequest) => {
 
 	if (pathname === '/dashboard/login') return NextResponse.redirect(new URL(`${pathBase}/drafts`, req.url));
 
+
 	if (session.user.role === 'admin') {
 		if (pathname.startsWith('/dashboard/draft/') && !session.user.twoFactorEnabled)
 			return NextResponse.redirect(new URL('/dashboard/drafts', req.url));
