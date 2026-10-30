@@ -75,6 +75,7 @@ export default defineConfig({
 		},
 	},
 	numTestsKeptInMemory: 1,
+	video: true
 });
 
 // retries if promise response is undefined
