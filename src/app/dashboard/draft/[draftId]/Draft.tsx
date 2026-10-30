@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { clientEnv } from '@/env/client';
 import { ChannelProvider } from 'ably/react';
 import DraftContent from '@/organisms/DraftContent';
 
@@ -19,7 +20,7 @@ interface Props {
 
 const Draft = ({ draftId, userId }: Props) => (
 	<AblyProvider userId={userId} draftId={draftId} mode="basic">
-		<ChannelProvider channelName={`local:${draftId}`}>
+		<ChannelProvider channelName={`${clientEnv.NEXT_PUBLIC_VERCEL_ENV}:${draftId}`}>
 			<DraftContent draftId={draftId} controls={UserControls} />
 		</ChannelProvider>
 	</AblyProvider>
