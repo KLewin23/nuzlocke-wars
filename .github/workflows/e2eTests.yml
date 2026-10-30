@@ -7,7 +7,7 @@ env:
   BASE_URL: http://localhost:3000
   NEXT_PUBLIC_BASE_URL: http://localhost:3000
   VERCEL_ENV: production
-  NODE_ENV: testing
+  NODE_ENV: test
   DATABASE_USERNAME: gh_pg_user
   DATABASE_PASSWORD: gh_pg_pass
   DATABASE_PORT: 54321
@@ -44,6 +44,7 @@ jobs:
           browser: firefox
 
       - uses: actions/upload-artifact@v7
+        if: failure()
         with:
           name: Cypress Videos
           path: cypress/videos
