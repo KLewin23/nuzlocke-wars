@@ -60,8 +60,9 @@ const TeamNameCombobox = ({ selectedTeamName, onChange, existingTeams }: Props) 
 								existingTeams.map(team => (
 									<CommandItem
 										key={team}
-										value={team}
-										onSelect={() => onValueChange(selectedTeamName)}
+										value={team} 
+										className='cursor-pointer hover:bg-black/10'
+										onSelect={() => onValueChange(team)}
 									>
 										<CheckIcon
 											className={cn(
@@ -76,6 +77,7 @@ const TeamNameCombobox = ({ selectedTeamName, onChange, existingTeams }: Props) 
 								<CommandItem
 									key={selectedTeamName}
 									value={selectedTeamName}
+									className='cursor-pointer hover:bg-black/10'
 									onSelect={() => onValueChange(selectedTeamName)}
 								>
 									<CheckIcon className={cn('mr-2 h-4 w-4', 'opacity-100')} />

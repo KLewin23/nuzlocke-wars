@@ -21,7 +21,7 @@ const startNextRound = async (draftId: number): Promise<QueryState> =>
 					.innerJoin(round, eq(round.id, draft.currentRoundId))
 					.innerJoin(bid, and(eq(draft.id, bid.draftId), eq(bid.roundId, round.id)))
 					.where(eq(draft.id, draftId))
-					.orderBy(desc(bid.amount), asc(bid.id)) // highest or first
+					.orderBy(desc(bid.amount), asc(bid.id), desc(sql`RANDOM()`)) // highest or first
 					.limit(1),
 				err => buildCRUDError('read', 'highest bid', err),
 			);

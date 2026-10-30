@@ -30,7 +30,9 @@ const getCurrentRound = async (
 		.leftJoin(user, eq(user.id, round.targetUserId));
 
 	const roundResponse = await eitherOr(
-		session.user.role === 'user' ? baseQuery.where(inArray(draft.id, isInDraftQuery(session))) : baseQuery,
+		session.user.role === 'user' ?
+			baseQuery.where(and(inArray(draft.id, isInDraftQuery(session)), eq(draft.id, draftId)))
+		:	baseQuery.where(eq(draft.id, draftId)),
 		err => buildCRUDError('read', 'current round', err),
 	);
 

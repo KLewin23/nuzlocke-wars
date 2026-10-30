@@ -1,15 +1,15 @@
 'use server';
 
 import { eq } from 'drizzle-orm';
-import { badRequest } from '@/util/query';
 import buildCRUDError from '@/error/crudError';
 import adminSession from '@/func/adminSession';
-import { eitherOr, leftOf } from '@/util/either';
+import { badRequest, successOr } from '@/util/query';
 import { RoundStatus, db, draft, round, team } from '@/db';
+import { Either, eitherOr, leftOf, rightOf } from '@/util/either';
 import type { BaseTeamData, PlayerList, Team } from '@/type/actions';
-import type { QueryStateWithNonFailure, Success } from '@/util/query';
 import { createDraftToTeamInternal } from '@/func/createDraftToTeamInternal';
 import { createDraftToPlayersInternal } from '@/func/createDraftToPlayerInternal';
+import type { QueryFailureState, QueryStateWithNonFailure, Success } from '@/util/query';
 
 interface CreateDraftPayload {
 	name: string;
@@ -17,6 +17,7 @@ interface CreateDraftPayload {
 	initialPlayerCoins?: number;
 	teams: Array<Team>;
 	players: PlayerList;
+	maxPlayersPerTeam: number;
 }
 
 const createDraft = async ({
@@ -25,6 +26,7 @@ const createDraft = async ({
 	roundLength,
 	teams,
 	players,
+	maxPlayersPerTeam,
 }: CreateDraftPayload): Promise<QueryStateWithNonFailure<Success>> =>
 	adminSession<Success>(
 		async () => {
@@ -41,7 +43,7 @@ const createDraft = async ({
 
 			const groupedTeams = teams.reduce<{ existing: Array<BaseTeamData>; new: Array<BaseTeamData> }>(
 				(acc, cur) => {
-					if ('captainId' in cur) return { ...acc, new: [...acc.new, cur] };
+					if (cur.isNew) return { ...acc, new: [...acc.new, cur] };
 					return { ...acc, existing: [...acc.existing, cur] };
 				},
 				{ existing: [], new: [] },
@@ -55,6 +57,7 @@ const createDraft = async ({
 							name,
 							roundLength,
 							initialPlayerCoins,
+							maxPlayersPerTeam,
 						})
 						.returning({ id: draft.id });
 					const createdDraft = createdDrafts.at(0);
@@ -77,19 +80,11 @@ const createDraft = async ({
 				}),
 				err => buildCRUDError('create', 'draft', err),
 			);
+			
+			const teamsResponse = await insertNewTeams(groupedTeams.new)
+			if (teamsResponse._type === 'left') return teamsResponse;
 
 			if (transactionResponse._type === 'left') return transactionResponse;
-
-			const newTeams = await eitherOr(
-				db.insert(team).values(
-					groupedTeams.new.map(t => ({
-						name: t.name,
-					})),
-				),
-				err => buildCRUDError('create', 'team', err),
-			);
-
-			if (newTeams._type === 'left') return newTeams;
 
 			const attatchTeamsResponse = await createDraftToTeamInternal(transactionResponse.value.id, [
 				...groupedTeams.existing,
@@ -105,3 +100,17 @@ const createDraft = async ({
 	);
 
 export { createDraft, type CreateDraftPayload };
+
+const insertNewTeams = async (
+	teams: Array<{ name: string }>,
+): Promise<Either<QueryFailureState, Success<undefined>>> => {
+	if (teams.length === 0) return rightOf({ type: 'Success' as const, data: undefined });
+	return successOr(
+		db.insert(team).values(
+			teams.map(t => ({
+				name: t.name,
+			})),
+		),
+		err => buildCRUDError('create', 'team', err),
+	);
+};

@@ -8,7 +8,7 @@ import Button from '@/components/atoms/Button';
 import { Field } from '@/components/molecules/field/Field';
 import SubTitle from '@/components/atoms/typography/SubTitle';
 import { FieldLabel } from '@/components/molecules/field/FieldLabel';
-import type { CreateDraftForm, RHFControl, User } from '@/type/form';
+import type { CreateDraftForm, FormTeam, RHFControl, User } from '@/type/form';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/atoms/table';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/atoms/select';
 
@@ -17,10 +17,14 @@ import DeletionContextMenu from './DeletionContextMenu';
 interface Props {
 	control: RHFControl<CreateDraftForm>;
 	users: Array<User>;
+	teams: Array<FormTeam>;
+	players: CreateDraftForm['players'];
+	maxPlayersPerTeam: number;
 }
 
-const PlayerTable = ({ control, users }: Props) => {
+const PlayerTable = ({ control, users, players, teams, maxPlayersPerTeam }: Props) => {
 	const [selectedUser, setSelectedUser] = useState('');
+	const maximumNonCaptainPlayers = teams.length * maxPlayersPerTeam - teams.length;
 
 	return (
 		<Controller
@@ -29,7 +33,9 @@ const PlayerTable = ({ control, users }: Props) => {
 			render={({ field }) => (
 				<>
 					<div className="row w-full items-end justify-between gap-4">
-						<SubTitle>Players</SubTitle>
+						<SubTitle>
+							Players ( {players.length} / {maximumNonCaptainPlayers} ){' '}
+						</SubTitle>
 						<div className="row items-end gap-4">
 							<Field>
 								<FieldLabel htmlFor="select-draft-player">Select Draft Player</FieldLabel>
@@ -39,11 +45,13 @@ const PlayerTable = ({ control, users }: Props) => {
 									</SelectTrigger>
 									<SelectContent>
 										<SelectGroup>
-											{users.map(user => (
-												<SelectItem key={user.username} value={user.username}>
-													{user.username}
-												</SelectItem>
-											))}
+											{users
+												.filter(u => !teams.find(t => t.captainId === u.id))
+												.map(user => (
+													<SelectItem key={user.username} value={user.username}>
+														{user.username}
+													</SelectItem>
+												))}
 										</SelectGroup>
 									</SelectContent>
 								</Select>
@@ -61,6 +69,10 @@ const PlayerTable = ({ control, users }: Props) => {
 									if (!user)
 										return toast.error('Form validation error', {
 											description: 'Failed to fnd selected user.',
+										});
+									if (players.length >= maximumNonCaptainPlayers)
+										return toast.error('Form validation error', {
+											description: 'Maximum non captain players already added',
 										});
 									if (field.value.some(u => u.username === selectedUser))
 										return toast.info('User is already selected for draft.');
@@ -101,7 +113,7 @@ const PlayerTable = ({ control, users }: Props) => {
 											<TableCell>
 												<DeletionContextMenu
 													onDelete={() =>
-														field.onChange(field.value.filter(p => p === player))
+														field.onChange(field.value.filter(p => p !== player))
 													}
 												/>
 											</TableCell>

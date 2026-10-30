@@ -4,7 +4,7 @@ import type { Either } from '@/util/either';
 import withSession from '@/func/withSession';
 import buildCRUDError from '@/error/crudError';
 import { count, eq, inArray } from 'drizzle-orm';
-import { db, draft, playersToDrafts } from '@/db';
+import { db, draft, playersToDrafts, teamsToDrafts } from '@/db';
 import type { DraftResponseList } from '@/type/actions';
 import { type QueryFailureState, type Success, successOr } from '@/util/query';
 
@@ -16,9 +16,11 @@ const getDrafts = async (): Promise<Either<QueryFailureState, Success<DraftRespo
 				name: draft.name,
 				status: draft.status,
 				playerCount: count(playersToDrafts.userId),
+				teamCount: count(teamsToDrafts.captainId),
 			})
 			.from(draft)
 			.leftJoin(playersToDrafts, eq(draft.id, playersToDrafts.draftId))
+			.leftJoin(teamsToDrafts, eq(draft.id, teamsToDrafts.draftId))
 			.groupBy(draft.id);
 
 		return successOr(

@@ -9,6 +9,7 @@ import { EllipsisVertical, Pencil, RectangleEllipsis, Trash } from 'lucide-react
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/atoms/dropdownMenu';
 
 import DeleteUserDialog from './DeleteUserDialog';
+import UpdatePasswordDialog from './UpdatePasswordDialog';
 
 interface Props {
 	user: {
@@ -19,7 +20,7 @@ interface Props {
 }
 
 const UserActionsContextMenu = ({ user }: Props) => {
-	const [openDialog, setOpenDialog] = useState<'none' | 'delete_user'>();
+	const [openDialog, setOpenDialog] = useState<'none' | 'delete_user' | 'change_password'>();
 
 	return (
 		<>
@@ -34,10 +35,12 @@ const UserActionsContextMenu = ({ user }: Props) => {
 						<DropdownMenuItem>
 							<Pencil /> Edit Details
 						</DropdownMenuItem>
-						<DropdownMenuItem>
-							<RectangleEllipsis />
-							Change Password
-						</DropdownMenuItem>
+						<DialogTrigger onClick={() => setOpenDialog('change_password')} asChild>
+							<DropdownMenuItem variant="destructive">
+								<RectangleEllipsis />
+								Change Password
+							</DropdownMenuItem>
+						</DialogTrigger>
 						<DialogTrigger onClick={() => setOpenDialog('delete_user')} asChild>
 							<DropdownMenuItem variant="destructive">
 								<Trash />
@@ -49,6 +52,13 @@ const UserActionsContextMenu = ({ user }: Props) => {
 				{match(openDialog)
 					.with('delete_user', () => (
 						<DeleteUserDialog
+							userId={user.id}
+							targetUsername={user.username}
+							onClose={() => setOpenDialog('none')}
+						/>
+					))
+					.with('change_password', () => (
+						<UpdatePasswordDialog
 							userId={user.id}
 							targetUsername={user.username}
 							onClose={() => setOpenDialog('none')}
