@@ -49,7 +49,7 @@ const auth = betterAuth({
 		nextCookies(),
 	],
 	rateLimit: {
-		enabled: env.VERCEL_ENV === 'local' ? false : true,
+		enabled: env.VERCEL_ENV === 'local' || env.NODE_ENV === 'test' ? false : true,
 		window: 60,
 		max: 100,
 	},
