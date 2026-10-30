@@ -47,13 +47,14 @@ const assignTargetUser = async (
 	const randomTargetTeam = randomTargetTeamResponse.value.at(0);
 	if (!randomTargetTeam) return leftOf(rejected('No team bid for player, and all teams are full.'));
 	if (!randomTargetTeam.roundId) return leftOf(internalServerError('Current round could not be found by server'));
-	
+
 	const forcedBid = await eitherOr(
 		db.insert(bid).values({
 			draftId,
 			amount: 1,
 			roundId: randomTargetTeam.roundId,
 			teamName: randomTargetTeam.teamName,
+			isWinner: true,
 		}),
 		err => buildCRUDError('create', 'forced team bid', err),
 	);
