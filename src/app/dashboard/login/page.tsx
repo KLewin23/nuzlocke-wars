@@ -10,6 +10,7 @@ import { authClient } from '@/auth/auth-client';
 import { type MouseEvent, useState } from 'react';
 
 import VerifyMFADialog from './VerifyMFADialog';
+import { clientEnv } from '@/env/client';
 
 const successContextSchema = z.object({ data: z.object({ twoFactorMethods: z.array(z.string()) }) });
 
@@ -23,6 +24,8 @@ const Page = () => {
 		e.preventDefault();
 		if (username === '') return toast.error('A username is required');
 		if (password === '') return toast.error('A password is required');
+		// eslint-disable-next-line no-console
+		console.log(clientEnv.NEXT_PUBLIC_BASE_URL)
 		await authClient.signIn
 			.username({
 				username,

@@ -6,6 +6,8 @@ env:
   BETTER_AUTH_SECRET: random_secret
   BASE_URL: http://localhost:3000
   NEXT_PUBLIC_BASE_URL: http://localhost:3000
+  NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL: http://localhost:3000
+  NEXT_PUBLIC_VERCEL_ENV: production
   VERCEL_ENV: production
   NODE_ENV: test
   DATABASE_USERNAME: gh_pg_user
