@@ -20,7 +20,7 @@ const authClient = createAuthClient({
 	],
 	baseURL:
 		clientEnv.NEXT_PUBLIC_VERCEL_ENV === 'production' ?
-			clientEnv.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL
+			`https://${clientEnv.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}`
 		:	clientEnv.NEXT_PUBLIC_BASE_URL,
 });
 
