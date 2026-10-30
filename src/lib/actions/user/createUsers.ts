@@ -9,6 +9,7 @@ import adminSession from '@/func/adminSession';
 import buildAuthError from '@/error/buildAuthError';
 import type { CreateUserPayload } from '@/type/actions';
 import { type QueryStateWithNonFailure, type Success, successOr } from '@/util/query';
+import { headers } from 'next/headers';
 
 const createUsers = async (
 	users: Array<CreateUserPayload>,
@@ -29,11 +30,12 @@ const createUsers = async (
 			};
 			return successOr(
 				Promise.all(
-					users.map(user => {
+					users.map(async user => {
 						const { username, imageUrl, role } = user;
 						const password = getPassword(user);
 						return auth.api
 							.createUser({
+								headers: await headers(),
 								body: {
 									email: `${username}@placeholder.com`,
 									name: username,
