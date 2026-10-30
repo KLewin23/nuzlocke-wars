@@ -6,8 +6,8 @@ import Button from '@/components/atoms/Button';
 import toastErrorMesage from '@/util/formError';
 import { readableQueryFailure } from '@/util/query';
 import { Controller, useForm } from 'react-hook-form';
-import { createDraft } from '@/actions/draft/createDraft';
 import type { CreateDraftForm, User } from '@/type/form';
+import { createDraft } from '@/actions/draft/createDraft';
 import SubTitle from '@/components/atoms/typography/SubTitle';
 import { FieldGroup, FieldSet, InputField } from '@/components/molecules/field';
 
@@ -21,16 +21,20 @@ interface Props {
 }
 
 const AddDraftForm = ({ existingTeams, users }: Props) => {
-	const { control, reset, handleSubmit } = useForm<CreateDraftForm>({
+	const { control, reset, handleSubmit, watch } = useForm<CreateDraftForm>({
 		defaultValues: {
 			name: '',
 			players: [],
 			roundLength: 60,
 			teams: [],
 			initialPlayerCoins: 60,
+			maxPlayersPerTeam: 8,
 		},
 	});
 	const [submitPending, startSubmitTransition] = useTransition();
+	const teams = watch('teams');
+	const players = watch('players');
+	const maxPlayersPerTeam = watch('maxPlayersPerTeam');
 
 	const submitUsers = (values: CreateDraftForm) =>
 		startSubmitTransition(async () => {
@@ -101,7 +105,17 @@ const AddDraftForm = ({ existingTeams, users }: Props) => {
 								required: 'Initial player coins is required',
 							}}
 							placeholder="Enter each players initial coin balance."
-							label="Password (Leave blank for auto generation)"
+							label="Initial Player Coins"
+						/>
+						<InputField
+							name="maxPlayersPerTeam"
+							type="number"
+							control={control}
+							rules={{
+								required: 'Maximum players per team',
+							}}
+							placeholder="Enter maximum non captain players."
+							label="Maximunm players per team (including captain)"
 						/>
 					</FieldGroup>
 				</FieldSet>
@@ -126,7 +140,13 @@ const AddDraftForm = ({ existingTeams, users }: Props) => {
 			</div>
 
 			<TeamsTable control={control} users={users} />
-			<PlayerTable control={control} users={users} />
+			<PlayerTable
+				control={control}
+				users={users}
+				teams={teams}
+				players={players}
+				maxPlayersPerTeam={maxPlayersPerTeam}
+			/>
 
 			<Button palette="blackOnWhite" disabled={submitPending} className="w-full">
 				Submit Draft

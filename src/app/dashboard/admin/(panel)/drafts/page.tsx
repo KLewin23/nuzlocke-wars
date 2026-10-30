@@ -27,7 +27,7 @@ const page = async () => {
 						{draft => (
 							<TableRow key={`draft-row-${draft.id}`}>
 								<TableCell>{draft.name}</TableCell>
-								<TableCell>{draft.playerCount}</TableCell>
+								<TableCell>{draft.maxmimumPlayersPerTeam * draft.teamsCount}</TableCell>
 								<TableCell className="capitalize">{draft.status}</TableCell>
 								<TableCell>
 									<DraftActionsContextMenu draft={draft} />

@@ -14,11 +14,12 @@ SELECT * FROM public."bid";
 SELECT * FROM public."team";
 
 SELECT * FROM public."round";
+SELECT * FROM public."session" JOIN public."user" ON  public."user".id = session.user_id;
 
 SELECT *
 FROM public."players_to_drafts" -- JOIN public."user" ON public."user".id = players_to_drafts.user_id;
 
-SELECT * FROM public."teams_to_drafts";
+SELECT * FROM public."teams_to_drafts" JOIN public."user" ON public."teams_to_drafts".captain_id = public."user".id;
 
 SELECT *
 FROM public."user"

@@ -1,5 +1,10 @@
 import type { DraftStatus, RoundStatus } from '@/db';
 
+interface CreatedUser {
+	username: string;
+	password: string;
+}
+
 type GetCurrentCaptainSpend = Array<{
 	coinsSpent: number | null;
 	teamName: string;
@@ -33,7 +38,7 @@ interface TeamData {
 type GetTeams = Record<string, TeamData>;
 
 interface Bid {
-	id: number
+	id: number;
 	teamName: string;
 	amount: number;
 	captainId: string;
@@ -63,4 +68,5 @@ export type {
 	TeamData,
 	UserData,
 	DraftInfo,
+	CreatedUser,
 };

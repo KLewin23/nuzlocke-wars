@@ -1,8 +1,8 @@
 import buildCRUDError from '@/error/crudError';
 import { and, eq, lt, sql } from 'drizzle-orm';
 import { eitherOr, leftOf } from '@/util/either';
-import { type QueryStateWithNonFailure, type Success, rejected, successOr } from '@/util/query';
-import { DraftStatus, RoundStatus, db, draft, playersToDrafts, round, teamsToDrafts } from '@/db';
+import { DraftStatus, RoundStatus, bid, db, draft, playersToDrafts, round, teamsToDrafts } from '@/db';
+import { type QueryStateWithNonFailure, type Success, internalServerError, rejected, successOr } from '@/util/query';
 
 interface HighestBid {
 	userId: string;
@@ -25,7 +25,8 @@ const assignTargetUser = async (
 		db
 			.select({
 				teamName: teamsToDrafts.teamName,
-				targetUserId: round.targetUserId
+				targetUserId: round.targetUserId,
+				roundId: draft.currentRoundId,
 			})
 			.from(draft)
 			.innerJoin(round, eq(round.id, draft.currentRoundId))
@@ -35,7 +36,7 @@ const assignTargetUser = async (
 				and(eq(playersToDrafts.draftId, draft.id), eq(playersToDrafts.teamName, teamsToDrafts.teamName)),
 			)
 			.where(and(eq(round.roundStatus, RoundStatus.post_bidding), eq(draft.status, DraftStatus.active)))
-			.groupBy( teamsToDrafts.teamName, draft.maxPlayersPerTeam, round.targetUserId)
+			.groupBy(teamsToDrafts.teamName, draft.maxPlayersPerTeam, round.targetUserId, draft.currentRoundId)
 			.having(lt(sql`count(${playersToDrafts.userId}) + 1`, draft.maxPlayersPerTeam))
 			.orderBy(sql`RANDOM()`)
 			.limit(1),
@@ -45,6 +46,18 @@ const assignTargetUser = async (
 	if (randomTargetTeamResponse._type === 'left') return randomTargetTeamResponse;
 	const randomTargetTeam = randomTargetTeamResponse.value.at(0);
 	if (!randomTargetTeam) return leftOf(rejected('No team bid for player, and all teams are full.'));
+	if (!randomTargetTeam.roundId) return leftOf(internalServerError('Current round could not be found by server'));
+	
+	const forcedBid = await eitherOr(
+		db.insert(bid).values({
+			draftId,
+			amount: 1,
+			roundId: randomTargetTeam.roundId,
+			teamName: randomTargetTeam.teamName,
+		}),
+		err => buildCRUDError('create', 'forced team bid', err),
+	);
+	if (forcedBid._type === 'left') return forcedBid;
 
 	return successOr(
 		db

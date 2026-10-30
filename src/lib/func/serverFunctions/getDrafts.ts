@@ -13,10 +13,12 @@ const getDrafts = async (): Promise<Either<QueryFailureState, Success<DraftRespo
 				id: draft.id,
 				name: draft.name,
 				status: draft.status,
-				playerCount: count(playersToDrafts.userId),
+				maxmimumPlayersPerTeam: draft.maxPlayersPerTeam,
+				teamsCount: count(teamsToDrafts.captainId),
 			})
 			.from(draft)
-			.leftJoin(playersToDrafts, eq(draft.id, playersToDrafts.draftId))
+			// .leftJoin(playersToDrafts, eq(draft.id, playersToDrafts.draftId))
+			.leftJoin(teamsToDrafts, eq(draft.id, teamsToDrafts.draftId))
 			.groupBy(draft.id);
 
 		return successOr(

@@ -205,6 +205,9 @@ importers:
       cnfast:
         specifier: ^0.2.0
         version: 0.2.0
+      csv-stringify:
+        specifier: ^6.9.0
+        version: 6.9.0
       date-fns:
         specifier: ^4.4.0
         version: 4.4.0
@@ -3418,6 +3421,9 @@ packages:
 
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
+
+  csv-stringify@6.9.0:
+    resolution: {integrity: sha512-6b3e29CILFfSQ2nDRuZMRROzQOpPuJ+s8zPB5H7eK5ncXBbFOyVuRLU5Sx/zAUmVri3Ly49GyC8NEme4SVSAbA==}
 
   cypress@16.2.0:
     resolution: {integrity: sha512-qWW9RTldmGDmrWHL6UnsFxuOB3bJ3Kh9Ix7nb5mggI/d2IMPbl7ROd6+iy+zLIBp7ujQOQ8a5JQ6eODUJYsXVQ==}
@@ -8944,6 +8950,8 @@ snapshots:
       which: 2.0.2
 
   csstype@3.2.3: {}
+
+  csv-stringify@6.9.0: {}
 
   cypress@16.2.0:
     dependencies:

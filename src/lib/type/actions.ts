@@ -20,7 +20,8 @@ interface DraftResponse {
 	id: number;
 	name: string;
 	status: DraftStatus;
-	playerCount: number;
+	maxmimumPlayersPerTeam: number;
+	teamsCount: number
 }
 
 interface UserResponse {

@@ -54,6 +54,13 @@ const DraftActionsContextMenu = ({ draft }: Props) => {
 									</DropdownMenuItem>
 								</>
 
+						: draft.status === DraftStatus.active ?
+							<DropdownMenuItem variant="default" asChild>
+								<Link href={`/dashboard/admin/draft/${draft.id}`}>
+									<SquarePlus />
+									Join Draft
+								</Link>
+							</DropdownMenuItem>
 						:	<DropdownMenuItem variant="default">I&apos;m empty...</DropdownMenuItem>}
 					</DropdownMenuContent>
 				</DropdownMenu>

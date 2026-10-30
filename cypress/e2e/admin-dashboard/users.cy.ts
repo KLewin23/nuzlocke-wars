@@ -17,6 +17,7 @@ describe('/dashboard/admin/users/* path', () => {
 		it('can create multiple users', () => {
 			cy.contains('Users').click();
 			cy.contains('Create User').click();
+
 			const users = Array.from(Array(3)).map((_, index) => `${new Date().valueOf()}${index}`);
 			users.forEach(username => {
 				cy.get('fieldset[data-testid="new-user-form"]').within(() => {
@@ -26,11 +27,13 @@ describe('/dashboard/admin/users/* path', () => {
 					cy.get('button[role="combobox"]').contains('User').click({ force: true });
 					cy.contains('Admin').should('exist');
 				});
-				cy.contains('Stage User').click({force: true});
+				cy.contains('Stage User').click({ force: true });
 			});
 			cy.contains('Submit Staged Users').click();
 			cy.contains('Users Created');
 			cy.contains('3 users successfully created.');
+			cy.contains('Created User Data');
+			cy.contains(users[0]);
 		});
 		it('is blocked from creating a user with invalid fields', () => {
 			cy.contains('Users').click();

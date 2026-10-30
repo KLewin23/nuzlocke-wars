@@ -53,6 +53,7 @@ const EnableMFAForm = ({ MFAAlreadyConfigured }: Props) => {
 						name="password"
 						control={control}
 						label="Password"
+						type="password"
 						placeholder="Enter password."
 						rules={{
 							required: { message: 'Your password is required.', value: true },

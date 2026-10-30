@@ -21,7 +21,8 @@ const checkIfBiddingOver = async (draftId: number) =>
 						roundOverdue: sql`${new Date()} > ${round.biddingStartTime} + ${draft.roundLength} * interval '1 second'`,
 					})
 					.from(draft)
-					.innerJoin(round, eq(draft.currentRoundId, round.id)),
+					.innerJoin(round, eq(draft.currentRoundId, round.id))
+					.where(eq(draft.id, draftId)),
 				err => buildCRUDError('read', 'draft state', err),
 			);
 			if (checkResponse._type === 'left') return checkResponse;
