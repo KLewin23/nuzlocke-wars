@@ -3,6 +3,7 @@
 import { toast } from 'sonner';
 import { Info } from 'lucide-react';
 import Title from '@/atoms/typography/Title';
+import type { CreatedUser } from '@/type/queries';
 import Button from '@/components/atoms/Button';
 import { useState, useTransition } from 'react';
 import { readableQueryFailure } from '@/util/query';
@@ -12,11 +13,14 @@ import SubTitle from '@/components/atoms/typography/SubTitle';
 
 import UserForm from './UserForm';
 import StagedUserTile from './StagedUserTile';
+import CreatedUsersPasswordsDialog from './CreatedUsersPasswordsDialog';
 
 const Page = () => {
 	const [currentUserBeingEdited, setCurrentUserBeingEdited] = useState<number | undefined>();
 	const [stagedUsers, setStagedUsers] = useState<Array<CreateUserPayload>>([]);
+	const [createdUsers, setCreatedUsers] = useState<Array<CreatedUser> | undefined>();
 	const [submitPending, startSubmitTransition] = useTransition();
+
 
 	const submitUsers = () =>
 		startSubmitTransition(async () => {
@@ -31,11 +35,13 @@ const Page = () => {
 				toast('Users Created', {
 					description: `${stagedUsers.length} ${stagedUsers.length === 1 ? 'user' : 'users'} successfully created.`,
 				});
+				setCreatedUsers(response.value.data);
 			});
 		});
 
 	return (
 		<div className="col w-full max-w-250 grow gap-4 self-center overflow-hidden">
+			<CreatedUsersPasswordsDialog users={createdUsers} onClose={() => setCreatedUsers(undefined)} />
 			<div className="col gap-2">
 				<Title>Create Users</Title>
 				<div className="row items-center gap-2">

@@ -3,14 +3,17 @@
 import * as z from 'zod';
 import { auth } from '@/auth/auth';
 import generator from 'generate-password';
+import type { CreatedUser } from '@/type/queries';
 import buildCRUDError from '@/error/crudError';
 import adminSession from '@/func/adminSession';
 import buildAuthError from '@/error/buildAuthError';
 import type { CreateUserPayload } from '@/type/actions';
-import { type QueryState, type Success, successOr } from '@/util/query';
+import { type QueryStateWithNonFailure, type Success, successOr } from '@/util/query';
 
-const createUsers = async (users: Array<CreateUserPayload>): Promise<QueryState> =>
-	adminSession<Success<Array<{ password: string }>>>(
+const createUsers = async (
+	users: Array<CreateUserPayload>,
+): Promise<QueryStateWithNonFailure<Success<Array<CreatedUser>>>> =>
+	adminSession<Success<Array<CreatedUser>>>(
 		async () => {
 			const passwordSchema = z.string().min(8);
 			const getPassword = (user: CreateUserPayload) => {
@@ -42,11 +45,11 @@ const createUsers = async (users: Array<CreateUserPayload>): Promise<QueryState>
 									},
 								},
 							})
-							.then(() => ({ password }));
+							.then(() => ({ password, username }));
 					}),
 				),
 				err => buildAuthError(err, buildCRUDError('create', 'users', err)),
-				false
+				false,
 			);
 		},
 		{
