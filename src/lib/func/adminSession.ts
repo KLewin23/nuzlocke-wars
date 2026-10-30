@@ -16,6 +16,7 @@ const adminSession = async <T>(
 			type: 'Unauthorized' as const,
 		});
 	const hasPermission = await auth.api.userHasPermission({
+		headers: await headers(),
 		body: {
 			userId: session?.user.id,
 			role: 'admin',
