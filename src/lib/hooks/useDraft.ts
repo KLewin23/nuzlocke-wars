@@ -5,6 +5,7 @@ import { ablyEvent } from '@/type/ably';
 import { useChannel } from 'ably/react';
 import { useQuery } from '@tanstack/react-query';
 import type { GetFullDraft } from '@/type/queries';
+import { clientEnv } from '@/env/client';
 
 const useDraft = (draftId: number) => {
 	const trpc = useTRPC();
@@ -40,7 +41,7 @@ const useDraft = (draftId: number) => {
 			.exhaustive();
 	};
 
-	useChannel(`local:${draftId}`, m => void handleMessage(m.name));
+	useChannel(`${clientEnv.NEXT_PUBLIC_VERCEL_ENV}:${draftId}`, m => void handleMessage(m.name));
 
 	const draft: GetFullDraft = {
 		info: getDraftInfo.data,

@@ -5,7 +5,7 @@ const clientEnv = createEnv({
 	clientPrefix: 'NEXT_PUBLIC',
 	client: {
 		NEXT_PUBLIC_BASE_URL: z.string(),
-		NEXT_PUBLIC_VERCEL_ENV: z.union([z.literal('development'), z.literal('preview'), z.literal('production')]),
+		NEXT_PUBLIC_VERCEL_ENV: z.union([z.literal('local'),z.literal('development'), z.literal('preview'), z.literal('production')]),
 		NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL: z.string(),
 	},
 	runtimeEnv: {
