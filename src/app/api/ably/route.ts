@@ -4,7 +4,7 @@ import logger from '@/logger';
 import { db, draft } from '@/db';
 import { auth } from '@/auth/auth';
 import { env } from '@/env/server';
-import { inArray } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { eitherOr, unwrap } from '@/util/either';
@@ -25,7 +25,7 @@ const POST = async (request: Request) => {
 		db
 			.select({ id: draft.id })
 			.from(draft)
-			.where(inArray(draft.id, isInDraftQuery(session))),
+			.where(and(inArray(draft.id, isInDraftQuery(session)), eq(draft.id, parseDraftId.data))),
 		err => {
 			logger.error(
 				Error.isError(err) ? err : new Error(`Unhandled data read error occurred reading a \`draft\` `),

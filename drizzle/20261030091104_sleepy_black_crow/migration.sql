@@ -1,0 +1,1 @@
+ALTER TABLE "bid" ADD COLUMN "is_winner" boolean DEFAULT false NOT NULL;

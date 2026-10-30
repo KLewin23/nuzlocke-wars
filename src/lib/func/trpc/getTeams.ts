@@ -36,7 +36,7 @@ const getTeams = async (
 			})
 			.from(teamsToDrafts)
 			.innerJoin(user, eq(teamsToDrafts.captainId, user.id))
-			.leftJoin(bid, and(eq(teamsToDrafts.teamName, bid.teamName), eq(teamsToDrafts.draftId, bid.draftId)))
+			.leftJoin(bid, and(eq(teamsToDrafts.teamName, bid.teamName), eq(teamsToDrafts.draftId, bid.draftId), eq(bid.isWinner, true)))
 			.where(eq(teamsToDrafts.draftId, draftId))
 			.groupBy(teamsToDrafts.teamName, user.username, teamsToDrafts.captainId, user.image),
 		err => buildCRUDError('read', 'teamsToDrafts', err),

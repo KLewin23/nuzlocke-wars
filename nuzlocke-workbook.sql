@@ -1,4 +1,4 @@
--- Active: 1793080587726@@pg-nuzlocke-wars-nuzlocke-wars.e.aivencloud.com@17387@nuzlocke-wars-prod
+-- Active: 1791947165204@@127.0.0.1@54321@nuzlocke-wars
 SELECT * FROM public."user";
 
 SELECT * FROM public."two_factor";

@@ -19,6 +19,7 @@ const auth = betterAuth({
 	},
 	baseURL: {
 		allowedHosts: ['localhost:3000', '*.vercel.app'],
+		fallback: env.BASE_URL,
 	},
 	user: {
 		deleteUser: {

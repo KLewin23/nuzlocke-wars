@@ -1,8 +1,8 @@
 'use server';
-import { eitherOr } from '@/util/either';
 import { publishEvent } from '@/util/ably';
 import buildCRUDError from '@/error/crudError';
 import adminSession from '@/func/adminSession';
+import { eitherOr, rightOf } from '@/util/either';
 import buildActionError from '@/error/actionError';
 import assignTargetUser from '@/func/assignTargetUser';
 import { type QueryState, successOr } from '@/util/query';
@@ -16,7 +16,7 @@ const startNextRound = async (draftId: number): Promise<QueryState> =>
 		async () => {
 			const highestBidResponse = await eitherOr(
 				db
-					.select({ userId: round.targetUserId, teamName: bid.teamName })
+					.select({ userId: round.targetUserId, teamName: bid.teamName, bidId: bid.id })
 					.from(draft)
 					.innerJoin(round, eq(round.id, draft.currentRoundId))
 					.innerJoin(bid, and(eq(draft.id, bid.draftId), eq(bid.roundId, round.id)))
@@ -31,6 +31,15 @@ const startNextRound = async (draftId: number): Promise<QueryState> =>
 
 			const userAssignment = await assignTargetUser(draftId, highestBid);
 			if (userAssignment._type === 'left') return userAssignment;
+
+			const setBidAsWinner =
+				highestBid ?
+					await successOr(db.update(bid).set({ isWinner: true }).where(eq(bid.id, highestBid?.bidId)), err =>
+						buildCRUDError('update', 'highest bid', err),
+					)
+				:	rightOf({});
+
+			if (setBidAsWinner._type === 'left') return setBidAsWinner;
 
 			const nextTarget = await eitherOr(
 				db

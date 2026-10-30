@@ -1,5 +1,6 @@
 import {
 	type AnyPgColumn,
+	boolean,
 	foreignKey,
 	integer,
 	pgEnum,
@@ -40,19 +41,21 @@ const draft = pgTable('draft', {
 	currentRoundId: integer('current_round_id').references((): AnyPgColumn => round.id),
 });
 
-const round = pgTable('round', {
-	id: serial('id').primaryKey(),
-	draftId: integer('draft_id')
-		.notNull()
-		.references((): AnyPgColumn => draft.id, { onDelete: 'cascade' }),
-	targetUserId: text('target_user_id')
-		.notNull()
-		.references(() => user.id),
-	roundStatus: roundStatus('round_status').notNull().default(RoundStatus.pre_bidding),
-	biddingStartTime: timestamp('bidding_start_time', { mode: 'date' }), // MUST BE UTC
-}, t => [
-	unique('targeted_user').on(t.draftId, t.targetUserId)
-]);
+const round = pgTable(
+	'round',
+	{
+		id: serial('id').primaryKey(),
+		draftId: integer('draft_id')
+			.notNull()
+			.references((): AnyPgColumn => draft.id, { onDelete: 'cascade' }),
+		targetUserId: text('target_user_id')
+			.notNull()
+			.references(() => user.id),
+		roundStatus: roundStatus('round_status').notNull().default(RoundStatus.pre_bidding),
+		biddingStartTime: timestamp('bidding_start_time', { mode: 'date' }), // MUST BE UTC
+	},
+	t => [unique('targeted_user').on(t.draftId, t.targetUserId)],
+);
 
 const bid = pgTable(
 	'bid',
@@ -64,6 +67,7 @@ const bid = pgTable(
 			.notNull()
 			.references(() => round.id, { onDelete: 'cascade' }),
 		amount: integer('amount').notNull(),
+		isWinner: boolean('is_winner').notNull().default(false),
 	},
 	table => [
 		unique('draft_teams_bid').on(table.draftId, table.roundId, table.teamName),
@@ -104,22 +108,7 @@ const teamsToDrafts = pgTable(
 			.references(() => draft.id, { onDelete: 'cascade' }),
 		captainId: text('captain_id').notNull(),
 	},
-	t => [
-		unique('one_captain').on(t.draftId, t.captainId),
-		primaryKey({ columns: [t.teamName, t.draftId] })
-	],
+	t => [unique('one_captain').on(t.draftId, t.captainId), primaryKey({ columns: [t.teamName, t.draftId] })],
 );
 
-export {
-	bid,
-	draft,
-	draftStatus,
-	DraftStatus,
-	playersToDrafts,
-	round,
-	roundStatus,
-	RoundStatus,
-	team,
-	teamsToDrafts
-};
-
+export { bid, draft, draftStatus, DraftStatus, playersToDrafts, round, roundStatus, RoundStatus, team, teamsToDrafts };
