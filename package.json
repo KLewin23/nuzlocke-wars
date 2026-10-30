@@ -12,7 +12,7 @@
 		"db:seed": "tsx ./src/seed.ts",
 		"db:local_rebuild": "docker compose down && docker compose up -d",
 		"cypress:open": "cypress open",
-		"cypress:run": "cypress run",
+		"cypress:run": "cypress run --browser firefox",
 		"lint": "eslint",
 		"commit": "cz"
 	},

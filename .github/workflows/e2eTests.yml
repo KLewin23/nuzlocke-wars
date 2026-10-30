@@ -41,4 +41,4 @@ jobs:
         with:
           build: npm run build
           start: npm start
-          browser: chrome
+          browser: firefox
