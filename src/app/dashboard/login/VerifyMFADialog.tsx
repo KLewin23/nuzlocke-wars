@@ -68,6 +68,7 @@ const VerifyMFADialog = ({ isOpen, onClose }: Props) => {
 										onChange={field.onChange}
 										maxLength={6}
 										pattern={REGEXP_ONLY_DIGITS}
+										data-testid="verify_mfa_input"
 									>
 										<InputOTPGroup>
 											<InputOTPSlot index={0} aria-invalid={fieldState.invalid} />

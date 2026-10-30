@@ -1,4 +1,3 @@
-import { defineRelationsPart } from 'drizzle-orm';
 import {
 	type AnyPgColumn,
 	foreignKey,
@@ -111,68 +110,9 @@ const teamsToDrafts = pgTable(
 	],
 );
 
-const draftRelations = defineRelationsPart({ user, draft, team, round, bid, playersToDrafts, teamsToDrafts }, r => ({
-	draft: {
-		players: r.many.user(),
-		team: r.many.team({
-			from: r.draft.id.through(r.teamsToDrafts.draftId),
-			to: r.team.name.through(r.teamsToDrafts.teamName),
-		}),
-		rounds: r.many.round({
-			alias: 'parent_draft_relation',
-		}),
-		currentRound: r.one.round({
-			alias: 'current_round_relation',
-			from: r.draft.currentRoundId,
-			to: r.round.id,
-		}),
-	},
-	round: {
-		draft: r.one.draft({
-			alias: 'parent_draft_relation',
-			from: r.round.draftId,
-			to: r.draft.id,
-		}),
-		bids: r.many.bid(),
-		target: r.one.user({
-			alias: 'target_user_relation',
-			from: r.round.targetUserId,
-			to: r.user.id,
-		}),
-	},
-	bid: {
-		round: r.one.round({
-			from: r.bid.id,
-			to: r.round.id,
-		}),
-		team: r.one.team({
-			from: r.bid.teamName.through(r.teamsToDrafts.teamName),
-			to: r.team.name.through(r.teamsToDrafts.teamName),
-		}),
-		draft: r.one.draft({
-			from: r.bid.draftId.through(r.teamsToDrafts.draftId),
-			to: r.draft.id.through(r.teamsToDrafts.draftId),
-		}),
-	},
-	user: {
-		drafts: r.many.draft({
-			from: r.user.id.through(r.playersToDrafts.userId),
-			to: r.draft.id.through(r.playersToDrafts.draftId),
-		}),
-		rounds: r.many.round({
-			alias: 'target_user_relation',
-		}),
-	},
-	team: {
-		drafts: r.many.draft(),
-		bids: r.many.bid()
-	},
-}));
-
 export {
 	bid,
 	draft,
-	draftRelations,
 	draftStatus,
 	DraftStatus,
 	playersToDrafts,
@@ -180,5 +120,6 @@ export {
 	roundStatus,
 	RoundStatus,
 	team,
-	teamsToDrafts,
+	teamsToDrafts
 };
+

@@ -1,5 +1,5 @@
-import { defineRelationsPart } from 'drizzle-orm';
 import { boolean, index, integer, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+
 
 // Generated with `pnpm dlx auth@latest generate`
 
@@ -106,39 +106,4 @@ const twoFactor = pgTable(
 	table => [index('twoFactor_secret_idx').on(table.secret), index('twoFactor_userId_idx').on(table.userId)],
 );
 
-const authRelations = defineRelationsPart({ user, session, account, verification, twoFactor }, r => ({
-	user: {
-		sessions: r.many.session({
-			from: r.user.id,
-			to: r.session.userId,
-		}),
-		accounts: r.many.account({
-			from: r.user.id,
-			to: r.account.userId,
-		}),
-		twoFactors: r.many.twoFactor({
-			from: r.user.id,
-			to: r.twoFactor.userId,
-		}),
-	},
-	session: {
-		user: r.one.user({
-			from: r.session.userId,
-			to: r.user.id,
-		}),
-	},
-	account: {
-		user: r.one.user({
-			from: r.account.userId,
-			to: r.user.id,
-		}),
-	},
-	twoFactor: {
-		user: r.one.user({
-			from: r.twoFactor.userId,
-			to: r.user.id,
-		}),
-	},
-}));
-
-export { user, account, session, roleEnum, authRelations, verification, Role, twoFactor };
+export { account, Role, roleEnum, session, twoFactor, user, verification };
