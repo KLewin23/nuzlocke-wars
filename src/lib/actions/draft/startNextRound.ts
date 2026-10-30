@@ -4,9 +4,10 @@ import { publishEvent } from '@/util/ably';
 import buildCRUDError from '@/error/crudError';
 import adminSession from '@/func/adminSession';
 import buildActionError from '@/error/actionError';
+import assignTargetUser from '@/func/assignTargetUser';
 import { type QueryState, successOr } from '@/util/query';
 import buildAblyPublishError from '@/error/ablyPublishError';
-import { and, asc, desc, eq, isNotNull, ne, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, isNotNull, isNull, ne, sql } from 'drizzle-orm';
 import { DraftStatus, RoundStatus, bid, db, draft, playersToDrafts, round, user } from '@/db';
 
 // Tldr. Create the next round, set the target player, sets the drafts current round to the new one.
@@ -27,18 +28,9 @@ const startNextRound = async (draftId: number): Promise<QueryState> =>
 
 			if (highestBidResponse._type === 'left') return highestBidResponse;
 			const highestBid = highestBidResponse.value.at(0);
-			if (highestBid) {
-				const assignUserToTeamResponse = await eitherOr(
-					db
-						.update(playersToDrafts)
-						.set({ teamName: highestBid.teamName })
-						.where(
-							and(eq(playersToDrafts.userId, highestBid.userId), eq(playersToDrafts.draftId, draftId)),
-						),
-					err => buildCRUDError('update', 'players to team assignments', err),
-				);
-				if (assignUserToTeamResponse._type === 'left') return assignUserToTeamResponse;
-			}
+
+			const userAssignment = await assignTargetUser(draftId, highestBid);
+			if (userAssignment._type === 'left') return userAssignment;
 
 			const nextTarget = await eitherOr(
 				db
@@ -46,8 +38,15 @@ const startNextRound = async (draftId: number): Promise<QueryState> =>
 					.from(playersToDrafts)
 					.innerJoin(user, eq(user.id, playersToDrafts.userId))
 					.leftJoin(round, and(ne(user.id, round.targetUserId), eq(round.draftId, draftId))) //NOTE THIS SEEMS WRONG should be not equal to user
-					.where(and(eq(playersToDrafts.draftId, draftId), isNotNull(round.id)))
-					.orderBy(sql`RANDOM()`),
+					.where(
+						and(
+							eq(playersToDrafts.draftId, draftId),
+							isNotNull(round.id),
+							isNull(playersToDrafts.teamName),
+						),
+					)
+					.orderBy(sql`RANDOM()`)
+					.limit(1),
 				err => buildCRUDError('read', 'next target player', err),
 			);
 			if (nextTarget._type === 'left') return nextTarget;

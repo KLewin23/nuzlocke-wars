@@ -8,7 +8,7 @@ const page = async () => {
 	const users = await getUsers();
 
 	return (
-		<div className="col w-full max-w-250 grow items-end gap-4 self-center">
+		<div className="col w-full max-w-250 grow items-end gap-4 self-center pb-4 overflow-hidden">
 			<Link href="/dashboard/admin/users/create">
 				<Button palette="blackOnWhite">Create User</Button>
 			</Link>
@@ -23,7 +23,7 @@ const page = async () => {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					<TableBodyDataHandler noDataMessage="No users to display" dataResponse={users}>
+					<TableBodyDataHandler columnCount={5} noDataMessage="No users to display" dataResponse={users}>
 						{user => (
 							<TableRow key={user.id}>
 								<TableCell>{user.username}</TableCell>

@@ -9,7 +9,7 @@ const page = async () => {
 	const drafts = await getDrafts();
 
 	return (
-		<div className="col w-full max-w-250 grow items-end gap-4 self-center">
+		<div className="col w-full max-w-250 grow items-end gap-4 self-center overflow-hidden">
 			<Link href="/dashboard/admin/drafts/create">
 				<Button palette="blackOnWhite">Create Draft</Button>
 			</Link>
@@ -23,7 +23,7 @@ const page = async () => {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					<TableBodyDataHandler noDataMessage="No drafts to display" dataResponse={drafts}>
+					<TableBodyDataHandler columnCount={4} noDataMessage="No drafts to display" dataResponse={drafts}>
 						{draft => (
 							<TableRow key={`draft-row-${draft.id}`}>
 								<TableCell>{draft.name}</TableCell>

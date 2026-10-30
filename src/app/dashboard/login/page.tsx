@@ -1,5 +1,6 @@
 'use client';
 
+import z from 'zod';
 import { toast } from 'sonner';
 import Title from '@/images/Title';
 import Button from '@/atoms/Button';
@@ -8,9 +9,14 @@ import { useRouter } from 'next/navigation';
 import { authClient } from '@/auth/auth-client';
 import { type MouseEvent, useState } from 'react';
 
+import VerifyMFADialog from './VerifyMFADialog';
+
+const successContextSchema = z.object({ data: z.object({ twoFactorMethods: z.array(z.string()) }) });
+
 const Page = () => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
+	const [verifyMfa, setVerifyMfa] = useState(false);
 	const router = useRouter();
 
 	const handleLogin = async (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
@@ -22,9 +28,13 @@ const Page = () => {
 				username,
 				password,
 				fetchOptions: {
-					onSuccess: () => void router.push('/dashboard/drafts'),
+					onSuccess: context => {
+						const hasMFA = successContextSchema.safeParse(context);
+						if (hasMFA.success && hasMFA.data.data.twoFactorMethods.includes('totp'))
+							return setVerifyMfa(true);
+						router.push('/dashboard/drafts');
+					},
 					onError: err => {
-						// console.error(new Error(err.error.message, { cause: err.error.cause }), 'Login Error');
 						toast.error(err.error.message ?? 'Invalid credentials, please try again.');
 					},
 				},
@@ -36,6 +46,7 @@ const Page = () => {
 
 	return (
 		<div className="col mt-[30vh] w-87.5 items-center gap-16 p-4">
+			<VerifyMFADialog isOpen={verifyMfa} onClose={() => setVerifyMfa(false)} />
 			<Title variant="dashboard" />
 			<form className="col w-full gap-8">
 				<Input

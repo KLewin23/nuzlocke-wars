@@ -4,7 +4,7 @@ import { defineConfig } from 'drizzle-kit';
 
 export default defineConfig({
 	out: './drizzle',
-	schema: ['./src/lib/db/draftSchema.ts', './src/lib/db/authSchema.ts'],
+	schema: ['./src/lib/db/authSchema.ts', './src/lib/db/draftSchema.ts'],
 	dialect: 'postgresql',
 	dbCredentials: {
 		host: env.DATABASE_HOST,

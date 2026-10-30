@@ -1,7 +1,9 @@
 import logger from '@/logger';
 import { auth } from '@/auth/auth';
+import { env } from '@/env/server';
 import { faker } from '@faker-js/faker';
-import { Role, db, draft, playersToDrafts, team, teamsToDrafts } from '@/db';
+import { generateRandomString, symmetricEncrypt } from 'better-auth/crypto';
+import { Role, db, draft, playersToDrafts, team, teamsToDrafts, twoFactor } from '@/db';
 
 const arrayOf = (length: number): Array<unknown> => Array.from(Array(length));
 
@@ -17,7 +19,19 @@ const setupCoreUsers = async () => {
 			},
 		},
 	});
+	// For manual work login as this user
 	await auth.api.createUser({
+		body: {
+			email: 'manual.admin@admin.com',
+			name: 'ManualAdmin',
+			password: 'password',
+			role: 'admin',
+			data: {
+				username: 'ManualAdmin',
+			},
+		},
+	});
+	const user = await auth.api.createUser({
 		body: {
 			email: 'admin@admin.com',
 			name: 'Admin',
@@ -25,14 +39,30 @@ const setupCoreUsers = async () => {
 			role: 'admin',
 			data: {
 				username: 'Admin',
+				twoFactorEnabled: true
 			},
 		},
+	});
+	const secret = generateRandomString(32);
+	const encryptedSecret = await symmetricEncrypt({
+		key: env.BETTER_AUTH_SECRET,
+		data: secret,
+	});
+	await db.insert(twoFactor).values({
+		id: 'ADMIN_TWO_FACTOR',
+		userId: user.user.id,
+		backupCodes: '',
+		secret: encryptedSecret,
+		verified: true,
 	});
 };
 
 const seedUser = async (role: Role) => {
 	const name = faker.person.fullName();
-	const username = `${faker.internet.username().replace(/[^0-9a-z]/gi, '')}${faker.date.anytime().getFullYear()}`;
+	const username = faker.internet
+		.username()
+		.replace(/[^0-9a-z]/gi, '')
+		.substring(0, 15);
 
 	return await auth.api.createUser({
 		body: {
@@ -41,6 +71,7 @@ const seedUser = async (role: Role) => {
 			password: 'password',
 			role,
 			data: {
+				image: 'https://picsum.photos/300/300',
 				username: username,
 			},
 		},
@@ -48,7 +79,7 @@ const seedUser = async (role: Role) => {
 };
 
 const seedDraft = async (usersPerTeam: number, teamCount: number) => {
-	const users = await Promise.all(arrayOf(usersPerTeam * teamCount).map(() => seedUser(Role.user)));
+	const users = await Promise.all(arrayOf(usersPerTeam * teamCount + teamCount).map(() => seedUser(Role.user)));
 	const teams = await db
 		.insert(team)
 		.values(arrayOf(teamCount).map(() => ({ name: faker.company.name().replace(/[^0-9a-z]/gi, '') })))
@@ -84,7 +115,7 @@ const seedDraft = async (usersPerTeam: number, teamCount: number) => {
 
 const main = async () => {
 	await setupCoreUsers();
-	await seedDraft(5, 4);
+	await seedDraft(2, 2);
 	await Promise.all(arrayOf(50).map(() => seedUser(Role.user)));
 	await Promise.all(arrayOf(10).map(() => seedUser(Role.admin)));
 	// const teams = await db

@@ -1,12 +1,14 @@
-import { db } from '@/db/database';
-import { env } from '@/env/server';
+//NOTE: path aliases don't work in the auth cli
 import { betterAuth } from 'better-auth';
-import * as schema from '@/db/authSchema';
 import { nextCookies } from 'better-auth/next-js';
 import { username } from 'better-auth/plugins/username';
+import { twoFactor } from 'better-auth/plugins/two-factor';
 import { admin as adminPlugin } from 'better-auth/plugins/admin';
 import { drizzleAdapter } from '@better-auth/drizzle-adapter/relations-v2';
 
+import { db } from '../db/database';
+import { env } from '../env/server';
+import * as schema from '../db/authSchema';
 import { ac, admin, user } from './permissions';
 
 const auth = betterAuth({
@@ -38,9 +40,16 @@ const auth = betterAuth({
 		enabled: true,
 		autoSignIn: false,
 	},
-	plugins: [username(), adminPlugin({ ac, roles: { admin, user } }), nextCookies()],
+	plugins: [
+		username({
+			maxUsernameLength: 16,
+		}),
+		twoFactor(),
+		adminPlugin({ ac, roles: { admin, user } }),
+		nextCookies(),
+	],
 	rateLimit: {
-		enabled: env.VERCEL_ENV === 'local' ? false : true,
+		enabled: env.VERCEL_ENV === 'local' || env.NODE_ENV === 'test' ? false : true,
 		window: 60,
 		max: 100,
 	},

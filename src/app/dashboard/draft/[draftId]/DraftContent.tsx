@@ -1,10 +1,10 @@
 'use client';
 
+import cn from 'cnfast';
 import useDraft from '@/hooks/useDraft';
-import { entries } from '@/util/extension';
-import TeamRow from '@/components/molecules/TeamRow';
+import { DraftStatus } from '@/db/draftSchema';
 import TargetUserImage from '@/atoms/TargetUserImage';
-import { DraftStatus, RoundStatus } from '@/db/draftSchema';
+import DraftingTeamGrid from '@/organisms/DraftingTeamGrid';
 
 import UserControls from './UserControls';
 
@@ -18,30 +18,17 @@ const DraftContent = ({ draftId }: Props) => {
 	const [draft] = useDraft(draftId);
 
 	return (
-		<div className="col items-center gap-4 py-6">
-			<div className="col items-center gap-2">
-				<TargetUserImage
-					targetUser={draft.currentRound?.targetPlayer}
-					forceHide={draft.info?.status !== DraftStatus.active}
-				/>
-				<UserControls draftId={draftId} draft={draft} />
-			</div>
-			{entries(draft?.teams ?? {}).map(([teamName, team]) => {
-				const currentBid = draft.currentRound?.bids.find(b => b.teamName === teamName);
-				return (
-					<TeamRow
-						key={teamName}
-						captain={team.captain}
-						coinsSpent={team.coinsSpent}
-						currentBid={currentBid !== undefined ? currentBid.amount : null}
-						initialTeamCoins={draft.info?.initialPlayerCoins}
-						maxPlayers={draft.info?.maxPlayersPerTeam ?? 0}
-						players={team.players}
-						teamName={teamName}
-						shouldRevealBid={draft.currentRound?.roundStatus === RoundStatus.post_bidding}
+		<div className={cn("col h-full items-center gap-4 py-6", draft.info?.status === DraftStatus.complete ? 'justify-center' : '')}>
+			{draft.info?.status !== DraftStatus.complete ?
+				<div className={'col items-center gap-2'}>
+					<TargetUserImage
+						targetUser={draft.currentRound?.targetPlayer}
+						forceHide={draft.info?.status !== DraftStatus.active}
 					/>
-				);
-			})}
+					<UserControls draftId={draftId} draft={draft} />
+				</div>
+			:	null}
+			<DraftingTeamGrid draft={draft} />
 		</div>
 	);
 };

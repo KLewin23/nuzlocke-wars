@@ -19,12 +19,13 @@ const DashboardNavbar = async () => {
 
 	return (
 		<Navbar
-			variant="dashbord"
+			variant="dashboard"
 			links={
 				role === 'admin' ?
 					{
 						Drafts: '/dashboard/admin/drafts',
 						Users: '/dashboard/admin/users',
+						Settings: '/dashboard/admin/settings',
 						'Sign Out': signOutAndRedirect,
 					}
 				:	{

@@ -34,7 +34,7 @@ const replayBidding = async (draftId: number) =>
 				db.transaction(async tx => {
 					await tx
 						.update(round)
-						.set({ roundStatus: RoundStatus.pre_bidding })
+						.set({ roundStatus: RoundStatus.pre_bidding, biddingStartTime: null })
 						.where(eq(round.id, currentRound.roundId));
 					await tx.delete(bid).where(and(eq(bid.roundId, currentRound.roundId), eq(bid.draftId, draftId)));
 				}),

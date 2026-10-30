@@ -15,6 +15,8 @@ const UserImage = ({ userData }: Props) => (
 				loading="eager"
 				alt="Profile image for drafted player"
 				className="h-full w-full object-cover"
+				height={84}
+				width={84}
 			/>
 		:	<div className="bg-black/20 p-4">
 				<Image src={QuestionMark as string} loading="eager" alt="Image for unknown user" />

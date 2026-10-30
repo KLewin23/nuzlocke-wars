@@ -1,8 +1,7 @@
 import { env } from '@/env/server';
 import { drizzle } from 'drizzle-orm/node-postgres';
 
-import { authRelations } from './authSchema';
-import { draftRelations } from './draftSchema';
+import relations from './relations';
 
 export const db = drizzle({
 	connection: {
@@ -16,5 +15,5 @@ export const db = drizzle({
 			ca: env.DATABASE_CA_CERTIFICATE,
 		} : undefined
 	},
-	relations: { ...authRelations, ...draftRelations },
+	relations,
 });

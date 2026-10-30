@@ -15,7 +15,9 @@ const env = createEnv({
 		BETTER_AUTH_SECRET: z.string(),
 		BASE_URL: z.string(),
 		VERCEL_ENV: z
-			.union([z.literal('local'), z.literal('development'), z.literal('preview'), z.literal('production')])
+			.union([z.literal('local'), z.literal('development'), z.literal('preview'), z.literal('production')]),
+		NODE_ENV: z
+			.union([z.literal('test'), z.literal('development'), z.literal('production')])
 			.optional(),
 		ABLY_PUBLISH_API_KEY: z.string(),
 		ABLY_SUBSCRIBE_API_KEY: z.string(),
