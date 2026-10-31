@@ -8,7 +8,7 @@ import relations from './relations';
 const pool = new Pool({
 	...('DATABASE_CONNECTION_URL' in env ?
 		{
-			url: env.DATABASE_CONNECTION_URL,
+			connectionString: env.DATABASE_CONNECTION_URL,
 		}
 	:	{
 			host: env.DATABASE_HOST,

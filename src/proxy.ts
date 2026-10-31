@@ -6,6 +6,7 @@ export const proxy = async (req: NextRequest) => {
 	const session = await auth.api.getSession({
 		headers: await headers(),
 	});
+
 	const { pathname } = req.nextUrl;
 
 	if (!session) {
@@ -16,7 +17,6 @@ export const proxy = async (req: NextRequest) => {
 	const pathBase = session.user.role === 'admin' ? '/dashboard/admin' : '/dashboard';
 
 	if (pathname === '/dashboard/login') return NextResponse.redirect(new URL(`${pathBase}/drafts`, req.url));
-
 
 	if (session.user.role === 'admin') {
 		if (pathname.startsWith('/dashboard/draft/') && !session.user.twoFactorEnabled)
