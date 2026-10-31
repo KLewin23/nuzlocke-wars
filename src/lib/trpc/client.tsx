@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { env } from '@/env/server';
+import { clientEnv } from '@/env/client';
 import type { QueryClient } from '@tanstack/react-query';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
@@ -29,7 +29,7 @@ const getQueryClient = () => {
 const getUrl = () => {
 	const base = (() => {
 		if (typeof window !== 'undefined') return '';
-		if (process.env.VERCEL_URL) return env.BASE_URL;
+		if (process.env.VERCEL_URL) return clientEnv.NEXT_PUBLIC_BASE_URL;
 		return 'http://localhost:3000';
 	})();
 	return `${base}/api/trpc`;
