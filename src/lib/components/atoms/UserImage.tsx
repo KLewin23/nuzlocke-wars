@@ -7,7 +7,7 @@ interface Props {
 }
 
 const UserImage = ({ userData }: Props) => (
-	<div className="border-gradient-gold h-21 w-21 3xl:h-25 3xl:w-25 border-2">
+	<div className="border-gradient-gold h-19 w-19 3xl:h-25 3xl:w-25 border-2">
 		{userData?.image ?
 			<Image
 				unoptimized
@@ -15,7 +15,7 @@ const UserImage = ({ userData }: Props) => (
 				loading="eager"
 				alt="Profile image for drafted player"
 				className="h-full w-full object-cover"
-				height={84}
+				height={100}
 				width={84}
 			/>
 		:	<div className="bg-black/20 p-4">

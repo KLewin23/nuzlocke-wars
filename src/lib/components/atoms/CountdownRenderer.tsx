@@ -10,7 +10,7 @@ const CountdownRenderer = ({ seconds, minutes, completed, completedMessage }: Co
 			<p className="font-railroad-gothic text-lg">{completedMessage}</p>
 		</div>
 	:	<p className="font-railroad-gothic text-lg">
-			{minutes}:{seconds}
+			{minutes}:{seconds.toString().padStart(2, '0')}
 		</p>;
 
 export default CountdownRenderer;

@@ -39,7 +39,7 @@ const AdminControls = ({ draftId, draft }: Props) => {
 		.with([DraftStatus.open, RoundStatus.pre_bidding], () => (
 			<Button
 				palette="green"
-				className="3xl:text-xl w-40 text-lg"
+				className="3xl:text-xl w-40 text-lg max-h-11"
 				disabled={isPending}
 				onClick={() =>
 					runAction(startDraft(draftId), () => ({
@@ -54,7 +54,7 @@ const AdminControls = ({ draftId, draft }: Props) => {
 		.with([DraftStatus.active, RoundStatus.pre_bidding], () => (
 			<Button
 				palette="green"
-				className="3xl:text-xl w-40 text-lg"
+				className="3xl:text-xl w-40 text-lg max-h-11"
 				disabled={isPending}
 				onClick={() =>
 					runAction(startBidding(draftId), () => ({

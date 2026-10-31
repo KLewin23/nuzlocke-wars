@@ -23,7 +23,7 @@ const DraftContent = ({ draftId, controls: Controls }: Props) => {
 	return (
 		<div
 			className={cn(
-				'col h-full items-center gap-4 py-6',
+				'col h-full items-center gap-4 py-6 overflow-auto',
 				draft.info?.status === DraftStatus.complete ? 'justify-center' : '',
 			)}
 		>

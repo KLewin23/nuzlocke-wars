@@ -1,4 +1,4 @@
--- Active: 1793080587726@@pg-nuzlocke-wars-nuzlocke-wars.e.aivencloud.com@17387@nuzlocke-wars-prod
+-- Active: 1791947165204@@127.0.0.1@54321@nuzlocke-wars@public
 SELECT * FROM public."user";
 
 SELECT * FROM public."two_factor";
@@ -20,6 +20,16 @@ SELECT *
 FROM public."players_to_drafts" -- JOIN public."user" ON public."user".id = players_to_drafts.user_id;
 
 SELECT * FROM public."teams_to_drafts" JOIN public."user" ON public."teams_to_drafts".captain_id = public."user".id;
+
+INSERT INTO public."team" (name)
+VALUES ('TEST1'),
+('TEST2')
+
+
+INSERT INTO public."teams_to_drafts" (team_name, draft_id, captain_id) 
+VALUES ('TEST1', 1, 'rWEbqSlWg76Ms3sIz80WhabKCYxVe4fZ'),
+       ('TEST2', 1, 'K7uYc7owNP3QAdg8d9aBSUbkab1LIWfj')
+
 
 SELECT *
 FROM public."user"

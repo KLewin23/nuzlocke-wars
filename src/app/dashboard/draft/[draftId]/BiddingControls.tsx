@@ -73,8 +73,8 @@ const BiddingControls = ({ draftId, draft, biddingStartTime, roundLength }: Prop
 						type="number"
 						rules={{
 							required: 'You need to enter your bid',
-							maxLength: { message: "You can' bid more than 999,999 (You're insane)", value: 999999 },
-							minLength: { message: 'You at least need to big 1 coin... cmon', value: 1 },
+							max: { message: "You can' bid more than 999,999 (You're insane)", value: 999999 },
+							min: { message: 'You at least need to bid 1 coin... cmon', value: 1 },
 						}}
 					/>
 					<Button palette="green" disabled={isPending}>

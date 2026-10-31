@@ -22,7 +22,7 @@ const AfterBiddingControls = ({ draftId }: Props) => {
 		<ButtonGroup className="gradient-radial-green">
 			<Button
 				palette="default"
-				className="3xl:text-xl w-40 text-lg"
+				className="3xl:text-xl w-40 text-lg max-h-11"
 				disabled={isPending}
 				onClick={() =>
 					runAction(startNextRound(draftId), () => ({
@@ -35,7 +35,7 @@ const AfterBiddingControls = ({ draftId }: Props) => {
 			</Button>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<Button palette="default" className="border-l border-l-black/30 pl-2!">
+					<Button palette="default" className="border-l border-l-black/30 pl-2! max-h-11">
 						<ChevronDownIcon strokeWidth={4} />
 					</Button>
 				</DropdownMenuTrigger>
