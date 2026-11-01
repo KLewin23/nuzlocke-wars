@@ -1,10 +1,9 @@
 'use client';
 
-import { toast } from 'sonner';
 import { useTransition } from 'react';
 import Button from '@/components/atoms/Button';
 import toastErrorMesage from '@/util/formError';
-import { readableQueryFailure } from '@/util/query';
+import createActionHandler from '@/util/actions';
 import { Controller, useForm } from 'react-hook-form';
 import type { CreateDraftForm, User } from '@/type/form';
 import { createDraft } from '@/actions/draft/createDraft';
@@ -32,32 +31,31 @@ const AddDraftForm = ({ existingTeams, users }: Props) => {
 		},
 	});
 	const [submitPending, startSubmitTransition] = useTransition();
+	const handleAction = createActionHandler(startSubmitTransition);
 	const teams = watch('teams');
 	const players = watch('players');
 	const maxPlayersPerTeam = watch('maxPlayersPerTeam');
 
 	const submitUsers = (values: CreateDraftForm) =>
-		startSubmitTransition(async () => {
-			const response = await createDraft({
-				...values,
-				players: [
-					...values.players.map(p => ({
-						userId: p.userId,
-					})),
-				],
-			});
-			if (response._type === 'left')
-				return startSubmitTransition(() => {
-					const failure = readableQueryFailure(response.value);
-					toast.error(failure.title, { description: failure.description });
-				});
-			return startSubmitTransition(() => {
-				toast('Users Created', {
-					description: `Draft: \`${values.name}\` successfully created.`,
-				});
-				reset();
-			});
-		});
+		startSubmitTransition(() =>
+			handleAction(
+				createDraft({
+					...values,
+					players: [
+						...values.players.map(p => ({
+							userId: p.userId,
+						})),
+					],
+				}),
+				() => {
+					reset();
+					return {
+						title: 'Users Created',
+						description: `Draft: \`${values.name}\` successfully created.`,
+					};
+				},
+			),
+		);
 
 	return (
 		<form

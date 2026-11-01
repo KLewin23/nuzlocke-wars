@@ -19,6 +19,7 @@ enum DraftStatus {
 	open = 'open',
 	active = 'active',
 	complete = 'complete',
+	archived = 'archived',
 }
 
 const draftStatus = pgEnum('draft_status', DraftStatus);
@@ -91,7 +92,7 @@ const playersToDrafts = pgTable(
 			.references(() => user.id),
 		draftId: integer('draft_id')
 			.notNull()
-			.references(() => draft.id),
+			.references(() => draft.id, { onDelete: 'cascade' }),
 		teamName: text('team_name').references(() => team.name, { onDelete: 'cascade' }),
 	},
 	t => [primaryKey({ columns: [t.draftId, t.userId] })],

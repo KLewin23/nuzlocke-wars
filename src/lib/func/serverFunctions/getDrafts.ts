@@ -17,7 +17,6 @@ const getDrafts = async (): Promise<Either<QueryFailureState, Success<DraftRespo
 				teamsCount: count(teamsToDrafts.captainId),
 			})
 			.from(draft)
-			// .leftJoin(playersToDrafts, eq(draft.id, playersToDrafts.draftId))
 			.leftJoin(teamsToDrafts, eq(draft.id, teamsToDrafts.draftId))
 			.groupBy(draft.id);
 

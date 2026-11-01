@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { DraftStatus } from '@/db';
 import Button from '@/atoms/Button';
 import getDrafts from '@/func/serverFunctions/getDrafts';
 import { Table, TableBody, TableBodyDataHandler, TableCell, TableHead, TableHeader, TableRow } from '@/atoms/table';
@@ -23,7 +24,12 @@ const page = async () => {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					<TableBodyDataHandler columnCount={4} noDataMessage="No drafts to display" dataResponse={drafts}>
+					<TableBodyDataHandler
+						columnCount={4}
+						noDataMessage="No drafts to display"
+						dataResponse={drafts}
+						filter={i => i.status !== DraftStatus.archived}
+					>
 						{draft => (
 							<TableRow key={`draft-row-${draft.id}`}>
 								<TableCell>{draft.name}</TableCell>

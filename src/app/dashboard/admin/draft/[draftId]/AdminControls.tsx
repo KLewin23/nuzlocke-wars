@@ -5,7 +5,7 @@ import Button from '@/atoms/Button';
 import { addSeconds } from 'date-fns';
 import { useTransition } from 'react';
 import Countdown from 'react-countdown';
-import handleAction from '@/util/actions';
+import createActionHandler from '@/util/actions';
 import type { GetFullDraft } from '@/type/queries';
 import startDraft from '@/actions/draft/startDraft';
 import startBidding from '@/actions/draft/startBidding';
@@ -22,7 +22,7 @@ interface Props {
 
 const AdminControls = ({ draftId, draft }: Props) => {
 	const [isPending, startTransition] = useTransition();
-	const runAction = handleAction(startTransition);
+	const runAction = createActionHandler(startTransition);
 
 	const checkBiddingComplete = () => {
 		runAction(checkIfBiddingOver(draftId), ({ data: { isComplete } }) => {

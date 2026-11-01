@@ -4,7 +4,7 @@ import type { TransitionFunction } from 'react';
 import type { Either } from './either';
 import { type QueryFailureState, type QueryNonFailureState, readableQueryFailure } from './query';
 
-const handleAction =
+const createActionHandler =
 	(transitionFn: (callback: TransitionFunction) => void) =>
 	<L extends QueryFailureState, R extends QueryNonFailureState>(
 		action: Promise<Either<L, R>>,
@@ -21,4 +21,4 @@ const handleAction =
 			toast.success(toastInfo.title, { description: toastInfo.description });
 		});
 
-export default handleAction;
+export default createActionHandler;

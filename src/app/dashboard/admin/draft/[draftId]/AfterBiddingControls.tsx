@@ -2,7 +2,7 @@
 
 import Button from '@/atoms/Button';
 import { useTransition } from 'react';
-import handleAction from '@/util/actions';
+import createActionHandler from '@/util/actions';
 import replayBidding from '@/actions/draft/replayBidding';
 import { ChevronDownIcon, RotateCcw } from 'lucide-react';
 import startNextRound from '@/actions/draft/startNextRound';
@@ -16,7 +16,7 @@ interface Props {
 
 const AfterBiddingControls = ({ draftId }: Props) => {
 	const [isPending, startTransition] = useTransition();
-	const runAction = handleAction(startTransition);
+	const runAction = createActionHandler(startTransition);
 
 	return (
 		<ButtonGroup className="gradient-radial-green">

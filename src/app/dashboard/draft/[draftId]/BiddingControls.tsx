@@ -4,7 +4,7 @@ import Button from '@/atoms/Button';
 import { addSeconds } from 'date-fns';
 import { useTransition } from 'react';
 import Countdown from 'react-countdown';
-import handleAction from '@/util/actions';
+import createActionHandler from '@/util/actions';
 import { useForm } from 'react-hook-form';
 import createBid from '@/actions/bid/createBid';
 import { authClient } from '@/auth/auth-client';
@@ -24,7 +24,7 @@ interface Props {
 const BiddingControls = ({ draftId, draft, biddingStartTime, roundLength }: Props) => {
 	const [isPending, startTransition] = useTransition();
 	const session = authClient.useSession();
-	const runAction = handleAction(startTransition);
+	const runAction = createActionHandler(startTransition);
 	const currentBid = draft?.currentRound?.bids.find(b => b.captainId === session.data?.user.id);
 	const { control, handleSubmit } = useForm<{ bid: number }>({
 		defaultValues: {
