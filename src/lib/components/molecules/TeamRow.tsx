@@ -35,20 +35,20 @@ const TeamRow = ({
 				<p>{shouldRevealBid && currentBid !== null ? currentBid : '??'}</p>
 			</div>
 		</div>
-		<div className="items-start">
+		<div className="col items-start">
 			<div className="row h-7 rounded-tl-lg">
 				<div className="row h-7 min-w-70 items-end rounded-tl-lg bg-black/25 pl-4">
 					<p className="font-railroad-gothic">Team {teamName}</p>
 				</div>
 				<div className="border-t-28 border-l-28 border-t-transparent border-l-black/25" />
 			</div>
-			<div className="row bg-red gap-8 bg-black/25 px-4 pt-4 pb-2">
+			<div className="row bg-red gap-8 bg-black/25 grow px-4 pt-4 pb-2">
 				<div className="col items-center gap-1">
 					<UserImage userData={captain} />
 					<p className="font-railroad-gothic text-xs">{captain.username.substring(0, 15)}</p>
 				</div>
 				<div
-					className="grid grid-rows-1 gap-2"
+					className="grid grow basis-full grid-rows-1 gap-2"
 					style={{ gridTemplateColumns: `repeat( ${maxPlayers - 1}, minmax(min-content, 1fr) )` }}
 				>
 					{players.map(player => (
