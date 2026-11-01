@@ -1,4 +1,4 @@
 # Highlights
 - If MlemDota is live, show live stream at top
 - Newest Clips
-- Filterable clip panel -- https://dev.twitch.tv/docs/api/reference/#get-streams
+- Filterable clip panel -- https://dev.twitch.tv/docs/api/reference/#get-streams - with the tag NuzlockeWars
