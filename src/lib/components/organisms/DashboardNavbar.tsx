@@ -25,6 +25,7 @@ const DashboardNavbar = async () => {
 					{
 						Drafts: '/dashboard/admin/drafts',
 						Users: '/dashboard/admin/users',
+						Content: '/dashboard/admin/content',
 						Settings: '/dashboard/admin/settings',
 						'Sign Out': signOutAndRedirect,
 					}

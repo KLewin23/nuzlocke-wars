@@ -1,10 +1,25 @@
 import { defineRelations } from 'drizzle-orm';
 
-import { bid, draft, playersToDrafts, round, team, teamsToDrafts } from './draftSchema';
+import { clip, streamer } from './contentSchema';
 import { account, session, twoFactor, user, verification } from './authSchema';
+import { bid, draft, playersToDrafts, round, team, teamsToDrafts } from './draftSchema';
 
 const relations = defineRelations(
-	{ user, session, account, verification, twoFactor, draft, playersToDrafts, round, teamsToDrafts, team, bid },
+	{
+		user,
+		session,
+		account,
+		verification,
+		twoFactor,
+		draft,
+		playersToDrafts,
+		round,
+		teamsToDrafts,
+		team,
+		bid,
+		streamer,
+		clip,
+	},
 	r => ({
 		user: {
 			sessions: r.many.session({
@@ -26,6 +41,7 @@ const relations = defineRelations(
 			rounds: r.many.round({
 				alias: 'target_user_relation',
 			}),
+			approvedClips: r.many.clip(),
 		},
 		session: {
 			user: r.one.user({
@@ -90,6 +106,19 @@ const relations = defineRelations(
 		team: {
 			drafts: r.many.draft(),
 			bids: r.many.bid(),
+		},
+		streamer: {
+			clips: r.many.clip(),
+		},
+		clip: {
+			streamer: r.one.streamer({
+				from: r.clip.streamerId,
+				to: r.streamer.id,
+			}),
+			approver: r.one.user({
+				from: r.clip.approverUserId,
+				to: r.user.id,
+			}),
 		},
 	}),
 );

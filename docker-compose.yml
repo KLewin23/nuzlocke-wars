@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:18
-    container_name: gst-depot-postgres
+    container_name: nuzlocke-wars
     ports:
       - "${DATABASE_PORT}:5432"
     environment:

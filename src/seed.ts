@@ -39,7 +39,7 @@ const setupCoreUsers = async () => {
 			role: 'admin',
 			data: {
 				username: 'Admin',
-				twoFactorEnabled: true
+				twoFactorEnabled: true,
 			},
 		},
 	});
@@ -151,6 +151,7 @@ const main = async () => {
 	// );
 };
 
-main()
-	.then(() => logger.info('Successfully seeded db'))
-	.catch(e => logger.error(`Failed to seed db ${e}`));
+void (async () =>
+	main()
+		.then(() => logger.info('Successfully seeded db'))
+		.catch(e => logger.error(`Failed to seed db ${e}`)))();

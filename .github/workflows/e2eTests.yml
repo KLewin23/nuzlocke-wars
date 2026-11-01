@@ -17,6 +17,8 @@ env:
   DATABASE_NAME: nuzlocke-wars
   ABLY_PUBLISH_API_KEY: ${secrets.ABLY_PUBLISH_API_KEY}
   ABLY_SUBSCRIBE_API_KEY: ${secrets.ABLY_SUBSCRIBE_API_KEY}
+  TWITCH_SECRET: secret
+  TWITCH_CLIENT_ID: client
 
 jobs:
   cypress-run:

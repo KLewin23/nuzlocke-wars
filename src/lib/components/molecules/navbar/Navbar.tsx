@@ -11,6 +11,7 @@ const buttonVariants = cva('row font-railroad-gothic relative justify-center px-
 	variants: {
 		variant: {
 			default: 'bg-background',
+			content: 'bg-content-nav',
 			dashboard: '',
 		},
 	},
@@ -23,17 +24,15 @@ interface Props {
 	links: Record<string, string | (() => Promise<unknown>)>; // Record<title, link>
 }
 
-const Navbar = ({
-	variant,
-	className,
-	links,
-}: React.ComponentProps<'div'> & VariantProps<typeof buttonVariants> & Props) => {
+type NavbarProps = React.ComponentProps<'div'> & VariantProps<typeof buttonVariants> & Props;
+
+const Navbar = ({ variant, className, links }: NavbarProps) => {
 	const { isClient, width } = useWindowSize();
 
 	return (
 		<nav data-variant={variant} className={cn(buttonVariants({ variant, className }))}>
 			<div className="row max-w-250 grow items-center justify-between gap-5 py-6">
-				<Link href={variant === 'dashboard' ? "/dashboard/drafts" : '/'}>
+				<Link href={variant === 'dashboard' ? '/dashboard/drafts' : '/'}>
 					<Title variant={variant !== 'dashboard' ? 'default' : 'dashboard'} />
 				</Link>
 				{isClient && width > 600 ?
@@ -54,4 +53,5 @@ const Navbar = ({
 	);
 };
 
+export type { NavbarProps };
 export default Navbar;
