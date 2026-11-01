@@ -38,7 +38,7 @@ const getDraftInfo = async (
 		logger.warn(`Received ${draftResponse.value.length} when expecting 1 in getDraftInfo`);
 
 	const targetDraft = draftResponse.value.at(0);
-	if (!targetDraft) return leftOf(notFound(`Target draft \`${draftId}\` not found in getFullDraft`));
+	if (!targetDraft) return leftOf(notFound(`Target draft \`${draftId}\` not found in getDraftInfo`));
 
 	return rightOf({
 		type: 'Success' as const,
