@@ -6,8 +6,8 @@ const BasicNavbar = (props: Omit<NavbarProps, 'links'>) => (
 	<Navbar
 		{...props}
 		links={{
-			HOME: '/',
-			CONTENT: '/content',
+			Home: '/',
+			Content: '/content',
 			// WARRIORS: '/',
 			// HIGHLIGHTS: '/',
 			// FAQ: '/',
