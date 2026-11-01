@@ -1,9 +1,13 @@
 import Navbar from '@/molecules/navbar';
 
-const BasicNavbar = () => (
+import type { NavbarProps } from '../molecules/navbar/Navbar';
+
+const BasicNavbar = (props: Omit<NavbarProps, 'links'>) => (
 	<Navbar
+		{...props}
 		links={{
-			// HOME: '/',
+			HOME: '/',
+			CONTENT: '/content',
 			// WARRIORS: '/',
 			// HIGHLIGHTS: '/',
 			// FAQ: '/',

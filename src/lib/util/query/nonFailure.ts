@@ -10,6 +10,14 @@ interface Success<D = undefined> extends QueryNonFailureState {
 	data: D;
 }
 
+const success = <D = undefined>(data: D) =>
+	// data ?
+		({
+			type: 'Success' as const,
+			data,
+		})
+	// :	{ type: 'Success' as const };
+
 const successOr = <L, D, B extends boolean = true>(
 	promise: Promise<D>,
 	or: (e: unknown) => L,
@@ -24,6 +32,6 @@ const successOr = <L, D, B extends boolean = true>(
 		)
 		.catch(e => leftOf(or(e)));
 
-export { successOr };
+export { successOr, success };
 
 export type { Success, QueryNonFailureState };

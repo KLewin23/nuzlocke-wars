@@ -259,6 +259,9 @@ importers:
       react-qr-code:
         specifier: ^2.2.0
         version: 2.2.0(react@19.2.8)
+      react-twitch-embed:
+        specifier: ^3.1.0
+        version: 3.1.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
@@ -5279,6 +5282,13 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
+
+  react-twitch-embed@3.1.0:
+    resolution: {integrity: sha512-LIY6LXxsWUoqTMHhe8apZjavng1dNjecDs4x5rHWXEcWeW97TK9s6V4wK82xWhILxsGYsoVNJsANJuE9jBcmZw==}
+    engines: {node: '>=20.19'}
+    peerDependencies:
+      react: ^18.2.0 || ^19.0.0
+      react-dom: ^18.2.0 || ^19.0.0
 
   react@19.2.8:
     resolution: {integrity: sha512-PWaYA1L/q9u2u7xYQi+Y3L3Yfnie7XyLeaJICV1MGD6LprsBxcAqGjYyr0eY3p+QdsA+x/Irkt4Qif8D63+Sbw==}
@@ -10900,6 +10910,11 @@ snapshots:
       tslib: 2.8.1
     optionalDependencies:
       '@types/react': 19.3.0
+
+  react-twitch-embed@3.1.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+    dependencies:
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
 
   react@19.2.8: {}
 
