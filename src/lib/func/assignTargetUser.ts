@@ -35,7 +35,7 @@ const assignTargetUser = async (
 				playersToDrafts,
 				and(eq(playersToDrafts.draftId, draft.id), eq(playersToDrafts.teamName, teamsToDrafts.teamName)),
 			)
-			.where(and(eq(round.roundStatus, RoundStatus.post_bidding), eq(draft.status, DraftStatus.active)))
+			.where(and(eq(round.roundStatus, RoundStatus.post_bidding), eq(draft.status, DraftStatus.active), eq(draft.id, draftId)))
 			.groupBy(teamsToDrafts.teamName, draft.maxPlayersPerTeam, round.targetUserId, draft.currentRoundId)
 			.having(lt(sql`count(${playersToDrafts.userId}) + 1`, draft.maxPlayersPerTeam))
 			.orderBy(sql`RANDOM()`)
