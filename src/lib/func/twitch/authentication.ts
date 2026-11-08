@@ -1,10 +1,10 @@
-import z from 'zod';
 import { env } from '@/env/server';
 import buildActionError from '@/error/actionError';
+import z from 'zod';
 
-import { success } from '../../util/query';
-import { Either, leftOf, rightOf } from '../../util/either';
+import { type Either, leftOf, rightOf } from '../../util/either';
 import type { QueryFailureState, QueryStateWithNonFailure, Success } from '../../util/query';
+import { success } from '../../util/query';
 
 const authenticationResponseSchema = z.object({
 	access_token: z.string(),
@@ -22,6 +22,7 @@ const authenticationCode = (): Promise<QueryStateWithNonFailure<Success<TwitchAu
 			client_secret: env.TWITCH_SECRET,
 			grant_type: 'client_credentials',
 		}),
+		cache: 'no-store'
 	})
 		.then(async raw => {
 			const json: unknown = await raw.json();

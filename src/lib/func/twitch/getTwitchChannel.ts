@@ -36,6 +36,7 @@ const getTwitchChannel = (
 				Authorization: `Bearer ${authentication.access_token}`,
 				'Client-ID': env.TWITCH_CLIENT_ID,
 			},
+			cache: 'no-store'
 		})
 			.then(async raw => {
 				const json: unknown = await raw.json();
