@@ -3,7 +3,7 @@ name: Unit Tests
 on: push
 
 jobs:
-  cypress-run:
+  unit-tests:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
