@@ -6,6 +6,7 @@ import { leftOf, rightOf } from '@/util/either';
 import { notFound, success } from '@/util/query';
 import buildActionError from '@/error/actionError';
 import type { QueryStateWithNonFailure, Success } from '@/util/query';
+import { isDynamicServerError } from 'next/dist/client/components/hooks-server-context';
 
 import { withTwitchAuthentication } from './authentication';
 
@@ -36,7 +37,7 @@ const getTwitchChannel = (
 				Authorization: `Bearer ${authentication.access_token}`,
 				'Client-ID': env.TWITCH_CLIENT_ID,
 			},
-			cache: 'no-store'
+			cache: 'no-store',
 		})
 			.then(async raw => {
 				const json: unknown = await raw.json();
@@ -56,9 +57,12 @@ const getTwitchChannel = (
 					),
 				);
 			})
-			.catch(e =>
-				leftOf(buildActionError('contacting Twitch.tv to getChannel', 'contact Twitch.tv to getChannel', e)),
-			);
+			.catch(e => {
+				if (isDynamicServerError(e)) throw e;
+				return leftOf(
+					buildActionError('contacting Twitch.tv to getChannel', 'contact Twitch.tv to getChannel', e),
+				);
+			});
 	});
 
 export type { GetTwitchChannel, SingularTwitchChannel };

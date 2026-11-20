@@ -1,10 +1,11 @@
+import z from 'zod';
 import { env } from '@/env/server';
 import buildActionError from '@/error/actionError';
-import z from 'zod';
+import { isDynamicServerError } from 'next/dist/client/components/hooks-server-context';
 
+import { success } from '../../util/query';
 import { type Either, leftOf, rightOf } from '../../util/either';
 import type { QueryFailureState, QueryStateWithNonFailure, Success } from '../../util/query';
-import { success } from '../../util/query';
 
 const authenticationResponseSchema = z.object({
 	access_token: z.string(),
@@ -22,7 +23,7 @@ const authenticationCode = (): Promise<QueryStateWithNonFailure<Success<TwitchAu
 			client_secret: env.TWITCH_SECRET,
 			grant_type: 'client_credentials',
 		}),
-		cache: 'no-store'
+		cache: 'no-store',
 	})
 		.then(async raw => {
 			const json: unknown = await raw.json();
@@ -36,11 +37,12 @@ const authenticationCode = (): Promise<QueryStateWithNonFailure<Success<TwitchAu
 				),
 			);
 		})
-		.catch(e =>
-			leftOf(
+		.catch(e => {
+			if (isDynamicServerError(e)) throw e;
+			return leftOf(
 				buildActionError('contacting Twitch.tv for authentication', 'contact Twitch.tv for authentication', e),
-			),
-		);
+			);
+		});
 
 const withTwitchAuthentication = async <T>(
 	withTwitchAuthentication: (authentication: TwitchAuthentication) => Promise<Either<QueryFailureState, T>>,
