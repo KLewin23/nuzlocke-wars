@@ -118,40 +118,43 @@ const main = async () => {
 	await seedDraft(2, 2);
 	await Promise.all(arrayOf(50).map(() => seedUser(Role.user)));
 	await Promise.all(arrayOf(10).map(() => seedUser(Role.admin)));
-	// const teams = await db
-	// 	.insert(team)
-	// 	.values(arrayOf(10).map(() => ({ name: faker.company.name().replace(/[^0-9a-z]/gi, '') })))
-	// 	.returning({ name: team.name });
-	// const drafts = await db
-	// 	.insert(draft)
-	// 	.values(
-	// 		arrayOf(10).map(() => ({
-	// 			name: `${faker.animal.type()} Draft`,
-	// 			initialPlayerCoins: faker.number.int({ max: 120, min: 30 }),
-	// 			maxPlayersPerTeam: faker.number.int({ max: 8, min: 3 }),
-	// 			roundLength: faker.number.int({ max: 180, min: 30 }),
-	// 		})),
-	// 	)
-	// 	.returning({ id: draft.id });
-	// const simpleUserIds = await db.select({ id: user.id }).from(user).where(eq(user.role, Role.user));
-	// await db.insert(teamsToDrafts).values(
-	// 	teams.flatMap(({ name }, index) => {
-	// 		const draftId = drafts.at(index);
-	// 		const captainId = simpleUserIds.at(index);
-	// 		return draftId && captainId ?
-	// 				[
-	// 					{
-	// 						draftId: draftId.id,
-	// 						teamName: name,
-	// 						captainId: captainId.id,
-	// 					},
-	// 				]
-	// 			:	[];
-	// 	}),
-	// );
 };
 
-void (async () =>
-	main()
-		.then(() => logger.info('Successfully seeded db'))
-		.catch(e => logger.error(`Failed to seed db ${e}`)))();
+main()
+	.then(() => {
+		logger.info('Successfully seeded db');
+	})
+	.catch(e => logger.error(`Failed to seed db ${e}`))
+	.finally(() => process.exit());
+
+// const teams = await db
+// 	.insert(team)
+// 	.values(arrayOf(10).map(() => ({ name: faker.company.name().replace(/[^0-9a-z]/gi, '') })))
+// 	.returning({ name: team.name });
+// const drafts = await db
+// 	.insert(draft)
+// 	.values(
+// 		arrayOf(10).map(() => ({
+// 			name: `${faker.animal.type()} Draft`,
+// 			initialPlayerCoins: faker.number.int({ max: 120, min: 30 }),
+// 			maxPlayersPerTeam: faker.number.int({ max: 8, min: 3 }),
+// 			roundLength: faker.number.int({ max: 180, min: 30 }),
+// 		})),
+// 	)
+// 	.returning({ id: draft.id });
+// const simpleUserIds = await db.select({ id: user.id }).from(user).where(eq(user.role, Role.user));
+// await db.insert(teamsToDrafts).values(
+// 	teams.flatMap(({ name }, index) => {
+// 		const draftId = drafts.at(index);
+// 		const captainId = simpleUserIds.at(index);
+// 		return draftId && captainId ?
+// 				[
+// 					{
+// 						draftId: draftId.id,
+// 						teamName: name,
+// 						captainId: captainId.id,
+// 					},
+// 				]
+// 			:	[];
+// 	}),
+// );

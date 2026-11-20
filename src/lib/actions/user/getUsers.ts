@@ -4,12 +4,12 @@ import { count, eq } from 'drizzle-orm';
 import { db, session, user } from '@/db';
 import type { Either } from '@/util/either';
 import buildCRUDError from '@/error/crudError';
-import adminSession from '@/func/adminSession';
+import withAdminSession from '@/func/withAdminSession';
 import type { UserResponseList } from '@/type/actions';
 import { type QueryFailureState, type Success, successOr } from '@/util/query';
 
 const getUsers = async (): Promise<Either<QueryFailureState, Success<UserResponseList>>> =>
-	adminSession(
+	withAdminSession(
 		async () =>
 			successOr(
 				db

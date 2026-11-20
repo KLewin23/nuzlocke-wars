@@ -19,6 +19,7 @@ env:
   ABLY_SUBSCRIBE_API_KEY: ${secrets.ABLY_SUBSCRIBE_API_KEY}
   TWITCH_SECRET: secret
   TWITCH_CLIENT_ID: client
+  SKIP_ADMIN_MFA: false
 
 jobs:
   cypress-run:

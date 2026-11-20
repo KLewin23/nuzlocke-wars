@@ -4,14 +4,14 @@ import logger from '@/logger';
 import { eq, sql } from 'drizzle-orm';
 import { publishEvent } from '@/util/ably';
 import buildCRUDError from '@/error/crudError';
-import adminSession from '@/func/adminSession';
+import withAdminSession from '@/func/withAdminSession';
 import { RoundStatus, db, draft, round } from '@/db';
 import { eitherOr, leftOf, rightOf } from '@/util/either';
 import buildAblyPublishError from '@/error/ablyPublishError';
 import { type Success, internalServerError, successOr } from '@/util/query';
 
 const checkIfBiddingOver = async (draftId: number) =>
-	adminSession<Success<{ isComplete: boolean }>>(
+	withAdminSession<Success<{ isComplete: boolean }>>(
 		async () => {
 			const checkResponse = await eitherOr(
 				db

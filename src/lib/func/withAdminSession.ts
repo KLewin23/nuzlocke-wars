@@ -3,8 +3,9 @@ import { headers } from 'next/headers';
 import { type Either, leftOf } from '@/util/either';
 import type { Permissions } from '@/auth/permissions';
 import type { QueryFailureState } from '@/util/query';
+import { env } from '@/env/server';
 
-const adminSession = async <T>(
+const withAdminSession = async <T>(
 	withSession: (session: typeof auth.$Infer.Session) => Promise<Either<QueryFailureState, T>>,
 	permissions?: Permissions,
 ): Promise<Either<QueryFailureState, T>> => {
@@ -23,9 +24,9 @@ const adminSession = async <T>(
 			permissions: permissions ?? {},
 		},
 	});
-	if (hasPermission.success === false || !session.user.twoFactorEnabled)
+	if (hasPermission.success === false || (!session.user.twoFactorEnabled && !env.SKIP_ADMIN_MFA))
 		return leftOf({ type: 'Forbidden' as const });
 	return withSession(session);
 };
 
-export default adminSession;
+export default withAdminSession;

@@ -5,7 +5,7 @@ import { auth } from '@/auth/auth';
 import generator from 'generate-password';
 import type { CreatedUser } from '@/type/queries';
 import buildCRUDError from '@/error/crudError';
-import adminSession from '@/func/adminSession';
+import withAdminSession from '@/func/withAdminSession';
 import buildAuthError from '@/error/buildAuthError';
 import type { CreateUserPayload } from '@/type/actions';
 import { type QueryStateWithNonFailure, type Success, successOr } from '@/util/query';
@@ -14,7 +14,7 @@ import { headers } from 'next/headers';
 const createUsers = async (
 	users: Array<CreateUserPayload>,
 ): Promise<QueryStateWithNonFailure<Success<Array<CreatedUser>>>> =>
-	adminSession<Success<Array<CreatedUser>>>(
+	withAdminSession<Success<Array<CreatedUser>>>(
 		async () => {
 			const passwordSchema = z.string().min(8);
 			const getPassword = (user: CreateUserPayload) => {
