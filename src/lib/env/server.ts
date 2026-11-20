@@ -14,7 +14,8 @@ const envSchema = z.intersection(
 		ABLY_PUBLISH_API_KEY: z.string(),
 		ABLY_SUBSCRIBE_API_KEY: z.string(),
 		TWITCH_CLIENT_ID: z.string(),
-		TWITCH_SECRET: z.string()
+		TWITCH_SECRET: z.string(),
+		SKIP_ADMIN_MFA: z.coerce.boolean().default(false)
 	}),
 	z.union([
 		z.object({

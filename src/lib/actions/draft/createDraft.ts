@@ -2,7 +2,7 @@
 
 import { eq } from 'drizzle-orm';
 import buildCRUDError from '@/error/crudError';
-import adminSession from '@/func/adminSession';
+import withAdminSession from '@/func/withAdminSession';
 import { badRequest, successOr } from '@/util/query';
 import { RoundStatus, db, draft, round, team } from '@/db';
 import { Either, eitherOr, leftOf, rightOf } from '@/util/either';
@@ -28,7 +28,7 @@ const createDraft = async ({
 	players,
 	maxPlayersPerTeam,
 }: CreateDraftPayload): Promise<QueryStateWithNonFailure<Success>> =>
-	adminSession<Success>(
+	withAdminSession<Success>(
 		async () => {
 			if (players.length === 0) return leftOf(badRequest('Received 0 players when creating draft, minimum: 1'));
 			if (teams.length === 0) return leftOf(badRequest('Received 0 teams for draft: minimum: 1'));

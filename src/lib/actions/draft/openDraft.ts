@@ -3,7 +3,7 @@
 import logger from '@/logger';
 import { and, eq, ne } from 'drizzle-orm';
 import buildCRUDError from '@/error/crudError';
-import adminSession from '@/func/adminSession';
+import withAdminSession from '@/func/withAdminSession';
 import buildActionError from '@/error/actionError';
 import { eitherOr, leftOf, rightOf } from '@/util/either';
 import { notFound, rejected, successOr } from '@/util/query';
@@ -11,7 +11,7 @@ import type { QueryStateWithNonFailure, Success } from '@/util/query';
 import { DraftStatus, RoundStatus, db, draft, playersToDrafts, round, teamsToDrafts } from '@/db';
 
 const openDraft = async (draftId: number): Promise<QueryStateWithNonFailure<Success>> =>
-	adminSession<Success>(
+	withAdminSession<Success>(
 		async () => {
 			const draftResponse = await eitherOr(
 				db

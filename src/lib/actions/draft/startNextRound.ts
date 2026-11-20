@@ -1,7 +1,7 @@
 'use server';
 import { publishEvent } from '@/util/ably';
 import buildCRUDError from '@/error/crudError';
-import adminSession from '@/func/adminSession';
+import withAdminSession from '@/func/withAdminSession';
 import { eitherOr, rightOf } from '@/util/either';
 import buildActionError from '@/error/actionError';
 import assignTargetUser from '@/func/assignTargetUser';
@@ -12,7 +12,7 @@ import { DraftStatus, RoundStatus, bid, db, draft, playersToDrafts, round, user 
 
 // Tldr. Create the next round, set the target player, sets the drafts current round to the new one.
 const startNextRound = async (draftId: number): Promise<QueryState> =>
-	adminSession(
+	withAdminSession(
 		async () => {
 			const highestBidResponse = await eitherOr(
 				db

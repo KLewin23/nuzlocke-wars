@@ -14,22 +14,40 @@ SELECT * FROM public."bid";
 SELECT * FROM public."team";
 
 SELECT * FROM public."round";
-SELECT * FROM public."session" JOIN public."user" ON  public."user".id = session.user_id;
+
+SELECT * FROM public."clip";
+
+SELECT * FROM public."streamer";
+
+SELECT *
+FROM public."session"
+    JOIN public."user" ON public."user".id = session.user_id;
 
 SELECT *
 FROM public."players_to_drafts" -- JOIN public."user" ON public."user".id = players_to_drafts.user_id;
 
-SELECT * FROM public."teams_to_drafts" JOIN public."user" ON public."teams_to_drafts".captain_id = public."user".id;
+SELECT *
+FROM public."teams_to_drafts"
+    JOIN public."user" ON public."teams_to_drafts".captain_id = public."user".id;
 
-INSERT INTO public."team" (name)
-VALUES ('TEST1'),
-('TEST2')
+INSERT INTO public."team" (name) VALUES ('TEST1'), ('TEST2')
 
-
-INSERT INTO public."teams_to_drafts" (team_name, draft_id, captain_id) 
-VALUES ('TEST1', 1, 'rWEbqSlWg76Ms3sIz80WhabKCYxVe4fZ'),
-       ('TEST2', 1, 'K7uYc7owNP3QAdg8d9aBSUbkab1LIWfj')
-
+INSERT INTO
+    public."teams_to_drafts" (
+        team_name,
+        draft_id,
+        captain_id
+    )
+VALUES (
+        'TEST1',
+        1,
+        'rWEbqSlWg76Ms3sIz80WhabKCYxVe4fZ'
+    ),
+    (
+        'TEST2',
+        1,
+        'K7uYc7owNP3QAdg8d9aBSUbkab1LIWfj'
+    )
 
 SELECT *
 FROM public."user"
@@ -157,15 +175,18 @@ WHERE
 
 SELECT * FROM players_to_drafts WHERE players_to_drafts.draft_id = 1
 
-
 -- Select team if no highest bidder
-SELECT  "teams_to_drafts"."team_name", round.target_user_id
+SELECT "teams_to_drafts"."team_name", round.target_user_id
 FROM
     "draft"
-JOIN "round" on "round"."id" = "draft"."current_round_id"
-JOIN "teams_to_drafts" on "teams_to_drafts"."draft_id" = "draft"."id"
-LEFT JOIN "players_to_drafts" on "players_to_drafts"."draft_id" = "draft"."id" AND "players_to_drafts"."team_name" = "teams_to_drafts"."team_name"
-WHERE "round"."round_status" = 'post_bidding'  AND "draft"."status" = 'active' AND draft.id = 1
+    JOIN "round" on "round"."id" = "draft"."current_round_id"
+    JOIN "teams_to_drafts" on "teams_to_drafts"."draft_id" = "draft"."id"
+    LEFT JOIN "players_to_drafts" on "players_to_drafts"."draft_id" = "draft"."id"
+    AND "players_to_drafts"."team_name" = "teams_to_drafts"."team_name"
+WHERE
+    "round"."round_status" = 'post_bidding'
+    AND "draft"."status" = 'active'
+    AND draft.id = 1
 GROUP BY
     -- "players_to_drafts"."user_id",
     round.target_user_id,
@@ -176,15 +197,14 @@ HAVING
 order by RANDOM()
 limit 1
 
-SELECT *
-FROM
-    "draft"
+SELECT * FROM "draft"
+
+SELECT * FROM "round"
+
+SELECT * FROM "user"
 
 SELECT *
 FROM
-    "round"
-
-SELECT *
-FROM
-    "user"
-
+    clip
+    LEFT JOIN clip_creator ON clip.creator_id = clip_creator.twitch_id
+    JOIN streamer ON streamer.twitch_id = clip.streamer_id

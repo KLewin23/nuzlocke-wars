@@ -5,17 +5,20 @@ const statement = {
 	...defaultStatements,
 	draft: ['create', 'update', 'read'],
 	team: ['create', 'update', 'delete'],
+	clip: ['create', 'update', 'read', 'delete'],
 } as const;
 
 const ac = createAccessControl(statement);
 
 const user = ac.newRole({
 	draft: ['read'],
+	clip: ['read'],
 });
 
 const admin = ac.newRole({
 	draft: ['create', 'update', 'read'],
 	team: ['create', 'update', 'delete'],
+	clip: ['create', 'update', 'read', 'delete'],
 	...adminAc.statements,
 });
 

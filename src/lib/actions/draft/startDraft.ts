@@ -5,14 +5,14 @@ import type { PublishResult } from 'ably';
 import { publishEvent } from '@/util/ably';
 import { DraftStatus, db, draft } from '@/db';
 import buildCRUDError from '@/error/crudError';
-import adminSession from '@/func/adminSession';
+import withAdminSession from '@/func/withAdminSession';
 import { eitherOr, leftOf } from '@/util/either';
 import { rejected, successOr } from '@/util/query';
 import type { QueryState, Success } from '@/util/query';
 import buildAblyPublishError from '@/error/ablyPublishError';
 
 const startDraft = async (draftId: number): Promise<QueryState> =>
-	adminSession<Success<PublishResult>>(
+	withAdminSession<Success<PublishResult>>(
 		async () => {
 			const startDraftResponse = await eitherOr(
 				db

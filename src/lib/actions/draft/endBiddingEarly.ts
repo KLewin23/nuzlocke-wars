@@ -4,14 +4,14 @@ import logger from '@/logger';
 import { eq } from 'drizzle-orm';
 import { publishEvent } from '@/util/ably';
 import buildCRUDError from '@/error/crudError';
-import adminSession from '@/func/adminSession';
+import withAdminSession from '@/func/withAdminSession';
 import { eitherOr, leftOf } from '@/util/either';
 import { RoundStatus, db, draft, round } from '@/db';
 import buildAblyPublishError from '@/error/ablyPublishError';
 import { internalServerError, successOr } from '@/util/query';
 
 const endBiddingEarly = async (draftId: number) =>
-	adminSession(async () => {
+	withAdminSession(async () => {
 		const checkResponse = await eitherOr(
 			db
 				.select({

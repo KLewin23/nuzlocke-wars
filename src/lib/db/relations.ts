@@ -1,6 +1,6 @@
 import { defineRelations } from 'drizzle-orm';
 
-import { clip, streamer } from './contentSchema';
+import { clip, clipCreator, streamer } from './contentSchema';
 import { account, session, twoFactor, user, verification } from './authSchema';
 import { bid, draft, playersToDrafts, round, team, teamsToDrafts } from './draftSchema';
 
@@ -19,6 +19,7 @@ const relations = defineRelations(
 		bid,
 		streamer,
 		clip,
+		clipCreator,
 	},
 	r => ({
 		user: {
@@ -110,14 +111,21 @@ const relations = defineRelations(
 		streamer: {
 			clips: r.many.clip(),
 		},
+		clipCreator: {
+			clips: r.many.clip(),
+		},
 		clip: {
 			streamer: r.one.streamer({
 				from: r.clip.streamerId,
-				to: r.streamer.id,
+				to: r.streamer.twitchId,
 			}),
 			approver: r.one.user({
 				from: r.clip.approverUserId,
 				to: r.user.id,
+			}),
+			creator: r.one.clipCreator({
+				from: r.clip.creatorId,
+				to: r.clipCreator.twitchId,
 			}),
 		},
 	}),
