@@ -14,7 +14,6 @@ const layout = async ({ children }: Props) => {
 	const session = await auth.api.getSession({
 		headers: await headers(),
 	});
-	console.log(env.SKIP_ADMIN_MFA);
 	return (
 		<>
 			<DashboardNavbar />
