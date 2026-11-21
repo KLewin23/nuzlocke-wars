@@ -21,7 +21,7 @@ const envSchema = z.intersection(
 			if (val === 'true') return true;
 			if (val === 'false') return false;
 			return val;
-		}, z.boolean()),
+		}, z.boolean()).default(false),
 	}),
 	z.union([
 		z.object({
