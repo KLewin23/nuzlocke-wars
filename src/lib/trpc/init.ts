@@ -27,6 +27,7 @@ const t = initTRPC.context<Awaited<ReturnType<typeof createTRPCContext>>>().crea
 // Base router and procedure helpers
 const createTRPCRouter = t.router;
 const createCallerFactory = t.createCallerFactory;
+const unauthenticatedProcedure = t.procedure
 const authenticatedProcedure = t.procedure.use(async opts => {
 	const { ctx } = opts;
 	if (!ctx.session?.user) throw new TRPCError({ code: 'UNAUTHORIZED' });
@@ -38,4 +39,4 @@ const authenticatedProcedure = t.procedure.use(async opts => {
 	});
 });
 
-export { createTRPCContext, createTRPCRouter, createCallerFactory, authenticatedProcedure };
+export { createTRPCContext, createTRPCRouter, createCallerFactory, authenticatedProcedure, unauthenticatedProcedure };

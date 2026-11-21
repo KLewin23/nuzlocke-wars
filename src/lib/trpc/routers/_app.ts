@@ -6,7 +6,7 @@ import { throwOnLeft } from '@/util/either';
 import getDraftInfo from '@/func/trpc/getDraftInfo';
 import getCurrentRound from '@/func/trpc/getCurrentRound';
 
-import { authenticatedProcedure, createTRPCRouter } from '../init';
+import { authenticatedProcedure, createTRPCRouter, unauthenticatedProcedure } from '../init';
 
 export const appRouter = createTRPCRouter({
 	getDraftInfo: authenticatedProcedure
@@ -27,7 +27,7 @@ export const appRouter = createTRPCRouter({
 		const currentRound = await getCurrentRound(opts.ctx.session, opts.input.draftId);
 		return throwOnLeft(currentRound, asTRPCError).data;
 	}),
-	getClips: authenticatedProcedure.input(z.object({ pageSize: z.number(), cursor: z.number() })).query(async opts => {
+	getClips: unauthenticatedProcedure.input(z.object({ pageSize: z.number(), cursor: z.number() })).query(async opts => {
 		const clips = await getClips(opts.input.pageSize, opts.input.cursor);
 		return throwOnLeft(clips, asTRPCError).data;
 	}),

@@ -11,7 +11,7 @@ interface Props {
 }
 
 const ContentShowcase = ({ showcaseResponse }: Props) => (
-	<div className="col h-[calc(100vh-76px)] w-full items-center gap-14 pt-8">
+	<div className="col w-full items-center gap-14 py-8">
 		{showcaseResponse._type === 'right' ?
 			<div className="col items-center gap-6">
 				<h1 className="xs:text-5xl font-railroad-gothic text-xl sm:text-4xl md:text-8xl">Live Now</h1>

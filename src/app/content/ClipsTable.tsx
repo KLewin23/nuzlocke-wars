@@ -16,10 +16,10 @@ const ClipsTable = () => {
 	return (
 		<div className="col w-full items-center gap-4">
 			<h2 className="xs:text-5xl font-railroad-gothic text-xl sm:text-4xl md:text-6xl">Highlights</h2>
-			<div className="auto-cols-[minmax(1fr, 500px)] px-gutters w-full">
-				{clipsResponse.isError ?
-					<SubTitle>Failed to retrieve our hightlights :{'('}</SubTitle>
-				:	clipsResponse.data?.map(clip => (
+			{clipsResponse.isError ?
+				<SubTitle>Failed to retrieve our highlights :{'('}</SubTitle>
+			:	<div className="auto-rows px-gutters grid w-full grid-flow-row grid-cols-[repeat(auto-fill,minmax(500px,1fr))] gap-4 place-items-center">
+					{clipsResponse.data?.map(clip => (
 						<div key={`clip-${clip.id}`} className="col bg-clip w-fit gap-2 rounded-2xl p-4">
 							<Link href={clip.url}>
 								<div className="overflow-hidden rounded-2xl">
@@ -33,11 +33,11 @@ const ClipsTable = () => {
 								</div>
 							</Link>
 							<div className="col gap-1">
-								<p className="font-bold text-lg">{clip.title}</p>
+								<p className="text-lg font-bold">{clip.title}</p>
 								<Link href={`https://twitch.tv/${clip.broadcasterName}`}>
 									<div className="row items-center gap-2">
 										<Image alt="Twitch Logo" src={TwitchIcon as string} height={22} width={22} />
-										<p  className="text-lg">{clip.broadcasterName}</p>
+										<p className="text-lg">{clip.broadcasterName}</p>
 									</div>
 								</Link>
 								<Tooltip>
@@ -53,9 +53,9 @@ const ClipsTable = () => {
 								</Tooltip>
 							</div>
 						</div>
-					))
-				}
-			</div>
+					))}
+				</div>
+			}
 		</div>
 	);
 };
