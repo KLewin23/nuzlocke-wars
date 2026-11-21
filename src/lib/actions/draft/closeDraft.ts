@@ -3,11 +3,11 @@ import { and, eq } from 'drizzle-orm';
 import { successOr } from '@/util/query';
 import { DraftStatus, db, draft } from '@/db';
 import buildCRUDError from '@/error/crudError';
-import adminSession from '@/func/adminSession';
+import withAdminSession from '@/func/withAdminSession';
 import type { QueryStateWithNonFailure, Success } from '@/util/query';
 
 const closeDraft = async (draftId: number): Promise<QueryStateWithNonFailure<Success>> =>
-	adminSession<Success>(
+	withAdminSession<Success>(
 		async () =>
 			successOr(
 				db

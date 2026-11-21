@@ -2,12 +2,12 @@
 
 import { and, eq } from 'drizzle-orm';
 import buildCRUDError from '@/error/crudError';
-import adminSession from '@/func/adminSession';
+import withAdminSession from '@/func/withAdminSession';
 import { db, playersToDrafts } from '@/db';
 import { type QueryState, successOr } from '@/util/query';
 
 const deleteDraftToPlayer = (userId: string, draftId: number): Promise<QueryState> =>
-	adminSession(
+	withAdminSession(
 		async () =>
 			successOr(
 				db

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { asTRPCError } from '@/util/query';
+import getClips from '@/func/trpc/getClips';
 import getTeams from '@/func/trpc/getTeams';
 import { throwOnLeft } from '@/util/either';
 import getDraftInfo from '@/func/trpc/getDraftInfo';
@@ -8,13 +9,6 @@ import getCurrentRound from '@/func/trpc/getCurrentRound';
 import { authenticatedProcedure, createTRPCRouter } from '../init';
 
 export const appRouter = createTRPCRouter({
-	// getFullDraft: authenticatedProcedure
-	// 	.input(
-	// 		z.object({
-	// 			draftId: z.number(),
-	// 		}),
-	// 	)
-	// 	.query(async opts => await getFullDraft(opts.ctx.session, opts.input.draftId)),
 	getDraftInfo: authenticatedProcedure
 		.input(
 			z.object({
@@ -32,6 +26,10 @@ export const appRouter = createTRPCRouter({
 	getCurrentRound: authenticatedProcedure.input(z.object({ draftId: z.number() })).query(async opts => {
 		const currentRound = await getCurrentRound(opts.ctx.session, opts.input.draftId);
 		return throwOnLeft(currentRound, asTRPCError).data;
+	}),
+	getClips: authenticatedProcedure.input(z.object({ pageSize: z.number(), cursor: z.number() })).query(async opts => {
+		const clips = await getClips(opts.input.pageSize, opts.input.cursor);
+		return throwOnLeft(clips, asTRPCError).data;
 	}),
 });
 

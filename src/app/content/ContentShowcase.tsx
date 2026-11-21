@@ -4,6 +4,8 @@ import { TwitchPlayer } from 'react-twitch-embed';
 import type { QueryStateWithNonFailure, Success } from '@/util/query';
 import type { SingularTwitchChannel } from '@/func/twitch/getTwitchChannel';
 
+import ClipsTable from './ClipsTable';
+
 interface Props {
 	showcaseResponse: QueryStateWithNonFailure<Success<SingularTwitchChannel>>;
 }
@@ -16,7 +18,7 @@ const ContentShowcase = ({ showcaseResponse }: Props) => (
 				<TwitchPlayer channel={showcaseResponse.value.data.usersLoginName} autoplay muted />
 			</div>
 		:	null}
-		<h2 className="xs:text-5xl font-railroad-gothic text-xl sm:text-4xl md:text-6xl">Highlights, Coming Soon!</h2>
+		<ClipsTable />
 	</div>
 );
 

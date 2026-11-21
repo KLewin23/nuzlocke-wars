@@ -3,7 +3,7 @@
 import { Role, db, user } from '@/db';
 import { and, eq, or } from 'drizzle-orm';
 import buildCRUDError from '@/error/crudError';
-import adminSession from '@/func/adminSession';
+import withAdminSession from '@/func/withAdminSession';
 import { type QueryState, successOr } from '@/util/query';
 
 interface UpdateUserPayload {
@@ -12,7 +12,7 @@ interface UpdateUserPayload {
 }
 
 const updateUser = async (targetUserId: string, { role, imageUrl }: UpdateUserPayload): Promise<QueryState> =>
-	adminSession(
+	withAdminSession(
 		async session => {
 			const queryBase = db.update(user).set({
 				...(role ? { role } : {}),

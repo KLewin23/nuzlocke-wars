@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"baseUrl": ".",
 		"target": "ES2017",
 		"lib": ["dom", "dom.iterable", "esnext"],
 		"allowJs": true,
@@ -19,10 +20,10 @@
 			}
 		],
 		"paths": {
-			"@/*": ["./src/lib/*"],
-			"@/lib/*": ["./src/lib/*"],
-			"@/public/*": ["./public/*"],
-			"@/images/*": ["./src/lib/components/images/*"],
+			"@/*": ["src/lib/*"],
+			"@/lib/*": ["src/lib/*"],
+			"@/public/*": ["public/*"],
+			"@/images/*": ["src/lib/components/images/*"],
 			"@/organisms/*": ["./src/lib/components/organisms/*"],
 			"@/molecules/*": ["./src/lib/components/molecules/*"],
 			"@/atoms/*": ["./src/lib/components/atoms/*"],

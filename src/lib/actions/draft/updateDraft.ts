@@ -3,7 +3,7 @@
 import { eq } from 'drizzle-orm';
 import { leftOf } from '@/util/either';
 import buildCRUDError from '@/error/crudError';
-import adminSession from '@/func/adminSession';
+import withAdminSession from '@/func/withAdminSession';
 import { type DraftStatus, db, draft } from '@/db';
 import { type QueryState, successOr } from '@/util/query';
 
@@ -18,7 +18,7 @@ const updateDraft = async (
 	draftId: number,
 	{ name, initialPlayerCoins, roundLength, status }: UpdateDraftPayload,
 ): Promise<QueryState> =>
-	adminSession(
+	withAdminSession(
 		async () => {
 			if (
 				name === undefined &&
