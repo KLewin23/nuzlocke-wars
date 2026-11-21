@@ -11,9 +11,9 @@ const page = async () => {
 
 	return (
 		<HydrateClient>
-			<div className="gradient-section-red-background">
+			<div className="gradient-section-red-background grow">
 				<BasicNavbar variant="content" />
-				<main className="col">
+				<main className="col grow">
 					<ContentShowcase showcaseResponse={showcaseChannel} />
 				</main>
 			</div>
